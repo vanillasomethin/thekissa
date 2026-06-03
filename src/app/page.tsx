@@ -1,452 +1,694 @@
 "use client";
 
-import type { Metadata } from "next";
-import { motion, useInView } from "framer-motion";
-import { PlayCircle, Palette, Video, Zap, Star } from "lucide-react";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
+import { motion } from "framer-motion";
+import { PlayCircle } from "lucide-react";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import PricingCalculator from "@/components/PricingCalculator";
 
-// SEO metadata — exported for Next.js App Router (works from server components too,
-// but keeping here for colocation; note: in a "use client" file this won't be picked
-// up automatically by Next.js. Move to a parent layout or a separate metadata.ts if needed.)
-export const metadata: Metadata = {
-  title: "Kissa Media Arts Agency — Bold Creative Work",
-  description:
-    "Kissa Media Arts Agency delivers bold branding, video production, graphic design, and social media for brands that refuse to be ignored.",
-  openGraph: {
-    title: "Kissa Media Arts Agency — Bold Creative Work",
-    description:
-      "Bold creative work for brands that refuse to be ignored. Branding, video, design, and more.",
-    url: "https://kissamedia.com",
-    siteName: "Kissa Media Arts Agency",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Kissa Media Arts Agency",
-    description: "Bold creative work for brands that refuse to be ignored.",
-  },
-};
+// ─── Data ─────────────────────────────────────────────────────────────────────
 
-// ─── Animated Counter ────────────────────────────────────────────────────────
-function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true });
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    if (!inView) return;
-    let start = 0;
-    const duration = 1200;
-    const step = Math.ceil(target / (duration / 16));
-    const timer = setInterval(() => {
-      start += step;
-      if (start >= target) {
-        setCount(target);
-        clearInterval(timer);
-      } else {
-        setCount(start);
-      }
-    }, 16);
-    return () => clearInterval(timer);
-  }, [inView, target]);
-
-  return (
-    <span ref={ref}>
-      {count}
-      {suffix}
-    </span>
-  );
-}
-
-// ─── Gradient Orb ─────────────────────────────────────────────────────────────
-function GradientOrb({
-  color,
-  size,
-  x,
-  y,
-  delay,
-}: {
-  color: string;
-  size: number;
-  x: string;
-  y: string;
-  delay: number;
-}) {
-  return (
-    <motion.div
-      className="absolute rounded-full blur-3xl opacity-20 pointer-events-none"
-      style={{ background: color, width: size, height: size, left: x, top: y }}
-      animate={{ scale: [1, 1.2, 1], opacity: [0.15, 0.25, 0.15] }}
-      transition={{ duration: 6, repeat: Infinity, delay, ease: "easeInOut" }}
-    />
-  );
-}
-
-// ─── Work Card Colors ─────────────────────────────────────────────────────────
-const workCards = [
-  { name: "Pulse Energy Rebrand", category: "Branding", bg: "from-yellow-500 to-orange-500" },
-  { name: "Vanilla x Somethin Collab", category: "Architecture", bg: "from-pink-500 to-purple-600" },
-  { name: "Bloom Festival Campaign", category: "Social Media", bg: "from-green-400 to-teal-500" },
-  { name: "Nexus Tech Launch", category: "Video", bg: "from-blue-500 to-indigo-600" },
-  { name: "Kova Coffee Visual ID", category: "Branding", bg: "from-orange-400 to-red-500" },
-  { name: "Urban Flow Series", category: "Photography", bg: "from-purple-500 to-pink-500" },
+const projects = [
+  { name: "ORÍTHYA",        category: "Branding + Film",            year: "2025", bg: "linear-gradient(150deg,#AD1335,#16100F)" },
+  { name: "Lantern Year",   category: "Immersive + Installation",   year: "2025", bg: "linear-gradient(150deg,#2E5563,#16100F)" },
+  { name: "Maison Verre",   category: "Visual Identity + Motion",   year: "2024", bg: "linear-gradient(150deg,#B97D1E,#16100F)" },
+  { name: "The Long Night", category: "Film + Direction",           year: "2024", bg: "linear-gradient(150deg,#1E3D47,#16100F)" },
+  { name: "Sundra",         category: "Brand + Web",                year: "2025", bg: "linear-gradient(150deg,#7A0E26,#16100F)" },
+  { name: "Echo Bloom",     category: "Social + Content",           year: "2026", bg: "linear-gradient(150deg,#355a5f,#16100F)" },
 ];
 
 const testimonials = [
   {
-    name: "Amara Osei",
-    role: "CEO, Pulse Energy",
-    quote:
-      "Kissa completely transformed our brand identity. The team brought a level of creative energy that we had never seen before — truly exceptional work.",
-    stars: 5,
+    quote:    "They didn't just make us a video. They found the story we'd been trying to tell for years.",
+    name:     "Luiza Becker",
+    role:     "Brand Director",
+    company:  "Maison Verre",
+    initials: "LB",
+    avatarBg: "#AD1335",
+    borderColor: "var(--crimson)",
   },
   {
-    name: "Lena Hartmann",
-    role: "Marketing Director, Bloom Festival",
-    quote:
-      "Our campaign numbers tripled after working with Kissa. They understand how to make a brand feel alive in the digital space.",
-    stars: 5,
+    quote:    "the Kissa turns complex ideas into something you feel before you understand it. Our launch film hit 4 million views in a week.",
+    name:     "Mateo Ruiz",
+    role:     "Founder",
+    company:  "Sundra",
+    initials: "MR",
+    avatarBg: "#2E5563",
+    borderColor: "var(--crimson-bright)",
   },
   {
-    name: "Marcus Webb",
-    role: "Founder, Kova Coffee",
-    quote:
-      "From logo to packaging to web — Kissa handled everything flawlessly. Professional, bold, and always on time.",
-    stars: 5,
+    quote:    "An 11 out of 10. They built the whole world around our brand.",
+    name:     "Amie Schneider",
+    role:     "Founder",
+    company:  "Lantern Year",
+    initials: "AS",
+    avatarBg: "#2A3F5F",
+    borderColor: "var(--accent-cool)",
+  },
+  {
+    quote:    "Professional, fearless, and genuinely fun. They anticipate what the story needs before you can ask.",
+    name:     "Carey Martell",
+    role:     "Founder",
+    company:  "Echo Bloom",
+    initials: "CM",
+    avatarBg: "#355a5f",
+    borderColor: "var(--crimson)",
   },
 ];
 
-const blogPosts = [
+const stats = [
+  { value: "0.5s",  desc: "The time you have to stop a scroll. We make every frame count." },
+  { value: "200M+", desc: "Views earned for the brands we've told stories for." },
+  { value: "55%",   desc: "Of first impressions are purely visual. So we make it matter." },
+  { value: "1",     desc: "Story per brand, told right. That's the whole job." },
+];
+
+const services = [
   {
-    title: "Why Brand Consistency Wins in a Noisy Market",
-    date: "May 28, 2026",
-    category: "Branding",
-    excerpt:
-      "In a world of infinite scroll and fleeting attention, the brands that stick are the ones that stay relentlessly consistent across every touchpoint.",
+    num:  "01",
+    title: "Story & Brand",
+    lead:  "Strategy that sounds like you.",
+    body:  "We dig into who you are and why it matters, then build the language and visuals to say it clearly. Every touchpoint becomes part of a coherent, compelling narrative.",
+    tags:  ["Brand strategy", "Visual identity", "Branded content", "Campaigns", "Social"],
   },
   {
-    title: "Short-Form Video Is Eating the World — Here's How to Win",
-    date: "May 14, 2026",
-    category: "Video Production",
-    excerpt:
-      "Reels, TikToks, YouTube Shorts. The format is everywhere. We break down what makes a short-form video actually convert.",
+    num:  "02",
+    title: "Motion & Film",
+    lead:  "Frames that move people.",
+    body:  "From concept to cut, we make films that earn attention rather than demand it. Craft-led production, purposeful direction, and post that never forgets the story.",
+    tags:  ["Video production", "Film & direction", "Animation", "Motion design", "Post"],
   },
   {
-    title: "The Color Psychology Behind High-Converting Campaigns",
-    date: "April 30, 2026",
-    category: "Design",
-    excerpt:
-      "Color is not decoration — it's strategy. Learn how the world's most effective campaigns use hue, saturation, and contrast to drive action.",
+    num:  "03",
+    title: "Digital & Immersive",
+    lead:  "Experiences you step inside.",
+    body:  "Beyond the screen, into the room. We design environments, installations, and interactive worlds that blur the boundary between audience and story.",
+    tags:  ["Immersive", "Installations", "Web", "AR/social", "Creative direction"],
   },
 ];
+
+const MARQUEE_TEXT =
+  "BRANDED CONTENT · VIDEO PRODUCTION · BRAND STRATEGY · SOCIAL CAMPAIGNS · PHOTOGRAPHY · ANIMATION · IMMERSIVE EXPERIENCES · ";
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+const fadeUp = {
+  initial:     { opacity: 0, y: 20 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport:    { once: true },
+  transition:  { duration: 0.6, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
+};
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
+
 export default function HomePage() {
-  const metricsRef = useRef<HTMLDivElement>(null);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [dragging, setDragging]   = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, scrollLeft: 0 });
+
+  function onMouseDown(e: React.MouseEvent) {
+    if (!carouselRef.current) return;
+    setDragging(true);
+    setDragStart({ x: e.pageX, scrollLeft: carouselRef.current.scrollLeft });
+  }
+  function onMouseMove(e: React.MouseEvent) {
+    if (!dragging || !carouselRef.current) return;
+    carouselRef.current.scrollLeft = dragStart.scrollLeft - (e.pageX - dragStart.x);
+  }
+  function onMouseUp() { setDragging(false); }
 
   return (
-    <main className="bg-[#0A0A0A] text-[#F5F5F5] overflow-x-hidden font-sans">
-      {/* ── 1. Hero ───────────────────────────────────────────────────────── */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center px-6 text-center overflow-hidden">
-        {/* Animated gradient orbs */}
-        <GradientOrb color="#FFD700" size={600} x="-10%" y="-20%" delay={0} />
-        <GradientOrb color="#FF6B35" size={500} x="60%" y="10%" delay={2} />
-        <GradientOrb color="#FF3CAC" size={400} x="20%" y="60%" delay={4} />
+    <>
+      <Navbar />
+      <main style={{ overflowX: "hidden" }}>
 
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="relative z-10 max-w-4xl mx-auto"
+        {/* ══ 1. HERO ═══════════════════════════════════════════════════════════ */}
+        <section
+          style={{
+            background: `
+              radial-gradient(ellipse 60% 60% at 90% 10%, rgba(173,19,53,0.18) 0%, transparent 70%),
+              radial-gradient(ellipse 50% 50% at 10% 90%, rgba(173,19,53,0.12) 0%, transparent 65%),
+              var(--ink)
+            `,
+            paddingTop:    160,
+            paddingBottom: 80,
+          }}
         >
-          <h1 className="text-6xl md:text-8xl font-black leading-none tracking-tight mb-4">
-            <span className="block">We Make Brands</span>
-            <span className="block gradient-text">Come Alive</span>
-          </h1>
-          <p className="mt-6 text-lg md:text-xl text-[#F5F5F5]/70 max-w-xl mx-auto leading-relaxed">
-            Kissa Media Arts Agency — bold creative work for brands that refuse to be ignored.
-          </p>
-          <div className="mt-10 flex flex-wrap gap-4 justify-center">
-            <a
-              href="#work"
-              className="px-8 py-4 rounded-full bg-[#FFD700] text-[#0A0A0A] font-bold text-base hover:bg-yellow-300 transition-colors"
+          <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
+
+            {/* Eyebrow */}
+            <motion.p
+              className="k-eyebrow on-ink"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
             >
-              See Our Work
-            </a>
-            <a
-              href="#pricing"
-              className="px-8 py-4 rounded-full border-2 border-[#F5F5F5]/40 text-[#F5F5F5] font-bold text-base hover:border-[#FFD700] hover:text-[#FFD700] transition-colors"
+              <span className="pa" aria-hidden>▶</span>
+              {" "}Media art agency
+            </motion.p>
+
+            {/* H1 */}
+            <motion.h1
+              className="k-display"
+              initial={{ opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.12 }}
+              style={{
+                color:      "var(--fg-on-ink)",
+                fontSize:   "clamp(52px, 8vw, 96px)",
+                lineHeight: 1.05,
+                marginTop:  20,
+                marginBottom: 0,
+              }}
             >
-              Get a Quote
-            </a>
-          </div>
-        </motion.div>
+              We make stories
+              <br />
+              impossible to
+              <br />
+              <em style={{ fontStyle: "italic", color: "var(--crimson)" }}>look away</em>{" "}
+              from.
+            </motion.h1>
 
-        {/* Video reel placeholder */}
-        <motion.div
-          initial={{ opacity: 0, y: 60 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.3 }}
-          className="relative z-10 mt-16 w-full max-w-3xl mx-auto aspect-video rounded-2xl bg-[#161616] border border-white/10 flex items-center justify-center cursor-pointer group"
-        >
-          <motion.div
-            whileHover={{ scale: 1.1 }}
-            className="flex flex-col items-center gap-2 text-[#F5F5F5]/50 group-hover:text-[#FFD700] transition-colors"
-          >
-            <PlayCircle size={72} strokeWidth={1.2} />
-            <span className="text-sm font-medium tracking-widest uppercase">Watch Reel</span>
-          </motion.div>
-        </motion.div>
-      </section>
+            {/* Sub */}
+            <motion.p
+              className="k-body-l"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.26 }}
+              style={{
+                color:     "var(--fg-on-ink-2)",
+                maxWidth:  "52ch",
+                marginTop: 28,
+              }}
+            >
+              the Kissa is your creative partner for branded content, film, and immersive
+              experiences. The name kissa means story — every project is one we make
+              unforgettable.
+            </motion.p>
 
-      {/* ── 2. Marquee Ticker ────────────────────────────────────────────── */}
-      <section className="bg-[#111111] py-5 overflow-hidden border-y border-white/5">
-        <div className="flex whitespace-nowrap">
-          <span className="animate-marquee inline-block text-[#FFD700] font-bold text-sm tracking-widest uppercase">
-            {Array(4)
-              .fill(
-                "BRANDING · VIDEO PRODUCTION · GRAPHIC DESIGN · SOCIAL MEDIA · PHOTOGRAPHY · ANIMATION · WEB DESIGN · "
-              )
-              .join("")}
-          </span>
-          <span className="animate-marquee inline-block text-[#FFD700] font-bold text-sm tracking-widest uppercase" aria-hidden>
-            {Array(4)
-              .fill(
-                "BRANDING · VIDEO PRODUCTION · GRAPHIC DESIGN · SOCIAL MEDIA · PHOTOGRAPHY · ANIMATION · WEB DESIGN · "
-              )
-              .join("")}
-          </span>
-        </div>
-      </section>
-
-      {/* ── 3. Featured Work ─────────────────────────────────────────────── */}
-      <section id="work" className="py-24 px-6 max-w-7xl mx-auto">
-        <motion.h2
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-4xl md:text-5xl font-black mb-12 tracking-tight"
-        >
-          Selected Work
-        </motion.h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-          {workCards.map((card, i) => (
+            {/* CTA row */}
             <motion.div
-              key={card.name}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              className="group cursor-pointer"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.38 }}
+              style={{ display: "flex", gap: 16, flexWrap: "wrap", marginTop: 40 }}
             >
-              <div
-                className={`aspect-video rounded-xl bg-gradient-to-br ${card.bg} mb-3 overflow-hidden relative`}
-              >
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
-              </div>
-              <p className="font-bold text-[#F5F5F5] text-sm md:text-base">{card.name}</p>
-              <span className="inline-block mt-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-white/10 text-[#FFD700]">
-                {card.category}
-              </span>
+              <a href="#pricing" className="btn btn-primary">Start your kissa →</a>
+              <a href="#work"    className="btn btn-ghost on-ink">See the work</a>
             </motion.div>
-          ))}
-        </div>
-      </section>
 
-      {/* ── 4. Metrics ───────────────────────────────────────────────────── */}
-      <section ref={metricsRef} className="py-20 px-6 bg-[#111111] border-y border-white/5">
-        <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-10 text-center">
-          {[
-            { value: 120, suffix: "+", label: "Projects" },
-            { value: 48, suffix: "", label: "Clients" },
-            { value: 6, suffix: "", label: "Years" },
-            { value: 3, suffix: "", label: "Awards" },
-          ].map((stat) => (
-            <div key={stat.label}>
-              <p className="text-5xl md:text-6xl font-black text-[#FFD700]">
-                <AnimatedCounter target={stat.value} suffix={stat.suffix} />
+            {/* Video reel */}
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.5 }}
+              style={{
+                marginTop:    64,
+                maxWidth:     900,
+                width:        "100%",
+                aspectRatio:  "16/9",
+                borderRadius: 20,
+                background:   "linear-gradient(160deg, #1E3D47 0%, var(--ink) 100%)",
+                display:      "flex",
+                flexDirection: "column",
+                alignItems:   "center",
+                justifyContent: "center",
+                cursor:       "pointer",
+              }}
+            >
+              <PlayCircle size={64} style={{ color: "rgba(244,239,233,0.6)" }} strokeWidth={1.2} />
+              <p
+                className="k-credit"
+                style={{ color: "var(--fg-on-ink-2)", marginTop: 20, letterSpacing: "0.12em" }}
+              >
+                SHOWREEL · 2026 — 01:06 SELECTED WORK
               </p>
-              <p className="mt-2 text-[#F5F5F5]/70 font-medium text-sm uppercase tracking-widest">
-                {stat.label}
+            </motion.div>
+
+          </div>
+        </section>
+
+        {/* ══ 2. MARQUEE ════════════════════════════════════════════════════════ */}
+        <section style={{ background: "var(--bone)", padding: "28px 0", overflow: "hidden" }}>
+          <div className="marquee-track">
+            <div
+              style={{
+                fontFamily:     "var(--sans)",
+                fontSize:       13,
+                letterSpacing:  "0.2em",
+                textTransform:  "uppercase",
+                fontWeight:     600,
+                color:          "var(--crimson)",
+                whiteSpace:     "nowrap",
+              }}
+            >
+              {MARQUEE_TEXT}{MARQUEE_TEXT}
+            </div>
+          </div>
+        </section>
+
+        {/* ══ 3. STATEMENT ══════════════════════════════════════════════════════ */}
+        <section style={{ background: "var(--paper)", padding: "96px 0" }}>
+          <div className="wrap" style={{ maxWidth: 820, margin: "0 auto" }}>
+            <motion.p className="k-eyebrow" {...fadeUp}>What we believe</motion.p>
+            <motion.h2
+              className="k-h2"
+              {...fadeUp}
+              transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+              style={{ fontFamily: "var(--serif-display)", marginTop: 16 }}
+            >
+              We don&apos;t make content. We make{" "}
+              <span className="italic-crimson">kissa.</span>
+            </motion.h2>
+            <motion.p
+              className="k-body-l"
+              {...fadeUp}
+              transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+              style={{ color: "var(--fg2)", marginTop: 24, maxWidth: "64ch" }}
+            >
+              A campaign isn&apos;t a deliverable. It&apos;s a story told well enough that
+              people can&apos;t scroll past. We craft it in frames, in light, in the cut
+              between two shots.
+            </motion.p>
+          </div>
+        </section>
+
+        {/* ══ 4. SERVICES ═══════════════════════════════════════════════════════ */}
+        <section style={{ background: "var(--paper)", padding: "0 0 96px" }}>
+          <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
+
+            {/* 2-col header */}
+            <div
+              style={{
+                display:             "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap:                 40,
+                alignItems:          "end",
+                marginBottom:        64,
+              }}
+            >
+              <motion.h2
+                className="k-h2"
+                {...fadeUp}
+                style={{ fontFamily: "var(--serif-display)" }}
+              >
+                What we do
+              </motion.h2>
+              <motion.p
+                className="k-body"
+                {...fadeUp}
+                transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+                style={{ color: "var(--fg2)" }}
+              >
+                Three disciplines, one commitment: every project is a story worth telling —
+                and we make sure it lands.
+              </motion.p>
+            </div>
+
+            {/* Service pillars */}
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 32 }}>
+              {services.map((s, i) => (
+                <motion.div
+                  key={s.num}
+                  {...fadeUp}
+                  transition={{ duration: 0.6, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
+                  style={{ borderTop: "1px solid var(--line)" }}
+                >
+                  <p
+                    className="k-credit"
+                    style={{
+                      color:        "var(--fg3)",
+                      marginTop:    24,
+                      marginBottom: 8,
+                      fontFamily:   "var(--mono)",
+                    }}
+                  >
+                    {s.num}
+                  </p>
+                  <h3 className="k-h3" style={{ marginBottom: 8 }}>{s.title}</h3>
+                  <p
+                    className="italic-crimson"
+                    style={{ fontSize: 15, marginBottom: 12 }}
+                  >
+                    {s.lead}
+                  </p>
+                  <p
+                    className="k-body"
+                    style={{ color: "var(--fg2)", marginBottom: 20 }}
+                  >
+                    {s.body}
+                  </p>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                    {s.tags.map(tag => (
+                      <span
+                        key={tag}
+                        style={{
+                          background:   "var(--accent-soft)",
+                          color:        "var(--fg3)",
+                          borderRadius: 20,
+                          fontSize:     15,
+                          padding:      "4px 12px",
+                          fontFamily:   "var(--sans)",
+                        }}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ══ 5. SELECTED WORK ══════════════════════════════════════════════════ */}
+        <section id="work" style={{ background: "var(--ink)", padding: "96px 0" }}>
+          <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
+            <div
+              style={{
+                display:        "flex",
+                justifyContent: "space-between",
+                alignItems:     "flex-end",
+                marginBottom:   48,
+              }}
+            >
+              <div>
+                <motion.p className="k-eyebrow on-ink" {...fadeUp}>Selected work</motion.p>
+                <motion.h2
+                  className="k-h2"
+                  {...fadeUp}
+                  transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+                  style={{
+                    color:      "var(--fg-on-ink)",
+                    fontFamily: "var(--serif-display)",
+                    marginTop:  8,
+                  }}
+                >
+                  Stories we&apos;ve told
+                </motion.h2>
+              </div>
+              <p
+                style={{
+                  fontFamily:    "var(--mono)",
+                  fontSize:      12,
+                  letterSpacing: "0.08em",
+                  color:         "var(--fg-on-ink-2)",
+                  userSelect:    "none",
+                }}
+              >
+                DRAG →
               </p>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── 5. Services Snapshot ─────────────────────────────────────────── */}
-      <section className="py-24 px-6 max-w-7xl mx-auto">
-        <motion.h2
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-4xl md:text-5xl font-black mb-12 tracking-tight"
-        >
-          What We Do
-        </motion.h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            {
-              icon: <Palette size={32} strokeWidth={1.5} />,
-              title: "Graphic Design",
-              desc: "Visual identities, print, and digital assets that communicate with clarity and conviction.",
-            },
-            {
-              icon: <Video size={32} strokeWidth={1.5} />,
-              title: "Video Production",
-              desc: "From concept to final cut — brand films, reels, and campaigns that demand attention.",
-            },
-            {
-              icon: <Zap size={32} strokeWidth={1.5} />,
-              title: "Branding",
-              desc: "Strategy-led brand systems that give your business a voice, look, and lasting presence.",
-            },
-          ].map((service, i) => (
-            <motion.div
-              key={service.title}
-              initial={{ opacity: 0, y: 32 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.12 }}
-              className="bg-[#1A1A1A] rounded-2xl p-8 flex flex-col gap-4 border border-white/5 hover:border-[#FFD700]/30 transition-colors"
-            >
-              <span className="text-[#FF6B35]">{service.icon}</span>
-              <h3 className="text-xl font-bold">{service.title}</h3>
-              <p className="text-[#F5F5F5]/60 text-sm leading-relaxed">{service.desc}</p>
-              <a
-                href="#"
-                className="mt-auto text-[#FFD700] text-sm font-semibold hover:underline"
-              >
-                Learn more →
-              </a>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── 6. Social Proof ──────────────────────────────────────────────── */}
-      <section className="py-24 px-6 bg-[#111111] border-y border-white/5">
-        <div className="max-w-7xl mx-auto">
-          <motion.h2
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-4xl md:text-5xl font-black mb-12 tracking-tight"
-          >
-            What Clients Say
-          </motion.h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {testimonials.map((t, i) => (
-              <motion.div
-                key={t.name}
-                initial={{ opacity: 0, x: i === 0 ? -40 : i === 2 ? 40 : 0, y: i === 1 ? 40 : 0 }}
-                whileInView={{ opacity: 1, x: 0, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: i * 0.1 }}
-                className="bg-[#1A1A1A] rounded-2xl p-8 flex flex-col gap-4 border border-white/5"
-              >
-                <div className="flex gap-1">
-                  {Array(t.stars)
-                    .fill(null)
-                    .map((_, idx) => (
-                      <Star key={idx} size={16} fill="#FFD700" className="text-[#FFD700]" />
-                    ))}
-                </div>
-                <p className="text-[#F5F5F5]/80 text-sm leading-relaxed italic">
-                  &ldquo;{t.quote}&rdquo;
-                </p>
-                <div className="mt-auto">
-                  <p className="font-bold text-[#F5F5F5]">{t.name}</p>
-                  <p className="text-xs text-[#F5F5F5]/50">{t.role}</p>
-                </div>
-              </motion.div>
-            ))}
           </div>
-        </div>
-      </section>
 
-      {/* ── 7. Pricing Calculator ────────────────────────────────────────── */}
-      <section id="pricing" className="py-24 px-6 max-w-7xl mx-auto">
-        <motion.h2
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-4xl md:text-5xl font-black mb-12 tracking-tight"
-        >
-          Estimate Your Project Cost
-        </motion.h2>
-        <PricingCalculator />
-      </section>
-
-      {/* ── 8. Blog Preview ──────────────────────────────────────────────── */}
-      <section className="py-24 px-6 bg-[#111111] border-y border-white/5">
-        <div className="max-w-7xl mx-auto">
-          <motion.h2
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-4xl md:text-5xl font-black mb-12 tracking-tight"
-          >
-            Fresh Insights
-          </motion.h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {blogPosts.map((post, i) => (
-              <motion.article
-                key={post.title}
-                initial={{ opacity: 0, y: 32 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="bg-[#1A1A1A] rounded-2xl p-8 flex flex-col gap-3 border border-white/5 hover:border-[#FF3CAC]/30 transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#FF3CAC]/20 text-[#FF3CAC]">
-                    {post.category}
-                  </span>
-                  <span className="text-xs text-[#F5F5F5]/40">{post.date}</span>
-                </div>
-                <h3 className="font-bold text-[#F5F5F5] text-base leading-snug">{post.title}</h3>
-                <p className="text-[#F5F5F5]/60 text-sm leading-relaxed flex-1">{post.excerpt}</p>
-                <a href="#" className="text-[#FFD700] text-sm font-semibold hover:underline mt-2">
-                  Read more →
-                </a>
-              </motion.article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── 9. CTA Banner ────────────────────────────────────────────────── */}
-      <section className="py-32 px-6 bg-[#0A0A0A] text-center relative overflow-hidden">
-        <GradientOrb color="#FFD700" size={500} x="40%" y="-30%" delay={0} />
-        <GradientOrb color="#FF3CAC" size={400} x="-5%" y="30%" delay={2} />
-        <motion.div
-          initial={{ opacity: 0, y: 32 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="relative z-10 max-w-2xl mx-auto"
-        >
-          <h2 className="text-5xl md:text-7xl font-black tracking-tight leading-none mb-8">
-            Ready to make something bold?
-          </h2>
-          <a
-            href="mailto:hello@kissamedia.com"
-            className="inline-block px-12 py-5 rounded-full text-[#0A0A0A] font-black text-lg"
+          {/* Draggable carousel */}
+          <div
+            ref={carouselRef}
+            onMouseDown={onMouseDown}
+            onMouseMove={onMouseMove}
+            onMouseUp={onMouseUp}
+            onMouseLeave={onMouseUp}
             style={{
-              background: "linear-gradient(135deg, #FFD700 0%, #FF6B35 50%, #FF3CAC 100%)",
+              display:      "flex",
+              gap:          20,
+              overflowX:    "auto",
+              paddingLeft:  "max(24px, calc((100vw - 1100px) / 2))",
+              paddingRight: 24,
+              paddingBottom: 8,
+              cursor:       dragging ? "grabbing" : "grab",
+              scrollbarWidth: "none",
             }}
           >
-            Let&apos;s Talk
-          </a>
-        </motion.div>
-      </section>
-    </main>
+            {projects.map((p) => (
+              <div key={p.name} style={{ flex: "0 0 340px" }}>
+                <div
+                  style={{
+                    width:        340,
+                    aspectRatio:  "340/440",
+                    borderRadius: 16,
+                    overflow:     "hidden",
+                    position:     "relative",
+                    background:   p.bg,
+                  }}
+                >
+                  {/* Hover overlay */}
+                  <div
+                    style={{
+                      position:       "absolute",
+                      inset:          0,
+                      background:     "rgba(22,16,15,0.72)",
+                      display:        "flex",
+                      flexDirection:  "column",
+                      justifyContent: "flex-end",
+                      padding:        28,
+                      opacity:        0,
+                      transition:     "opacity 0.3s ease",
+                    }}
+                    onMouseEnter={e => ((e.currentTarget as HTMLElement).style.opacity = "1")}
+                    onMouseLeave={e => ((e.currentTarget as HTMLElement).style.opacity = "0")}
+                  >
+                    <p
+                      style={{
+                        fontFamily:   "var(--serif-display)",
+                        fontSize:     24,
+                        color:        "var(--fg-on-ink)",
+                        marginBottom: 12,
+                      }}
+                    >
+                      {p.name}
+                    </p>
+                    <span
+                      style={{
+                        background:   "rgba(173,19,53,0.3)",
+                        color:        "var(--fg-on-ink)",
+                        borderRadius: 20,
+                        fontSize:     13,
+                        padding:      "4px 12px",
+                        width:        "fit-content",
+                        fontFamily:   "var(--sans)",
+                      }}
+                    >
+                      {p.category}
+                    </span>
+                  </div>
+                </div>
+                <p
+                  style={{
+                    color:      "var(--fg-on-ink)",
+                    fontFamily: "var(--sans)",
+                    fontWeight: 700,
+                    marginTop:  14,
+                    fontSize:   15,
+                  }}
+                >
+                  {p.name}
+                </p>
+                <p
+                  style={{
+                    fontFamily: "var(--mono)",
+                    fontSize:   12,
+                    color:      "var(--fg-on-ink-2)",
+                    marginTop:  4,
+                  }}
+                >
+                  {p.year}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ══ 6. TESTIMONIALS ═══════════════════════════════════════════════════ */}
+        <section style={{ background: "var(--paper)", padding: "96px 0" }}>
+          <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
+            <motion.p className="k-eyebrow" {...fadeUp}>Client stories</motion.p>
+            <motion.h2
+              className="k-h2"
+              {...fadeUp}
+              transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+              style={{ fontFamily: "var(--serif-display)", marginTop: 12, marginBottom: 48 }}
+            >
+              What our storytellers say.
+            </motion.h2>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 24 }}>
+              {testimonials.map((t, i) => (
+                <motion.div
+                  key={t.name}
+                  {...fadeUp}
+                  transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                  style={{
+                    background:   "#ffffff",
+                    borderRadius: 16,
+                    padding:      32,
+                    borderLeft:   `4px solid ${t.borderColor}`,
+                    boxShadow:    "var(--sh-1)",
+                  }}
+                >
+                  <p
+                    style={{
+                      fontFamily:   "var(--serif-display)",
+                      fontStyle:    "italic",
+                      fontSize:     17,
+                      color:        "var(--fg1)",
+                      lineHeight:   1.55,
+                      marginBottom: 24,
+                    }}
+                  >
+                    &ldquo;{t.quote}&rdquo;
+                  </p>
+                  <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                    <div
+                      style={{
+                        width:          38,
+                        height:         38,
+                        borderRadius:   "50%",
+                        background:     t.avatarBg,
+                        display:        "flex",
+                        alignItems:     "center",
+                        justifyContent: "center",
+                        color:          "#fff",
+                        fontFamily:     "var(--sans)",
+                        fontWeight:     700,
+                        fontSize:       13,
+                        flexShrink:     0,
+                      }}
+                    >
+                      {t.initials}
+                    </div>
+                    <div>
+                      <p style={{ fontFamily: "var(--sans)", fontWeight: 700, fontSize: 14, color: "var(--fg1)" }}>
+                        {t.name}
+                      </p>
+                      <p
+                        style={{
+                          fontFamily:    "var(--mono)",
+                          fontSize:      11,
+                          textTransform: "uppercase",
+                          letterSpacing: "0.08em",
+                          color:         "var(--fg3)",
+                        }}
+                      >
+                        {t.role}, {t.company}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ══ 7. STATS ══════════════════════════════════════════════════════════ */}
+        <section style={{ background: "var(--ink)", padding: "96px 0" }}>
+          <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
+            <motion.h2
+              className="k-h2"
+              {...fadeUp}
+              style={{
+                fontFamily:   "var(--serif-display)",
+                color:        "var(--fg-on-ink)",
+                maxWidth:     "18ch",
+                marginBottom: 64,
+              }}
+            >
+              Story is the strategy. The numbers just agree.
+            </motion.h2>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 32 }}>
+              {stats.map((s, i) => (
+                <motion.div
+                  key={s.value}
+                  {...fadeUp}
+                  transition={{ duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                  style={{ borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: 28 }}
+                >
+                  <p
+                    style={{
+                      fontFamily:   "var(--serif-display)",
+                      fontSize:     "clamp(32px, 4vw, 56px)",
+                      color:        "var(--fg-on-ink)",
+                      fontWeight:   700,
+                      marginBottom: 14,
+                      lineHeight:   1,
+                    }}
+                  >
+                    {s.value}
+                  </p>
+                  <p style={{ color: "var(--fg-on-ink-2)", fontSize: 14, lineHeight: 1.55 }}>
+                    {s.desc}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ══ 8. PRICING CALCULATOR ═════════════════════════════════════════════ */}
+        <section id="pricing" style={{ background: "var(--bone)", padding: "96px 0" }}>
+          <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
+            <motion.p className="k-eyebrow" {...fadeUp}>Transparent pricing</motion.p>
+            <motion.h2
+              className="k-h2"
+              {...fadeUp}
+              transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+              style={{ fontFamily: "var(--serif-display)", marginTop: 12, marginBottom: 48 }}
+            >
+              Estimate your project.
+            </motion.h2>
+            <PricingCalculator />
+          </div>
+        </section>
+
+        {/* ══ 9. CTA BANNER ═════════════════════════════════════════════════════ */}
+        <section
+          style={{
+            background: `
+              radial-gradient(ellipse 55% 55% at 80% 20%, rgba(173,19,53,0.16) 0%, transparent 70%),
+              var(--ink)
+            `,
+            padding: "96px 0",
+          }}
+        >
+          <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
+            <motion.p className="k-eyebrow on-ink" {...fadeUp}>
+              Let&apos;s make something unforgettable
+            </motion.p>
+            <motion.h2
+              className="k-h2"
+              {...fadeUp}
+              transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+              style={{
+                fontFamily: "var(--serif-display)",
+                color:      "var(--fg-on-ink)",
+                fontSize:   "clamp(36px, 5vw, 72px)",
+                maxWidth:   "18ch",
+                marginTop:  16,
+                marginBottom: 40,
+                lineHeight: 1.1,
+              }}
+            >
+              Tell us your{" "}
+              <em style={{ fontStyle: "italic", color: "var(--crimson)" }}>story.</em>
+              {" "}We&apos;ll make sure nobody looks away.
+            </motion.h2>
+            <motion.div
+              {...fadeUp}
+              transition={{ duration: 0.6, delay: 0.22, ease: [0.22, 1, 0.36, 1] }}
+              style={{ display: "flex", alignItems: "center", gap: 28, flexWrap: "wrap" }}
+            >
+              <a href="#pricing" className="btn btn-primary">Start your kissa →</a>
+              <a
+                href="mailto:hello@thekissa.co"
+                style={{ color: "var(--fg-on-ink-2)", fontFamily: "var(--sans)", fontSize: 15 }}
+              >
+                hello@thekissa.co
+              </a>
+            </motion.div>
+          </div>
+        </section>
+
+      </main>
+      <Footer />
+    </>
   );
 }

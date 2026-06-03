@@ -1,72 +1,328 @@
 @import "tailwindcss";
 
+/* ============================================================
+   the Kissa — Design System Tokens
+   "Where Art Meets Storytelling."
+   ============================================================ */
+
 :root {
-  --bg: #0A0A0A;
-  --yellow: #FFD700;
-  --orange: #FF6B35;
-  --pink: #FF3CAC;
-  --white: #F5F5F5;
-  --gray: #1A1A1A;
-  --gray-mid: #2A2A2A;
+  /* --- Brand Core --- */
+  --crimson:        #AD1335;
+  --crimson-deep:   #7A0E26;
+  --crimson-bright: #D11A41;
+
+  /* --- Warm Neutrals --- */
+  --ink:            #16100F;
+  --gray-900:       #241A18;
+  --gray-700:       #4A4140;
+  --gray-500:       #7C7270;
+  --gray-400:       #A79D98;
+  --gray-300:       #C9C0BB;
+  --gray-200:       #E4DCD5;
+  --bone:           #F4EFE9;
+  --paper:          #FBF8F4;
+
+  /* --- Accents --- */
+  --accent-dark:    #1A1A1A;
+  --accent-cool:    #2A3F5F;
+  --accent-soft:    #E8E8E8;
+
+  /* --- Semantic --- */
+  --bg:             var(--paper);
+  --bg-alt:         var(--bone);
+  --bg-ink:         var(--ink);
+  --surface:        #ffffff;
+  --fg1:            var(--ink);
+  --fg2:            var(--gray-700);
+  --fg3:            var(--gray-500);
+  --fg-on-ink:      #F4EFE9;
+  --fg-on-ink-2:    #B9ADA7;
+  --line:           var(--gray-200);
+  --line-strong:    var(--gray-300);
+  --focus:          var(--crimson);
+
+  /* --- Typography --- */
+  --serif-display: var(--font-serif-display), 'Georgia', serif;
+  --sans:          var(--font-sans), 'Helvetica Neue', system-ui, sans-serif;
+  --mono:          var(--font-mono), ui-monospace, 'SFMono-Regular', monospace;
+
+  /* --- Spacing (8pt) --- */
+  --sp-1: 4px;  --sp-2: 8px;   --sp-3: 12px;  --sp-4: 16px;
+  --sp-5: 24px; --sp-6: 32px;  --sp-7: 48px;  --sp-8: 64px;
+  --sp-9: 96px; --sp-10: 128px;
+
+  /* --- Radii --- */
+  --r-sm: 6px;
+  --r-md: 12px;
+  --r-lg: 20px;
+  --r-bubble: 28px;
+  --r-pill: 999px;
+
+  /* --- Shadows (warm-tinted) --- */
+  --sh-1: 0 1px 2px rgba(22,16,15,0.06), 0 1px 3px rgba(22,16,15,0.05);
+  --sh-2: 0 4px 12px rgba(22,16,15,0.08), 0 1px 3px rgba(22,16,15,0.05);
+  --sh-3: 0 14px 38px rgba(22,16,15,0.13), 0 4px 10px rgba(22,16,15,0.07);
+  --sh-crimson: 0 14px 34px rgba(122,14,38,0.28);
+
+  /* --- Motion --- */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 140ms;
+  --dur: 240ms;
+  --dur-slow: 420ms;
 }
 
 @theme inline {
-  --color-background: #0A0A0A;
-  --color-foreground: #F5F5F5;
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--paper);
+  --color-foreground: var(--ink);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
 }
 
-* {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
+/* ============================================================
+   BASE RESET
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
 
 body {
-  background-color: #0A0A0A;
-  color: #F5F5F5;
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
   overflow-x: hidden;
+  margin: 0;
 }
+
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
 
 ::selection {
-  background: #FFD700;
-  color: #000;
+  background: var(--crimson);
+  color: #fff;
 }
 
-.gradient-text {
-  background: linear-gradient(135deg, #FFD700, #FF6B35, #FF3CAC);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+/* ============================================================
+   TYPE CLASSES
+   ============================================================ */
+.k-display {
+  font-family: var(--serif-display);
+  font-size: clamp(52px, 8vw, 96px);
+  line-height: 0.98;
+  letter-spacing: -0.015em;
+  font-weight: 700;
+  color: var(--fg1);
 }
 
-.card-hover {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.k-h1 {
+  font-family: var(--serif-display);
+  font-size: clamp(40px, 6vw, 72px);
+  line-height: 1.05;
+  letter-spacing: -0.012em;
+  font-weight: 700;
+  color: var(--fg1);
 }
 
-.card-hover:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+.k-h2 {
+  font-family: var(--serif-display);
+  font-size: clamp(32px, 4.5vw, 56px);
+  line-height: 1.1;
+  letter-spacing: -0.008em;
+  font-weight: 700;
+  color: var(--fg1);
 }
 
+.k-h3 {
+  font-family: var(--sans);
+  font-size: 22px;
+  line-height: 1.28;
+  font-weight: 700;
+  color: var(--fg1);
+}
+
+.k-body-l {
+  font-family: var(--sans);
+  font-size: 19px;
+  line-height: 1.6;
+  font-weight: 400;
+  color: var(--fg2);
+}
+
+.k-body {
+  font-family: var(--sans);
+  font-size: 17px;
+  line-height: 1.62;
+  font-weight: 400;
+  color: var(--fg2);
+}
+
+.k-small {
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.55;
+  font-weight: 400;
+  color: var(--fg2);
+}
+
+.k-caption {
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.45;
+  font-weight: 500;
+  color: var(--fg3);
+}
+
+.k-eyebrow {
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--crimson);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.k-eyebrow.on-ink { color: var(--fg-on-ink); }
+
+.k-credit {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  color: var(--fg3);
+}
+
+.k-quote {
+  font-family: var(--serif-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 1.35;
+  color: var(--fg1);
+}
+
+.italic-crimson { font-style: italic; color: var(--crimson); }
+
+/* Play arrow glyph */
+.pa {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-left: 8px solid currentColor;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--sans);
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: var(--r-md);
+  padding: 14px 24px;
+  border: 1.5px solid transparent;
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease),
+              background var(--dur) var(--ease),
+              box-shadow var(--dur) var(--ease),
+              color var(--dur) var(--ease);
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--crimson);
+  color: #fff;
+  box-shadow: var(--sh-crimson);
+}
+.btn-primary:hover { background: var(--crimson-deep); transform: translateY(-2px); }
+.btn-primary:active { transform: scale(0.98); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--line-strong);
+}
+.btn-ghost:hover { border-color: var(--ink); transform: translateY(-2px); }
+
+.btn-ghost.on-ink {
+  color: var(--fg-on-ink);
+  border-color: rgba(244,239,233,0.32);
+}
+.btn-ghost.on-ink:hover {
+  border-color: var(--fg-on-ink);
+  background: rgba(244,239,233,0.06);
+}
+
+/* ============================================================
+   REVEAL ANIMATION
+   ============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ============================================================
+   MARQUEE
+   ============================================================ */
 @keyframes marquee {
   from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  to   { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 30s linear infinite;
+}
+.marquee-track:hover { animation-play-state: paused; }
+
+/* ============================================================
+   SPEECH BUBBLE CARD MOTIF
+   ============================================================ */
+.bubble-card {
+  background: var(--surface);
+  border-radius: var(--r-bubble);
+  border: 2px solid var(--crimson);
+  padding: var(--sp-7);
+  box-shadow: var(--sh-2);
 }
 
-.animate-marquee {
-  animation: marquee 20s linear infinite;
+/* ============================================================
+   CARDS
+   ============================================================ */
+.k-card {
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--line);
+  box-shadow: var(--sh-1);
+  transition: box-shadow var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.k-card:hover {
+  box-shadow: var(--sh-3);
+  transform: translateY(-2px);
 }
 
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.2); }
-  50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.5); }
+/* ============================================================
+   WRAP
+   ============================================================ */
+.wrap {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 48px;
 }
-
-.pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
+@media (max-width: 680px) {
+  .wrap { padding: 0 24px; }
 }

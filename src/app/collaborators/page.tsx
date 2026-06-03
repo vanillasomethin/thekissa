@@ -1,78 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { ExternalLink, CheckCircle2, Send } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { CheckCircle2, Send, ArrowRight } from "lucide-react";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
-
-const featuredCollaborators = [
-  {
-    id: "vanilla",
-    name: "Vanilla",
-    tagline: "Architecture & Spatial Design",
-    description:
-      "Vanilla brings architectural vision to life — designing spaces that speak. Their mastery of form, material, and atmosphere transforms built environments into experiences that resonate long after you leave.",
-    projects: ["The Form & Function Exhibition", "Spatial Branding for Vault Gallery"],
-    accent: "#FFD700",
-    accentBg: "rgba(255,215,0,0.08)",
-    accentBorder: "rgba(255,215,0,0.25)",
-    logoGradient: "from-yellow-400 to-yellow-600",
-    initials: "VN",
-  },
-  {
-    id: "somethin",
-    name: "Somethin",
-    tagline: "Architecture & Urban Design",
-    description:
-      "Somethin turns cities into canvases. Through bold urban interventions and community-driven design, they create environments where identity, culture, and architecture converge into something unforgettable.",
-    projects: ["Urban Identity Series", "The Nairobi Blueprint"],
-    accent: "#FF6B35",
-    accentBg: "rgba(255,107,53,0.08)",
-    accentBorder: "rgba(255,107,53,0.25)",
-    logoGradient: "from-orange-400 to-orange-600",
-    initials: "SM",
-  },
-];
-
-const jointProjects = [
-  {
-    name: "The Form & Function Exhibition",
-    collaborator: "Kissa × Vanilla",
-    description:
-      "A landmark exhibition exploring the dialogue between visual identity and architectural space. Kissa led all visual communications; Vanilla designed the spatial experience.",
-    bg: "from-yellow-500/40 to-yellow-800/60",
-    tag: "#FFD700",
-    tagBg: "rgba(255,215,0,0.15)",
-  },
-  {
-    name: "Spatial Branding for Vault Gallery",
-    collaborator: "Kissa × Vanilla",
-    description:
-      "End-to-end brand identity and environmental graphics for Nairobi's most anticipated contemporary art space. Every surface tells the brand story.",
-    bg: "from-yellow-400/30 to-zinc-900/80",
-    tag: "#FFD700",
-    tagBg: "rgba(255,215,0,0.15)",
-  },
-  {
-    name: "Urban Identity Series",
-    collaborator: "Kissa × Somethin",
-    description:
-      "A photographic and graphic series documenting and reinterpreting the visual identity of Nairobi's evolving urban landscape — murals, signage, and spatial wayfinding.",
-    bg: "from-orange-500/40 to-orange-900/60",
-    tag: "#FF6B35",
-    tagBg: "rgba(255,107,53,0.15)",
-  },
-  {
-    name: "The Nairobi Blueprint",
-    collaborator: "Kissa × Somethin",
-    description:
-      "A speculative design project reimagining key urban zones of Nairobi through the combined lens of graphic storytelling and architectural vision.",
-    bg: "from-orange-400/30 to-zinc-900/80",
-    tag: "#FF6B35",
-    tagBg: "rgba(255,107,53,0.15)",
-  },
-];
+// ─── Data ──────────────────────────────────────────────────────────────────────
 
 const collaborationTypes = [
   "Branding & Identity",
@@ -84,13 +18,52 @@ const collaborationTypes = [
   "Other",
 ];
 
+const jointProjects = [
+  {
+    name: "The Form & Function Exhibition",
+    collaborator: "Kissa × Vanilla",
+    bg: "linear-gradient(135deg, #AD1335 0%, #7A0E26 100%)",
+    chip: "crimson",
+  },
+  {
+    name: "Spatial Branding for Vault Gallery",
+    collaborator: "Kissa × Vanilla",
+    bg: "linear-gradient(135deg, #7A0E26 0%, #16100F 100%)",
+    chip: "crimson",
+  },
+  {
+    name: "Urban Identity Series",
+    collaborator: "Kissa × Somethin",
+    bg: "linear-gradient(135deg, #2A3F5F 0%, #16100F 100%)",
+    chip: "cool",
+  },
+  {
+    name: "The Nairobi Blueprint",
+    collaborator: "Kissa × Somethin",
+    bg: "linear-gradient(135deg, #1a2c44 0%, #16100F 100%)",
+    chip: "cool",
+  },
+];
+
 // ─── Sub-components ────────────────────────────────────────────────────────────
 
 function CollaboratorCard({
-  collab,
+  name,
+  tagline,
+  description,
+  projects,
+  accent,
+  accentBg,
+  initials,
   delay,
 }: {
-  collab: (typeof featuredCollaborators)[number];
+  name: string;
+  tagline: string;
+  description: string;
+  projects: string[];
+  accent: string;
+  accentBg: string;
+  initials: string;
   delay: number;
 }) {
   return (
@@ -99,87 +72,59 @@ function CollaboratorCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.65, delay }}
-      className="flex flex-col rounded-3xl overflow-hidden border"
+      className="bubble-card flex flex-col"
       style={{
-        background: collab.accentBg,
-        borderColor: collab.accentBorder,
+        background: "#fff",
+        borderRadius: 28,
+        border: "2px solid var(--crimson)",
+        padding: 40,
+        display: "flex",
+        flexDirection: "column",
+        gap: 24,
       }}
     >
       {/* Logo placeholder */}
       <div
-        className={`w-full aspect-[2/1] bg-gradient-to-br ${collab.logoGradient} flex items-center justify-center`}
+        style={{
+          width: "100%",
+          aspectRatio: "2/1",
+          background: accentBg,
+          borderRadius: 16,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
       >
-        <span className="text-[#0A0A0A] text-5xl font-black tracking-tight">
-          {collab.initials}
+        <span style={{ color: accent, fontSize: 56, fontWeight: 900, fontFamily: "var(--serif-display)" }}>
+          {initials}
         </span>
       </div>
 
       {/* Content */}
-      <div className="flex flex-col flex-1 p-8 gap-5">
+      <div style={{ display: "flex", flexDirection: "column", gap: 16, flex: 1 }}>
         <div>
-          <p className="text-xs font-bold tracking-widest uppercase mb-1" style={{ color: collab.accent }}>
-            {collab.tagline}
-          </p>
-          <h3 className="text-3xl font-black text-[#F5F5F5]">{collab.name}</h3>
+          <p className="k-eyebrow" style={{ color: accent, marginBottom: 6 }}>{tagline}</p>
+          <h3 className="k-h3" style={{ color: "var(--fg1)" }}>{name}</h3>
         </div>
 
-        <p className="text-[#F5F5F5]/65 leading-relaxed text-sm">{collab.description}</p>
+        <p className="k-body" style={{ color: "var(--fg2)" }}>{description}</p>
 
         <div>
-          <p className="text-xs font-bold tracking-widest uppercase text-[#F5F5F5]/40 mb-3">
-            Joint Projects
-          </p>
-          <ul className="flex flex-col gap-2">
-            {collab.projects.map((project) => (
-              <li key={project} className="flex items-start gap-2 text-sm text-[#F5F5F5]/80">
-                <CheckCircle2 size={15} className="mt-0.5 flex-shrink-0" style={{ color: collab.accent }} />
+          <p className="k-eyebrow" style={{ color: "var(--fg3)", marginBottom: 12 }}>Joint Projects</p>
+          <ul style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {projects.map((project) => (
+              <li key={project} className="pa" style={{ color: "var(--fg2)", fontSize: 15 }}>
                 {project}
               </li>
             ))}
           </ul>
         </div>
 
-        <div className="mt-auto">
-          <button
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-sm transition-all hover:opacity-80 active:scale-95"
-            style={{ background: collab.accent, color: "#0A0A0A" }}
-          >
-            View Projects <ExternalLink size={14} />
+        <div style={{ marginTop: "auto", paddingTop: 8 }}>
+          <button className="btn btn-ghost" style={{ color: accent, borderColor: accent }}>
+            View projects <ArrowRight size={14} />
           </button>
         </div>
-      </div>
-    </motion.div>
-  );
-}
-
-function ProjectCard({
-  project,
-  index,
-}: {
-  project: (typeof jointProjects)[number];
-  index: number;
-}) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 36 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="bg-[#1A1A1A] rounded-2xl overflow-hidden border border-white/5 card-hover flex flex-col"
-    >
-      {/* Placeholder image */}
-      <div className={`w-full aspect-video bg-gradient-to-br ${project.bg}`} />
-
-      {/* Content */}
-      <div className="p-6 flex flex-col gap-3 flex-1">
-        <span
-          className="inline-block text-xs font-bold px-3 py-1 rounded-full w-fit"
-          style={{ color: project.tag, background: project.tagBg }}
-        >
-          {project.collaborator}
-        </span>
-        <h4 className="font-black text-[#F5F5F5] text-base leading-snug">{project.name}</h4>
-        <p className="text-[#F5F5F5]/55 text-sm leading-relaxed flex-1">{project.description}</p>
       </div>
     </motion.div>
   );
@@ -188,17 +133,10 @@ function ProjectCard({
 // ─── Page ──────────────────────────────────────────────────────────────────────
 
 export default function CollaboratorsPage() {
-  const [form, setForm] = useState({
-    name: "",
-    organization: "",
-    collaborationType: "",
-    message: "",
-  });
+  const [form, setForm] = useState({ name: "", organization: "", collaborationType: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
 
-  function handleChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
-  ) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
@@ -208,234 +146,293 @@ export default function CollaboratorsPage() {
   }
 
   return (
-    <main className="bg-[#0A0A0A] text-[#F5F5F5] overflow-x-hidden min-h-screen">
-      {/* ── 1. Hero ─────────────────────────────────────────────────────── */}
-      <section className="relative pt-32 pb-24 px-6 text-center overflow-hidden">
-        {/* Background orbs */}
-        <motion.div
-          className="absolute rounded-full blur-3xl opacity-15 pointer-events-none"
-          style={{ background: "#FFD700", width: 500, height: 500, left: "-10%", top: "-20%" }}
-          animate={{ scale: [1, 1.15, 1] }}
-          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute rounded-full blur-3xl opacity-15 pointer-events-none"
-          style={{ background: "#FF6B35", width: 400, height: 400, right: "-5%", top: "10%" }}
-          animate={{ scale: [1, 1.2, 1] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        />
+    <>
+      <Navbar />
+      <main style={{ background: "var(--paper)", color: "var(--fg1)" }}>
 
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="relative z-10 max-w-3xl mx-auto"
-        >
-          <p className="text-xs font-bold tracking-widest uppercase text-[#FFD700] mb-4">
-            Partners & Collaborators
-          </p>
-          <h1 className="text-6xl md:text-7xl font-black leading-none tracking-tight mb-6">
-            <span className="gradient-text">Creative Alliances</span>
-          </h1>
-          <p className="text-lg text-[#F5F5F5]/65 leading-relaxed max-w-xl mx-auto">
-            We believe the most powerful creative work is born when distinct disciplines collide.
-            Kissa builds deep, long-term partnerships with studios and firms who share our obsession
-            with craft, intention, and impact.
-          </p>
-        </motion.div>
-      </section>
-
-      {/* ── 2. Featured Collaborators ───────────────────────────────────── */}
-      <section className="py-20 px-6 max-w-7xl mx-auto">
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-3xl md:text-4xl font-black mb-12 tracking-tight"
-        >
-          Featured Collaborators
-        </motion.h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {featuredCollaborators.map((collab, i) => (
-            <CollaboratorCard key={collab.id} collab={collab} delay={i * 0.15} />
-          ))}
-        </div>
-      </section>
-
-      {/* ── 3. Joint Projects Grid ──────────────────────────────────────── */}
-      <section className="py-20 px-6 bg-[#111111] border-y border-white/5">
-        <div className="max-w-7xl mx-auto">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-3xl md:text-4xl font-black mb-12 tracking-tight"
-          >
-            Joint Projects
-          </motion.h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {jointProjects.map((project, i) => (
-              <ProjectCard key={project.name} project={project} index={i} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── 4. Collaboration Philosophy ─────────────────────────────────── */}
-      <section className="py-28 px-6 max-w-4xl mx-auto text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 32 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-        >
-          <p className="text-xs font-bold tracking-widest uppercase text-[#FF3CAC] mb-8">
-            Our Philosophy
-          </p>
-          <blockquote className="text-4xl md:text-5xl font-black leading-tight tracking-tight mb-8">
-            &ldquo;Great work happens at the{" "}
-            <span className="gradient-text">intersection of disciplines.</span>&rdquo;
-          </blockquote>
-          <p className="text-[#F5F5F5]/60 text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
-            Kissa does not collaborate for the sake of it. Every partnership we enter is built on
-            genuine creative alignment — a shared hunger to push past the obvious and make something
-            that stands apart. When a brand strategist sits beside an architect, when a filmmaker
-            shares a brief with a spatial designer, the unexpected becomes possible. That is where
-            we choose to work.
-          </p>
-        </motion.div>
-      </section>
-
-      {/* ── 5. Become a Collaborator ────────────────────────────────────── */}
-      <section className="py-24 px-6 bg-[#111111] border-y border-white/5">
-        <div className="max-w-2xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="mb-10"
-          >
-            <p className="text-xs font-bold tracking-widest uppercase text-[#FFD700] mb-3">
-              Work With Us
-            </p>
-            <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4">
-              Become a Collaborator
-            </h2>
-            <p className="text-[#F5F5F5]/55 text-sm leading-relaxed">
-              We&apos;re always open to conversations with studios, firms, and creatives who want to
-              build something together. Tell us about yourself.
-            </p>
-          </motion.div>
-
-          {submitted ? (
+        {/* ── 1. Hero ──────────────────────────────────────────────────── */}
+        <section style={{ background: "var(--ink)", padding: "160px 0 96px", textAlign: "center" }}>
+          <div className="wrap">
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="bg-[#1A1A1A] rounded-2xl border border-[#FFD700]/30 p-10 text-center"
+              initial={{ opacity: 0, y: 32 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.75 }}
             >
-              <CheckCircle2 size={48} className="text-[#FFD700] mx-auto mb-4" />
-              <h3 className="text-2xl font-black mb-2">Message sent!</h3>
-              <p className="text-[#F5F5F5]/55 text-sm">
-                We&apos;ll be in touch soon to explore how we can work together.
+              <p className="k-eyebrow" style={{ color: "var(--fg-on-ink-2)", marginBottom: 20 }}>
+                Creative alliances
+              </p>
+              <h1
+                className="k-h1"
+                style={{ color: "var(--fg-on-ink)", maxWidth: 680, margin: "0 auto" }}
+              >
+                Where disciplines{" "}
+                <em className="italic-crimson">collide.</em>
+              </h1>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ── 2. Featured Collaborators ─────────────────────────────── */}
+        <section style={{ background: "var(--paper)", padding: "96px 0" }}>
+          <div className="wrap">
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 32 }}>
+              <CollaboratorCard
+                name="Vanilla"
+                tagline="Architects & Spatial Design"
+                description="Vanilla brings architectural vision to life — designing spaces that speak. Their mastery of form, material, and atmosphere transforms built environments into experiences that resonate long after you leave."
+                projects={["The Form & Function Exhibition", "Spatial Branding for Vault Gallery"]}
+                accent="var(--crimson)"
+                accentBg="rgba(173,19,53,0.07)"
+                initials="VN"
+                delay={0}
+              />
+              <CollaboratorCard
+                name="Somethin"
+                tagline="Architecture & Urban Design"
+                description="Somethin turns cities into canvases. Through bold urban interventions and community-driven design, they create environments where identity, culture, and architecture converge into something unforgettable."
+                projects={["Urban Identity Series", "The Nairobi Blueprint"]}
+                accent="var(--accent-cool)"
+                accentBg="rgba(42,63,95,0.08)"
+                initials="SM"
+                delay={0.15}
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* ── 3. Joint Projects Grid ────────────────────────────────── */}
+        <section style={{ background: "var(--bone)", padding: "96px 0" }}>
+          <div className="wrap">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              style={{ marginBottom: 48 }}
+            >
+              <h2 className="k-h2" style={{ color: "var(--fg1)" }}>Joint projects</h2>
+            </motion.div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 24 }}>
+              {jointProjects.map((project, i) => (
+                <motion.div
+                  key={project.name}
+                  initial={{ opacity: 0, y: 28 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.08 }}
+                  className="k-card"
+                  style={{ background: "#fff", borderRadius: 16, overflow: "hidden" }}
+                >
+                  <div
+                    style={{
+                      width: "100%",
+                      aspectRatio: "16/9",
+                      background: project.bg,
+                    }}
+                  />
+                  <div style={{ padding: "20px 24px 24px" }}>
+                    <p className="k-body" style={{ color: "var(--fg1)", fontWeight: 700, marginBottom: 8 }}>
+                      {project.name}
+                    </p>
+                    <span
+                      style={{
+                        display: "inline-block",
+                        padding: "4px 12px",
+                        borderRadius: 20,
+                        fontSize: 12,
+                        fontFamily: "var(--mono)",
+                        background: project.chip === "crimson" ? "rgba(173,19,53,0.1)" : "rgba(42,63,95,0.1)",
+                        color: project.chip === "crimson" ? "var(--crimson)" : "var(--accent-cool)",
+                      }}
+                    >
+                      {project.collaborator}
+                    </span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── 4. Philosophy ──────────────────────────────────────────── */}
+        <section style={{ background: "var(--ink)", padding: "96px 0", textAlign: "center" }}>
+          <div className="wrap" style={{ maxWidth: 780 }}>
+            <motion.div
+              initial={{ opacity: 0, y: 32 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+            >
+              <blockquote
+                style={{
+                  fontFamily: "var(--serif-display)",
+                  fontSize: "clamp(28px, 4vw, 48px)",
+                  fontStyle: "italic",
+                  color: "var(--fg-on-ink)",
+                  lineHeight: 1.25,
+                  marginBottom: 32,
+                }}
+              >
+                &ldquo;Great work happens at the intersection of disciplines.&rdquo;
+              </blockquote>
+              <p className="k-body-l" style={{ color: "var(--fg-on-ink-2)", maxWidth: 600, margin: "0 auto" }}>
+                Every partnership the Kissa enters is built on genuine creative alignment — a shared hunger to push past the obvious and make something that stands apart. When a brand strategist sits beside an architect, the unexpected becomes possible.
               </p>
             </motion.div>
-          ) : (
-            <motion.form
+          </div>
+        </section>
+
+        {/* ── 5. Become a Collaborator ───────────────────────────────── */}
+        <section style={{ background: "var(--paper)", padding: "96px 0" }}>
+          <div className="wrap" style={{ maxWidth: 640 }}>
+            <motion.div
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.15 }}
-              onSubmit={handleSubmit}
-              className="bg-[#1A1A1A] rounded-2xl border border-white/5 p-8 flex flex-col gap-5"
+              transition={{ duration: 0.6 }}
+              style={{ marginBottom: 40 }}
             >
-              {/* Name */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-bold tracking-widest uppercase text-[#F5F5F5]/50">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  required
-                  value={form.name}
-                  onChange={handleChange}
-                  placeholder="Your full name"
-                  className="bg-[#0A0A0A] border border-white/10 rounded-xl px-4 py-3 text-sm text-[#F5F5F5] placeholder:text-[#F5F5F5]/25 focus:outline-none focus:border-[#FFD700]/50 transition-colors"
-                />
-              </div>
+              <p className="k-eyebrow" style={{ color: "var(--fg3)", marginBottom: 12 }}>Work with us</p>
+              <h2 className="k-h2" style={{ color: "var(--fg1)", marginBottom: 16 }}>Become a collaborator</h2>
+              <p className="k-body" style={{ color: "var(--fg2)" }}>
+                We&apos;re always open to conversations with studios, firms, and creatives who want to build something together.
+              </p>
+            </motion.div>
 
-              {/* Organization */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-bold tracking-widest uppercase text-[#F5F5F5]/50">
-                  Organization
-                </label>
-                <input
-                  type="text"
-                  name="organization"
-                  required
-                  value={form.organization}
-                  onChange={handleChange}
-                  placeholder="Your studio, firm, or company"
-                  className="bg-[#0A0A0A] border border-white/10 rounded-xl px-4 py-3 text-sm text-[#F5F5F5] placeholder:text-[#F5F5F5]/25 focus:outline-none focus:border-[#FFD700]/50 transition-colors"
-                />
-              </div>
-
-              {/* Collaboration Type */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-bold tracking-widest uppercase text-[#F5F5F5]/50">
-                  Collaboration Type
-                </label>
-                <select
-                  name="collaborationType"
-                  required
-                  value={form.collaborationType}
-                  onChange={handleChange}
-                  className="bg-[#0A0A0A] border border-white/10 rounded-xl px-4 py-3 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#FFD700]/50 transition-colors appearance-none"
+            <AnimatePresence mode="wait">
+              {submitted ? (
+                <motion.div
+                  key="success"
+                  initial={{ opacity: 0, scale: 0.96 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  style={{
+                    background: "rgba(173,19,53,0.06)",
+                    border: "1.5px solid var(--crimson)",
+                    borderRadius: 20,
+                    padding: 48,
+                    textAlign: "center",
+                  }}
                 >
-                  <option value="" disabled>
-                    Select a type
-                  </option>
-                  {collaborationTypes.map((type) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
+                  <CheckCircle2 size={40} style={{ color: "var(--crimson)", margin: "0 auto 16px" }} />
+                  <h3 className="k-h3" style={{ color: "var(--fg1)", marginBottom: 8 }}>Message sent!</h3>
+                  <p className="k-body" style={{ color: "var(--fg2)" }}>
+                    We&apos;ll be in touch soon to explore how we can work together.
+                  </p>
+                </motion.div>
+              ) : (
+                <motion.form
+                  key="form"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  onSubmit={handleSubmit}
+                  style={{ display: "flex", flexDirection: "column", gap: 24 }}
+                >
+                  {[
+                    { label: "Name", name: "name", type: "text", placeholder: "Your full name" },
+                    { label: "Organization", name: "organization", type: "text", placeholder: "Your studio, firm, or company" },
+                  ].map((field) => (
+                    <div key={field.name}>
+                      <label className="k-eyebrow" style={{ color: "var(--fg3)", display: "block", marginBottom: 8 }}>
+                        {field.label}
+                      </label>
+                      <input
+                        type={field.type}
+                        name={field.name}
+                        required
+                        value={(form as Record<string, string>)[field.name]}
+                        onChange={handleChange}
+                        placeholder={field.placeholder}
+                        style={{
+                          width: "100%",
+                          borderBottom: "1.5px solid var(--line)",
+                          background: "transparent",
+                          padding: "12px 0",
+                          fontSize: 17,
+                          color: "var(--fg1)",
+                          outline: "none",
+                          fontFamily: "var(--sans)",
+                          boxSizing: "border-box",
+                        }}
+                        onFocus={(e) => (e.target.style.borderBottomColor = "var(--crimson)")}
+                        onBlur={(e) => (e.target.style.borderBottomColor = "var(--line)")}
+                      />
+                    </div>
                   ))}
-                </select>
-              </div>
 
-              {/* Message */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-bold tracking-widest uppercase text-[#F5F5F5]/50">
-                  Message
-                </label>
-                <textarea
-                  name="message"
-                  required
-                  rows={5}
-                  value={form.message}
-                  onChange={handleChange}
-                  placeholder="Tell us about your work and what you have in mind..."
-                  className="bg-[#0A0A0A] border border-white/10 rounded-xl px-4 py-3 text-sm text-[#F5F5F5] placeholder:text-[#F5F5F5]/25 focus:outline-none focus:border-[#FFD700]/50 transition-colors resize-none"
-                />
-              </div>
+                  <div>
+                    <label className="k-eyebrow" style={{ color: "var(--fg3)", display: "block", marginBottom: 8 }}>
+                      Collaboration type
+                    </label>
+                    <select
+                      name="collaborationType"
+                      required
+                      value={form.collaborationType}
+                      onChange={handleChange}
+                      style={{
+                        width: "100%",
+                        borderBottom: "1.5px solid var(--line)",
+                        background: "transparent",
+                        padding: "12px 0",
+                        fontSize: 17,
+                        color: "var(--fg1)",
+                        outline: "none",
+                        fontFamily: "var(--sans)",
+                        appearance: "none",
+                        boxSizing: "border-box",
+                      }}
+                    >
+                      <option value="" disabled>Select a type</option>
+                      {collaborationTypes.map((t) => (
+                        <option key={t} value={t}>{t}</option>
+                      ))}
+                    </select>
+                  </div>
 
-              <button
-                type="submit"
-                className="mt-2 flex items-center justify-center gap-2 w-full py-4 rounded-full font-black text-sm text-[#0A0A0A] transition-opacity hover:opacity-85 active:scale-95"
-                style={{
-                  background: "linear-gradient(135deg, #FFD700 0%, #FF6B35 60%, #FF3CAC 100%)",
-                }}
-              >
-                <Send size={15} />
-                Send Message
-              </button>
-            </motion.form>
-          )}
-        </div>
-      </section>
-    </main>
+                  <div>
+                    <label className="k-eyebrow" style={{ color: "var(--fg3)", display: "block", marginBottom: 8 }}>
+                      Message
+                    </label>
+                    <textarea
+                      name="message"
+                      required
+                      rows={5}
+                      value={form.message}
+                      onChange={handleChange}
+                      placeholder="Tell us about your work and what you have in mind..."
+                      style={{
+                        width: "100%",
+                        borderBottom: "1.5px solid var(--line)",
+                        background: "transparent",
+                        padding: "12px 0",
+                        fontSize: 17,
+                        color: "var(--fg1)",
+                        outline: "none",
+                        fontFamily: "var(--sans)",
+                        resize: "none",
+                        boxSizing: "border-box",
+                      }}
+                      onFocus={(e) => (e.target.style.borderBottomColor = "var(--crimson)")}
+                      onBlur={(e) => (e.target.style.borderBottomColor = "var(--line)")}
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 8 }}
+                  >
+                    <Send size={15} />
+                    Send message
+                  </button>
+                </motion.form>
+              )}
+            </AnimatePresence>
+          </div>
+        </section>
+
+      </main>
+      <Footer />
+    </>
   );
 }
