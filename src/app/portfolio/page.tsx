@@ -2,44 +2,38 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image";
+import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-const CATEGORIES = ["All", "Branding", "Food & Beverage", "Health & Wellness", "Tech & Finance", "Social & Lifestyle"];
-
 const PROJECTS = [
-  { slug: "fyture", name: "FYTURE", category: "Branding", img: "/projects/fyture.png" },
-  { slug: "mezze", name: "Mezze", category: "Food & Beverage", img: "/projects/mezze.png" },
-  { slug: "vs", name: "VS", category: "Branding", img: "/projects/vs.png" },
-  { slug: "tecfides", name: "Tecfides", category: "Tech & Finance", img: "/projects/tecfides.png" },
-  { slug: "natura", name: "Natura", category: "Social & Lifestyle", img: "/projects/natura.png" },
-  { slug: "hearing-ear-care", name: "Hearing Ear Care", category: "Health & Wellness", img: "/projects/hearing-ear-care.png" },
-  { slug: "asbc", name: "ASBC", category: "Tech & Finance", img: "/projects/asbc.png" },
-  { slug: "scribbles", name: "Scribbles", category: "Branding", img: "/projects/scribbles.png" },
-  { slug: "kere-pedals", name: "Kere Pedals", category: "Branding", img: "/projects/kere-pedals.png" },
-  { slug: "hyderabadi-dhaba", name: "Hyderabadi Dhaba", category: "Food & Beverage", img: "/projects/hyderabadi-dhaba.png" },
-  { slug: "travel-now", name: "Travel Now", category: "Social & Lifestyle", img: "/projects/travel-now.png" },
-  { slug: "gurukripa", name: "Gurukripa", category: "Food & Beverage", img: "/projects/gurukripa.png" },
-  { slug: "lyfsense", name: "Lyfsense", category: "Health & Wellness", img: "/projects/lyfsense.png" },
-  { slug: "chocolate-dairies", name: "Chocolate Dairies", category: "Food & Beverage", img: "/projects/chocolate-dairies.png" },
-  { slug: "pranik", name: "Pranik", category: "Health & Wellness", img: "/projects/pranik.png" },
-  { slug: "armario", name: "Armario", category: "Branding", img: "/projects/armario.png" },
-  { slug: "espoir-cube", name: "Espoir Cube", category: "Branding", img: "/projects/espoir-cube.png" },
-  { slug: "dip-n-melt", name: "Dip n Melt", category: "Food & Beverage", img: "/projects/dip-n-melt.png" },
-  { slug: "alive", name: "Alive", category: "Social & Lifestyle", img: "/projects/alive.png" },
-  { slug: "sorbete", name: "Sorbete", category: "Food & Beverage", img: "/projects/sorbete.jpg" },
-  { slug: "eqmed", name: "EQMed", category: "Health & Wellness", img: "/projects/eqmed.png" },
-  { slug: "hayatibb", name: "Hayatibb", category: "Health & Wellness", img: "/projects/hayatibb.png" },
-  { slug: "tmed", name: "Tmed", category: "Tech & Finance", img: "/projects/tmed.png" },
+  { slug: "fyture", name: "FYTURE", category: "Branding", canvaUrl: "https://www.canva.com/d/TT5LBPgwQwxGJOZ", bg: "linear-gradient(135deg,#1C0810 0%,#3A0F1E 50%,#1C0810)" },
+  { slug: "mezze", name: "Mezze", category: "Food & Beverage", canvaUrl: "https://www.canva.com/d/4e8NxvP6rD4weV7", bg: "linear-gradient(135deg,#0F1A10 0%,#1E3A20 50%,#0F1A10)" },
+  { slug: "vs", name: "VS", category: "Branding", canvaUrl: "https://www.canva.com/d/lzVUP4x-0_j4Giu", bg: "linear-gradient(135deg,#10100F 0%,#2A2010 50%,#10100F)" },
+  { slug: "tecfides", name: "Tecfides", category: "Tech & Finance", canvaUrl: "https://www.canva.com/d/uAp3r5ONIJyRW2t", bg: "linear-gradient(135deg,#0F141A 0%,#1A2A3A 50%,#0F141A)" },
+  { slug: "natura", name: "Natura", category: "Wellness & Lifestyle", canvaUrl: "https://www.canva.com/d/5atF6nUAu2myTup", bg: "linear-gradient(135deg,#101508 0%,#243010 50%,#101508)" },
+  { slug: "hearing-ear-care", name: "Hearing Ear Care", category: "Health", canvaUrl: "https://www.canva.com/d/_XDPj1ASuUmRVy9", bg: "linear-gradient(135deg,#0A1018 0%,#142030 50%,#0A1018)" },
+  { slug: "asbc", name: "ASBC", category: "Tech & Finance", canvaUrl: "https://www.canva.com/d/exxmAdW_9dBXBMu", bg: "linear-gradient(135deg,#0F1218 0%,#1E2440 50%,#0F1218)" },
+  { slug: "scribbles", name: "Scribbles", category: "Branding", canvaUrl: "https://www.canva.com/d/y4ZGuierNsuJMza", bg: "linear-gradient(135deg,#18100F 0%,#3A2010 50%,#18100F)" },
+  { slug: "kere-pedals", name: "Kere Pedals", category: "Branding", canvaUrl: "https://www.canva.com/d/QyGODGlg6dG5SDF", bg: "linear-gradient(135deg,#100F18 0%,#20103A 50%,#100F18)" },
+  { slug: "hyderabadi-dhaba", name: "Hyderabadi Dhaba", category: "Food & Beverage", canvaUrl: "https://www.canva.com/d/MI7BarHBxPEkBaS", bg: "linear-gradient(135deg,#180E08 0%,#3A2010 50%,#180E08)" },
+  { slug: "travel-now", name: "Travel Now", category: "Wellness & Lifestyle", canvaUrl: "https://www.canva.com/d/c_eEfVej9so5gqu", bg: "linear-gradient(135deg,#081018 0%,#10283A 50%,#081018)" },
+  { slug: "gurukripa", name: "Gurukripa", category: "Food & Beverage", canvaUrl: "https://www.canva.com/d/dhxLE02h2RJJRJE", bg: "linear-gradient(135deg,#180F0A 0%,#3A2015 50%,#180F0A)" },
+  { slug: "lyfsense", name: "Lyfsense", category: "Health", canvaUrl: "https://www.canva.com/d/GqmEIxZ6C6ned0v", bg: "linear-gradient(135deg,#0F1814 0%,#1E3828 50%,#0F1814)" },
+  { slug: "chocolate-dairies", name: "Chocolate Dairies", category: "Food & Beverage", canvaUrl: "https://www.canva.com/d/pbq3mWpSOb8pdlK", bg: "linear-gradient(135deg,#180C08 0%,#3A1810 50%,#180C08)" },
+  { slug: "pranik", name: "Pranik", category: "Health", canvaUrl: "https://www.canva.com/d/9-FsZ9v_Njndj88", bg: "linear-gradient(135deg,#0F1A10 0%,#204020 50%,#0F1A10)" },
+  { slug: "armario", name: "Armario", category: "Branding", canvaUrl: "https://www.canva.com/d/ZO04RqVk5EkiRCs", bg: "linear-gradient(135deg,#18100F 0%,#40201A 50%,#18100F)" },
+  { slug: "espoir-cube", name: "Espoir Cube", category: "Branding", canvaUrl: "https://www.canva.com/d/psdC61XxI9NI2Zu", bg: "linear-gradient(135deg,#100F18 0%,#2A2040 50%,#100F18)" },
+  { slug: "dip-n-melt", name: "Dip n Melt", category: "Food & Beverage", canvaUrl: "https://www.canva.com/d/GvzfZGfDu3pj4ln", bg: "linear-gradient(135deg,#181008 0%,#3A280A 50%,#181008)" },
+  { slug: "alive", name: "Alive", category: "Wellness & Lifestyle", canvaUrl: "https://www.canva.com/d/YX8nZA1NEv7FyP6", bg: "linear-gradient(135deg,#0A1810 0%,#10381A 50%,#0A1810)" },
+  { slug: "sorbete", name: "Sorbete", category: "Food & Beverage", canvaUrl: "https://www.canva.com/d/h0dM5G2nJ8Txp5m", bg: "linear-gradient(135deg,#180D08 0%,#402015 50%,#180D08)" },
+  { slug: "eqmed", name: "EQMed", category: "Health", canvaUrl: "https://www.canva.com/d/yUQQzCWSNc8-yO8", bg: "linear-gradient(135deg,#081018 0%,#10243A 50%,#081018)" },
+  { slug: "hayatibb", name: "Hayatibb", category: "Health", canvaUrl: "https://www.canva.com/d/Zj2mWu5_8FKn9iM", bg: "linear-gradient(135deg,#10100A 0%,#2A2A10 50%,#10100A)" },
+  { slug: "tmed", name: "Tmed", category: "Tech & Finance", canvaUrl: "https://www.canva.com/d/zRQbUcH4o-74Giq", bg: "linear-gradient(135deg,#0F1418 0%,#1E2840 50%,#0F1418)" },
 ];
 
-const TESTIMONIALS = [
-  { quote: "They didn't just design our brand — they found the story we'd been trying to tell for years.", name: "Sarah K.", company: "Lyfsense", initials: "SK" },
-  { quote: "The Kissa turned our concept into something people feel before they understand it. Incredible work.", name: "Marco V.", company: "Espoir Cube", initials: "MV" },
-  { quote: "Professional, bold, and genuinely fun to work with. They anticipate what the brand needs.", name: "Amara O.", company: "Natura", initials: "AO" },
-];
+const ALL_CATEGORIES = ["All", ...Array.from(new Set(PROJECTS.map((p) => p.category)))];
 
 export default function PortfolioPage() {
   const [selected, setSelected] = useState("All");
@@ -57,11 +51,31 @@ export default function PortfolioPage() {
               <span className="k-eyebrow on-ink" style={{ marginBottom: 20, display: "inline-flex" }}>
                 <span className="pa" /> Selected work
               </span>
-              <h1 style={{ fontFamily: "var(--serif-display)", fontWeight: 700, fontSize: "clamp(48px,7vw,84px)", lineHeight: 1.0, letterSpacing: "-0.012em", color: "#fff", margin: "16px 0 0", maxWidth: "16ch" }}>
-                Our unforgettable{" "}
-                <em className="italic-crimson" style={{ fontStyle: "italic" }}>kissas.</em>
+              <h1
+                style={{
+                  fontFamily: "var(--serif-display)",
+                  fontWeight: 700,
+                  fontSize: "clamp(56px,8vw,96px)",
+                  lineHeight: 1.0,
+                  letterSpacing: "-0.012em",
+                  color: "#fff",
+                  margin: "16px 0 0",
+                  maxWidth: "14ch",
+                }}
+              >
+                Our{" "}
+                <em style={{ fontStyle: "italic", color: "var(--crimson)" }}>kissas.</em>
               </h1>
-              <p className="k-body-l" style={{ color: "var(--fg-on-ink-2)", marginTop: 24, maxWidth: "48ch" }}>
+              <p
+                style={{
+                  fontFamily: "var(--sans)",
+                  fontSize: "clamp(16px,2vw,18px)",
+                  lineHeight: 1.65,
+                  color: "var(--fg-on-ink-2)",
+                  marginTop: 24,
+                  maxWidth: "48ch",
+                }}
+              >
                 Every project is a story. Here are ours — told in frames, light, and motion.
               </p>
             </motion.div>
@@ -69,9 +83,18 @@ export default function PortfolioPage() {
         </section>
 
         {/* Filter Bar */}
-        <div style={{ background: "var(--paper)", position: "sticky", top: 0, zIndex: 40, borderBottom: "1px solid var(--line)", padding: "16px 0" }}>
+        <div
+          style={{
+            background: "var(--paper)",
+            position: "sticky",
+            top: 0,
+            zIndex: 40,
+            borderBottom: "1px solid var(--line)",
+            padding: "16px 0",
+          }}
+        >
           <div className="wrap" style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            {CATEGORIES.map((cat) => (
+            {ALL_CATEGORIES.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setSelected(cat)}
@@ -97,11 +120,15 @@ export default function PortfolioPage() {
         </div>
 
         {/* Portfolio Grid */}
-        <section style={{ background: "var(--paper)", padding: "64px 0 96px" }}>
+        <section style={{ background: "var(--paper)", padding: "80px 0" }}>
           <div className="wrap">
             <motion.div
               layout
-              style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: 24 }}
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))",
+                gap: 24,
+              }}
             >
               <AnimatePresence mode="popLayout">
                 {filtered.map((project) => (
@@ -112,62 +139,131 @@ export default function PortfolioPage() {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
                     transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                    whileHover={{ y: -6, boxShadow: "0 24px 48px rgba(22,16,15,0.25)" }}
                     style={{
-                      background: "#fff",
-                      borderRadius: "var(--r-lg)",
-                      border: "1px solid var(--line)",
-                      boxShadow: "var(--sh-1)",
+                      borderRadius: 20,
                       overflow: "hidden",
+                      cursor: "pointer",
                       position: "relative",
+                      background: "#fff",
                     }}
-                    whileHover={{ y: -4, boxShadow: "var(--sh-3)" }}
                   >
-                    {/* Image */}
-                    <div style={{ position: "relative", aspectRatio: "4/3", overflow: "hidden", background: "var(--bone)" }}>
-                      <Image
-                        src={project.img}
-                        alt={project.name}
-                        fill
-                        style={{ objectFit: "cover" }}
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      />
-                      {/* Hover overlay */}
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        whileHover={{ opacity: 1 }}
+                    {/* Card image area */}
+                    <div
+                      style={{
+                        aspectRatio: "4/3",
+                        background: project.bg,
+                        position: "relative",
+                        overflow: "hidden",
+                      }}
+                    >
+                      {/* Noise-like radial overlay for texture */}
+                      <div
                         style={{
                           position: "absolute",
                           inset: 0,
-                          background: "linear-gradient(to bottom, rgba(22,16,15,0.2) 0%, rgba(22,16,15,0.85) 100%)",
+                          background:
+                            "radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.04) 0%, transparent 60%), radial-gradient(ellipse at 70% 80%, rgba(255,255,255,0.03) 0%, transparent 50%)",
+                          pointerEvents: "none",
+                        }}
+                      />
+                      {/* Bottom gradient + text */}
+                      <div
+                        style={{
+                          position: "absolute",
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          height: "60%",
+                          background: "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.8) 100%)",
                           display: "flex",
-                          alignItems: "flex-end",
-                          padding: 20,
+                          flexDirection: "column",
+                          justifyContent: "flex-end",
+                          padding: "0 20px 18px",
                         }}
                       >
-                        <span style={{ color: "#fff", fontFamily: "var(--sans)", fontWeight: 600, fontSize: 14, display: "inline-flex", alignItems: "center", gap: 8 }}>
-                          View case study <span className="pa" />
-                        </span>
-                      </motion.div>
+                        <div
+                          style={{
+                            fontFamily: "var(--mono)",
+                            fontSize: 11,
+                            fontWeight: 400,
+                            color: "rgba(255,255,255,0.65)",
+                            textTransform: "uppercase",
+                            letterSpacing: "0.12em",
+                            marginBottom: 6,
+                          }}
+                        >
+                          {project.category}
+                        </div>
+                        <div
+                          style={{
+                            fontFamily: "var(--serif-display)",
+                            fontSize: 22,
+                            fontWeight: 700,
+                            color: "#fff",
+                            lineHeight: 1.15,
+                            letterSpacing: "-0.01em",
+                          }}
+                        >
+                          {project.name}
+                        </div>
+                        <a
+                          href={project.canvaUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                            gap: 5,
+                            marginTop: 10,
+                            fontFamily: "var(--sans)",
+                            fontSize: 13,
+                            fontWeight: 600,
+                            color: "rgba(255,255,255,0.75)",
+                            textDecoration: "none",
+                            transition: "color 0.2s",
+                          }}
+                          onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
+                          onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.75)")}
+                        >
+                          View project <span style={{ fontSize: 12 }}>→</span>
+                        </a>
+                      </div>
                     </div>
 
-                    {/* Meta */}
-                    <div style={{ padding: "16px 20px 20px" }}>
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
-                        <span style={{ fontFamily: "var(--sans)", fontWeight: 700, fontSize: 17, color: "var(--fg1)" }}>{project.name}</span>
-                        <span style={{
+                    {/* Bottom meta row */}
+                    <div
+                      style={{
+                        background: "#fff",
+                        padding: "14px 20px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        gap: 8,
+                      }}
+                    >
+                      <span
+                        style={{
                           fontFamily: "var(--sans)",
-                          fontSize: 12,
-                          fontWeight: 600,
-                          color: "var(--crimson)",
-                          background: "var(--bone)",
-                          borderRadius: "var(--r-pill)",
-                          padding: "4px 10px",
-                          whiteSpace: "nowrap",
-                          flexShrink: 0,
-                        }}>
-                          {project.category}
-                        </span>
-                      </div>
+                          fontWeight: 700,
+                          fontSize: 15,
+                          color: "var(--fg1)",
+                          letterSpacing: "-0.005em",
+                        }}
+                      >
+                        {project.name}
+                      </span>
+                      <a
+                        href={project.canvaUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        aria-label={`View ${project.name} on Canva`}
+                        style={{ color: "var(--fg3)", display: "flex", alignItems: "center", flexShrink: 0 }}
+                      >
+                        <ExternalLink size={14} />
+                      </a>
                     </div>
                   </motion.div>
                 ))}
@@ -176,64 +272,29 @@ export default function PortfolioPage() {
 
             {filtered.length === 0 && (
               <div style={{ textAlign: "center", padding: "80px 0", color: "var(--fg3)" }}>
-                <p className="k-body">No projects in this category yet.</p>
+                <p style={{ fontFamily: "var(--sans)", fontSize: 16 }}>No projects in this category yet.</p>
               </div>
             )}
-          </div>
-        </section>
-
-        {/* Testimonials */}
-        <section style={{ background: "var(--bone)", padding: "96px 0" }}>
-          <div className="wrap">
-            <span className="k-eyebrow" style={{ marginBottom: 16, display: "inline-flex" }}>
-              <span className="pa" /> Kind words
-            </span>
-            <h2 className="k-h2" style={{ marginBottom: 56, marginTop: 12 }}>What our storytellers say.</h2>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 24 }}>
-              {TESTIMONIALS.map((t, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-60px" }}
-                  transition={{ duration: 0.6, delay: i * 0.1 }}
-                  style={{
-                    background: "#fff",
-                    borderRadius: "var(--r-lg)",
-                    borderLeft: "4px solid var(--crimson)",
-                    padding: 32,
-                    boxShadow: "var(--sh-1)",
-                  }}
-                >
-                  <p style={{ fontFamily: "var(--serif-display)", fontStyle: "italic", fontWeight: 500, fontSize: 17, lineHeight: 1.6, color: "var(--fg1)", margin: "0 0 24px" }}>
-                    &ldquo;{t.quote}&rdquo;
-                  </p>
-                  <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
-                    <div style={{ width: 40, height: 40, borderRadius: "50%", background: "var(--crimson)", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 15, flexShrink: 0 }}>
-                      {t.initials}
-                    </div>
-                    <div>
-                      <div style={{ fontFamily: "var(--sans)", fontWeight: 700, fontSize: 15, color: "var(--fg1)" }}>{t.name}</div>
-                      <div style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--fg3)", textTransform: "uppercase", letterSpacing: "0.08em" }}>{t.company}</div>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
           </div>
         </section>
 
         {/* CTA */}
         <section style={{ background: "var(--ink)", padding: "96px 0", textAlign: "center" }}>
           <div className="wrap" style={{ maxWidth: 720 }}>
-            <span className="k-eyebrow on-ink" style={{ marginBottom: 16, display: "inline-flex" }}>
-              <span className="pa" /> Start a project
-            </span>
-            <h2 style={{ fontFamily: "var(--serif-display)", fontWeight: 700, fontSize: "clamp(36px,5vw,60px)", color: "#fff", margin: "12px 0 40px", lineHeight: 1.1 }}>
+            <h2
+              style={{
+                fontFamily: "var(--serif-display)",
+                fontWeight: 700,
+                fontSize: "clamp(36px,5vw,60px)",
+                color: "#fff",
+                margin: "0 0 40px",
+                lineHeight: 1.1,
+              }}
+            >
               Have a project in mind?
             </h2>
             <Link href="/contact" className="btn btn-primary" style={{ fontSize: 16, padding: "16px 32px" }}>
-              Start a conversation <span className="pa" />
+              Start a conversation →
             </Link>
           </div>
         </section>
