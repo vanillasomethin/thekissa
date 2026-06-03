@@ -1,8 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { Mail, Phone, MapPin, AtSign, Globe, Link2, MessageCircle, CheckCircle2, Send, Clock } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  AtSign,
+  Linkedin,
+  PlayCircle,
+  Clock,
+  CheckCircle2,
+  Send,
+} from "lucide-react";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -14,37 +26,35 @@ type FormState = {
   message: string;
 };
 
-const inquiryTypes = ["General", "Project", "Partnership", "Press"];
+const inquiryTypes = ["General", "Project Brief", "Partnership", "Press"];
 
-const socialLinks = [
-  {
-    label: "Instagram",
-    href: "https://instagram.com/kissamedia",
-    icon: <AtSign size={20} />,
-  },
-  {
-    label: "Twitter / X",
-    href: "https://twitter.com/kissamedia",
-    icon: <MessageCircle size={20} />,
-  },
-  {
-    label: "LinkedIn",
-    href: "https://linkedin.com/company/kissamedia",
-    icon: <Link2 size={20} />,
-  },
-  {
-    label: "YouTube",
-    href: "https://youtube.com/@kissamedia",
-    icon: <Globe size={20} />,
-  },
-];
+// ─── Shared input style ───────────────────────────────────────────────────────
 
-// ─── Input shared style ───────────────────────────────────────────────────────
+const inputStyle: React.CSSProperties = {
+  width: "100%",
+  borderBottom: "1.5px solid var(--line)",
+  borderTop: "none",
+  borderLeft: "none",
+  borderRight: "none",
+  background: "transparent",
+  padding: "12px 0",
+  fontSize: 17,
+  color: "var(--fg1)",
+  outline: "none",
+  fontFamily: "var(--sans)",
+  boxSizing: "border-box",
+};
 
-const inputClass =
-  "bg-[#111111] border border-white/10 rounded-xl px-4 py-3 text-sm text-[#F5F5F5] placeholder:text-[#F5F5F5]/25 focus:outline-none focus:border-[#FFD700]/50 transition-colors w-full";
-
-const labelClass = "text-xs font-bold tracking-widest uppercase text-[#F5F5F5]/45 mb-1.5 block";
+function focusIn(
+  e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+) {
+  e.target.style.borderBottomColor = "var(--crimson)";
+}
+function focusOut(
+  e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+) {
+  e.target.style.borderBottomColor = "var(--line)";
+}
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
@@ -70,321 +80,428 @@ export default function ContactPage() {
   }
 
   return (
-    <main className="bg-[#0A0A0A] text-[#F5F5F5] overflow-x-hidden min-h-screen">
-      {/* ── 1. Hero ─────────────────────────────────────────────────────── */}
-      <section className="relative pt-32 pb-20 px-6 text-center overflow-hidden">
-        {/* Orbs */}
-        <motion.div
-          className="absolute rounded-full blur-3xl opacity-15 pointer-events-none"
-          style={{ background: "#FFD700", width: 560, height: 560, left: "-15%", top: "-20%" }}
-          animate={{ scale: [1, 1.15, 1] }}
-          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute rounded-full blur-3xl opacity-10 pointer-events-none"
-          style={{ background: "#FF3CAC", width: 440, height: 440, right: "-8%", top: "5%" }}
-          animate={{ scale: [1, 1.2, 1] }}
-          transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 2.5 }}
-        />
+    <>
+      <Navbar />
+      <main style={{ background: "var(--paper)", color: "var(--fg1)" }}>
 
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="relative z-10 max-w-3xl mx-auto"
+        {/* ── 1. Hero ─────────────────────────────────────────────────── */}
+        <section
+          style={{
+            background: "var(--ink)",
+            padding: "120px 0",
+            textAlign: "center",
+          }}
         >
-          <p className="text-xs font-bold tracking-widest uppercase text-[#FFD700] mb-4">
-            Get in Touch
-          </p>
-          <h1 className="text-6xl md:text-7xl font-black leading-none tracking-tight mb-6">
-            <span className="gradient-text">Let&apos;s Create Together</span>
-          </h1>
-          <p className="text-lg text-[#F5F5F5]/65 leading-relaxed max-w-xl mx-auto">
-            Got a project in mind, a brand to build, or just a wild idea? We want to hear it. Drop
-            us a message and let&apos;s figure out what we can make together.
-          </p>
-        </motion.div>
-      </section>
+          <div className="wrap">
+            <motion.div
+              initial={{ opacity: 0, y: 32 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.75 }}
+            >
+              <p
+                className="k-eyebrow"
+                style={{ color: "var(--fg-on-ink-2)", marginBottom: 20 }}
+              >
+                Get in touch
+              </p>
+              <h1
+                className="k-h1"
+                style={{ color: "var(--fg-on-ink)", maxWidth: 680, margin: "0 auto" }}
+              >
+                Let&apos;s create{" "}
+                <em className="italic-crimson">together.</em>
+              </h1>
+            </motion.div>
+          </div>
+        </section>
 
-      {/* ── 2. Two-column: Form + Details ──────────────────────────────── */}
-      <section className="px-6 pb-24 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
-          {/* ── Left: Contact Form ───────────────────────────────────────── */}
-          <motion.div
-            initial={{ opacity: 0, x: -32 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-          >
-            <h2 className="text-2xl font-black mb-7 tracking-tight">Send a Message</h2>
-
-            {submitted ? (
+        {/* ── 2. Two-column: Form + Details ──────────────────────────── */}
+        <section style={{ background: "var(--paper)", padding: "96px 0" }}>
+          <div className="wrap">
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "60fr 40fr",
+                gap: 64,
+                alignItems: "start",
+              }}
+            >
+              {/* ── Left: Form ─────────────────────────────────────────── */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.96 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="bg-[#1A1A1A] rounded-2xl border border-[#FFD700]/25 p-10 text-center"
+                initial={{ opacity: 0, x: -32 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7 }}
               >
-                <CheckCircle2 size={48} className="text-[#FFD700] mx-auto mb-4" />
-                <h3 className="text-2xl font-black mb-2">Message received!</h3>
-                <p className="text-[#F5F5F5]/55 text-sm leading-relaxed max-w-xs mx-auto">
-                  We typically respond within one business day. Looking forward to the
-                  conversation.
-                </p>
+                <h3
+                  className="k-h3"
+                  style={{ color: "var(--fg1)", marginBottom: 40 }}
+                >
+                  Start your project
+                </h3>
+
+                <AnimatePresence mode="wait">
+                  {submitted ? (
+                    <motion.div
+                      key="success"
+                      initial={{ opacity: 0, scale: 0.96 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      style={{
+                        background: "rgba(173,19,53,0.06)",
+                        border: "1.5px solid var(--crimson)",
+                        borderRadius: 20,
+                        padding: 48,
+                        textAlign: "center",
+                      }}
+                    >
+                      <CheckCircle2
+                        size={40}
+                        style={{ color: "var(--crimson)", margin: "0 auto 16px" }}
+                      />
+                      <h3
+                        className="k-h3"
+                        style={{ color: "var(--fg1)", marginBottom: 8 }}
+                      >
+                        Message received!
+                      </h3>
+                      <p className="k-body" style={{ color: "var(--fg2)" }}>
+                        We typically respond within one business day. Looking forward
+                        to the conversation.
+                      </p>
+                    </motion.div>
+                  ) : (
+                    <motion.form
+                      key="form"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      onSubmit={handleSubmit}
+                      style={{ display: "flex", flexDirection: "column", gap: 28 }}
+                    >
+                      {[
+                        {
+                          label: "Name",
+                          name: "name",
+                          type: "text",
+                          placeholder: "Your full name",
+                        },
+                        {
+                          label: "Email",
+                          name: "email",
+                          type: "email",
+                          placeholder: "you@example.com",
+                        },
+                        {
+                          label: "Phone",
+                          name: "phone",
+                          type: "tel",
+                          placeholder: "+254 700 000 000",
+                        },
+                      ].map((field) => (
+                        <div key={field.name}>
+                          <label
+                            className="k-eyebrow"
+                            style={{
+                              color: "var(--fg3)",
+                              display: "block",
+                              marginBottom: 8,
+                            }}
+                          >
+                            {field.label}
+                          </label>
+                          <input
+                            type={field.type}
+                            name={field.name}
+                            required={field.name !== "phone"}
+                            value={(form as Record<string, string>)[field.name]}
+                            onChange={handleChange}
+                            placeholder={field.placeholder}
+                            style={inputStyle}
+                            onFocus={focusIn}
+                            onBlur={focusOut}
+                          />
+                        </div>
+                      ))}
+
+                      <div>
+                        <label
+                          className="k-eyebrow"
+                          style={{
+                            color: "var(--fg3)",
+                            display: "block",
+                            marginBottom: 8,
+                          }}
+                        >
+                          Inquiry type
+                        </label>
+                        <select
+                          name="inquiryType"
+                          required
+                          value={form.inquiryType}
+                          onChange={handleChange}
+                          style={{ ...inputStyle, appearance: "none" }}
+                          onFocus={focusIn}
+                          onBlur={focusOut}
+                        >
+                          <option value="" disabled>
+                            Select an inquiry type
+                          </option>
+                          {inquiryTypes.map((t) => (
+                            <option key={t} value={t}>
+                              {t}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div>
+                        <label
+                          className="k-eyebrow"
+                          style={{
+                            color: "var(--fg3)",
+                            display: "block",
+                            marginBottom: 8,
+                          }}
+                        >
+                          Message
+                        </label>
+                        <textarea
+                          name="message"
+                          required
+                          rows={5}
+                          value={form.message}
+                          onChange={handleChange}
+                          placeholder="Tell us about your project, idea, or question..."
+                          style={{ ...inputStyle, resize: "none" }}
+                          onFocus={focusIn}
+                          onBlur={focusOut}
+                        />
+                      </div>
+
+                      <button
+                        type="submit"
+                        className="btn btn-primary"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          gap: 8,
+                          marginTop: 8,
+                        }}
+                      >
+                        <Send size={15} />
+                        Send message
+                      </button>
+                    </motion.form>
+                  )}
+                </AnimatePresence>
               </motion.div>
-            ) : (
-              <form
-                onSubmit={handleSubmit}
-                className="bg-[#1A1A1A] rounded-2xl border border-white/5 p-8 flex flex-col gap-5"
+
+              {/* ── Right: Contact Details ────────────────────────────── */}
+              <motion.div
+                initial={{ opacity: 0, x: 32 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: 0.1 }}
+                style={{ display: "flex", flexDirection: "column", gap: 40 }}
               >
-                {/* Name */}
-                <div>
-                  <label htmlFor="name" className={labelClass}>
-                    Name
-                  </label>
-                  <input
-                    id="name"
-                    type="text"
-                    name="name"
-                    required
-                    value={form.name}
-                    onChange={handleChange}
-                    placeholder="Your full name"
-                    className={inputClass}
-                  />
-                </div>
-
-                {/* Email */}
-                <div>
-                  <label htmlFor="email" className={labelClass}>
-                    Email
-                  </label>
-                  <input
-                    id="email"
-                    type="email"
-                    name="email"
-                    required
-                    value={form.email}
-                    onChange={handleChange}
-                    placeholder="you@example.com"
-                    className={inputClass}
-                  />
-                </div>
-
-                {/* Phone */}
-                <div>
-                  <label htmlFor="phone" className={labelClass}>
-                    Phone
-                  </label>
-                  <input
-                    id="phone"
-                    type="tel"
-                    name="phone"
-                    value={form.phone}
-                    onChange={handleChange}
-                    placeholder="+254 700 000 000"
-                    className={inputClass}
-                  />
-                </div>
-
-                {/* Inquiry Type */}
-                <div>
-                  <label htmlFor="inquiryType" className={labelClass}>
-                    Inquiry Type
-                  </label>
-                  <select
-                    id="inquiryType"
-                    name="inquiryType"
-                    required
-                    value={form.inquiryType}
-                    onChange={handleChange}
-                    className={`${inputClass} appearance-none`}
-                  >
-                    <option value="" disabled>
-                      Select an inquiry type
-                    </option>
-                    {inquiryTypes.map((type) => (
-                      <option key={type} value={type}>
-                        {type}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Message */}
-                <div>
-                  <label htmlFor="message" className={labelClass}>
-                    Message
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    required
-                    rows={5}
-                    value={form.message}
-                    onChange={handleChange}
-                    placeholder="Tell us about your project, idea, or question..."
-                    className={`${inputClass} resize-none`}
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="mt-1 flex items-center justify-center gap-2 w-full py-4 rounded-full font-black text-sm text-[#0A0A0A] transition-opacity hover:opacity-85 active:scale-95"
+                {/* Contact info rows */}
+                <div
                   style={{
-                    background:
-                      "linear-gradient(135deg, #FFD700 0%, #FF6B35 60%, #FF3CAC 100%)",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 28,
                   }}
                 >
-                  <Send size={15} />
-                  Send Message
-                </button>
-              </form>
-            )}
-          </motion.div>
-
-          {/* ── Right: Contact Details + Social ──────────────────────────── */}
-          <motion.div
-            initial={{ opacity: 0, x: 32 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.1 }}
-            className="flex flex-col gap-8"
-          >
-            <div>
-              <h2 className="text-2xl font-black mb-7 tracking-tight">Contact Details</h2>
-
-              <div className="bg-[#1A1A1A] rounded-2xl border border-white/5 p-8 flex flex-col gap-6">
-                {/* Email */}
-                <a
-                  href="mailto:hello@kissamedia.co"
-                  className="flex items-start gap-4 group"
-                >
-                  <div className="w-11 h-11 rounded-xl bg-[#FFD700]/10 border border-[#FFD700]/20 flex items-center justify-center flex-shrink-0 group-hover:bg-[#FFD700]/20 transition-colors">
-                    <Mail size={18} className="text-[#FFD700]" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold tracking-widest uppercase text-[#F5F5F5]/40 mb-0.5">
-                      Email
-                    </p>
-                    <p className="text-[#F5F5F5] text-sm font-semibold group-hover:text-[#FFD700] transition-colors">
-                      hello@kissamedia.co
-                    </p>
-                  </div>
-                </a>
-
-                {/* Phone */}
-                <a
-                  href="tel:+254700000000"
-                  className="flex items-start gap-4 group"
-                >
-                  <div className="w-11 h-11 rounded-xl bg-[#FF6B35]/10 border border-[#FF6B35]/20 flex items-center justify-center flex-shrink-0 group-hover:bg-[#FF6B35]/20 transition-colors">
-                    <Phone size={18} className="text-[#FF6B35]" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold tracking-widest uppercase text-[#F5F5F5]/40 mb-0.5">
-                      Phone
-                    </p>
-                    <p className="text-[#F5F5F5] text-sm font-semibold group-hover:text-[#FFD700] transition-colors">
-                      +254 700 000 000
-                    </p>
-                  </div>
-                </a>
-
-                {/* Location */}
-                <div className="flex items-start gap-4">
-                  <div className="w-11 h-11 rounded-xl bg-[#FF3CAC]/10 border border-[#FF3CAC]/20 flex items-center justify-center flex-shrink-0">
-                    <MapPin size={18} className="text-[#FF3CAC]" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold tracking-widest uppercase text-[#F5F5F5]/40 mb-0.5">
-                      Location
-                    </p>
-                    <p className="text-[#F5F5F5] text-sm font-semibold">Nairobi, Kenya</p>
-                  </div>
+                  {[
+                    {
+                      Icon: Mail,
+                      label: "Email",
+                      value: "hello@thekissa.co",
+                      href: "mailto:hello@thekissa.co",
+                    },
+                    {
+                      Icon: Phone,
+                      label: "Phone",
+                      value: "+254 700 000 000",
+                      href: "tel:+254700000000",
+                    },
+                    {
+                      Icon: MapPin,
+                      label: "Location",
+                      value: "Nairobi, Kenya",
+                      href: undefined,
+                    },
+                    {
+                      Icon: Clock,
+                      label: "Hours",
+                      value: "Mon–Fri · 9am–6pm EAT",
+                      href: undefined,
+                    },
+                  ].map(({ Icon, label, value, href }) => {
+                    const content = (
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "flex-start",
+                          gap: 16,
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: 44,
+                            height: 44,
+                            borderRadius: 12,
+                            background: "rgba(173,19,53,0.07)",
+                            border: "1px solid rgba(173,19,53,0.15)",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            flexShrink: 0,
+                          }}
+                        >
+                          <Icon size={18} style={{ color: "var(--crimson)" }} />
+                        </div>
+                        <div>
+                          <p
+                            className="k-eyebrow"
+                            style={{
+                              color: "var(--fg3)",
+                              marginBottom: 4,
+                            }}
+                          >
+                            {label}
+                          </p>
+                          <p
+                            className="k-body"
+                            style={{ color: "var(--fg1)", fontWeight: 600 }}
+                          >
+                            {value}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                    return href ? (
+                      <a
+                        key={label}
+                        href={href}
+                        style={{ textDecoration: "none" }}
+                      >
+                        {content}
+                      </a>
+                    ) : (
+                      <div key={label}>{content}</div>
+                    );
+                  })}
                 </div>
 
-                {/* Hours */}
-                <div className="flex items-start gap-4">
-                  <div className="w-11 h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0">
-                    <Clock size={18} className="text-[#F5F5F5]/50" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold tracking-widest uppercase text-[#F5F5F5]/40 mb-0.5">
-                      Studio Hours
-                    </p>
-                    <p className="text-[#F5F5F5] text-sm font-semibold">Mon – Fri, 9am – 6pm EAT</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Social Links */}
-            <div>
-              <h3 className="text-xs font-bold tracking-widest uppercase text-[#F5F5F5]/40 mb-4">
-                Follow Us
-              </h3>
-              <div className="flex gap-3">
-                {socialLinks.map((social) => (
-                  <a
-                    key={social.label}
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={social.label}
-                    className="w-11 h-11 rounded-xl bg-[#1A1A1A] border border-white/10 flex items-center justify-center text-[#F5F5F5]/50 hover:text-[#FFD700] hover:border-[#FFD700]/30 hover:bg-[#FFD700]/5 transition-all"
+                {/* Social links */}
+                <div>
+                  <p
+                    className="k-eyebrow"
+                    style={{ color: "var(--fg3)", marginBottom: 16 }}
                   >
-                    {social.icon}
-                  </a>
-                ))}
-              </div>
+                    Follow us
+                  </p>
+                  <div style={{ display: "flex", gap: 12 }}>
+                    {[
+                      {
+                        Icon: AtSign,
+                        label: "Instagram",
+                        href: "https://instagram.com/thekissa",
+                      },
+                      {
+                        Icon: Linkedin,
+                        label: "LinkedIn",
+                        href: "https://linkedin.com/company/thekissa",
+                      },
+                      {
+                        Icon: PlayCircle,
+                        label: "Vimeo",
+                        href: "https://vimeo.com/thekissa",
+                      },
+                    ].map(({ Icon, label, href }) => (
+                      <a
+                        key={label}
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={label}
+                        style={{
+                          width: 44,
+                          height: 44,
+                          borderRadius: 12,
+                          background: "var(--bone)",
+                          border: "1px solid var(--line)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          color: "var(--fg3)",
+                          transition: "color 0.2s",
+                          textDecoration: "none",
+                        }}
+                        onMouseEnter={(e) =>
+                          ((e.currentTarget as HTMLAnchorElement).style.color =
+                            "var(--crimson)")
+                        }
+                        onMouseLeave={(e) =>
+                          ((e.currentTarget as HTMLAnchorElement).style.color =
+                            "var(--fg3)")
+                        }
+                      >
+                        <Icon size={20} />
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
             </div>
-          </motion.div>
-        </div>
-      </section>
+          </div>
+        </section>
 
-      {/* ── 3. Map Placeholder ──────────────────────────────────────────── */}
-      <section className="px-6 pb-24 max-w-7xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 28 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="w-full aspect-[16/5] rounded-3xl bg-[#111111] border border-white/5 flex flex-col items-center justify-center gap-3 relative overflow-hidden"
-        >
-          {/* Subtle grid pattern */}
+        {/* ── 3. Map Placeholder ──────────────────────────────────────── */}
+        <section style={{ background: "var(--bone)", paddingBottom: 0 }}>
           <div
-            className="absolute inset-0 opacity-5"
-            style={{
-              backgroundImage:
-                "linear-gradient(#F5F5F5 1px, transparent 1px), linear-gradient(90deg, #F5F5F5 1px, transparent 1px)",
-              backgroundSize: "40px 40px",
-            }}
-          />
-
-          {/* Pin icon with glow */}
-          <motion.div
-            animate={{ y: [0, -6, 0] }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-            className="relative z-10"
+            className="wrap"
+            style={{ maxWidth: 1180, paddingBottom: 0 }}
           >
-            <div className="relative">
-              <div className="absolute inset-0 rounded-full bg-[#FF3CAC] blur-xl opacity-40 scale-150" />
+            <motion.div
+              initial={{ opacity: 0, y: 28 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+              style={{
+                width: "100%",
+                aspectRatio: "16/5",
+                background: "#241A18",
+                borderRadius: 20,
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 12,
+                margin: "0 auto",
+              }}
+            >
               <MapPin
-                size={40}
-                className="text-[#FF3CAC] relative z-10"
+                size={32}
+                style={{ color: "var(--fg-on-ink-2)" }}
                 strokeWidth={1.5}
               />
-            </div>
-          </motion.div>
+              <span
+                style={{
+                  fontFamily: "var(--mono)",
+                  fontSize: 13,
+                  color: "var(--fg-on-ink-2)",
+                }}
+              >
+                Nairobi, Kenya
+              </span>
+            </motion.div>
+          </div>
+        </section>
 
-          <p className="text-[#F5F5F5]/60 text-sm font-semibold tracking-wide relative z-10">
-            Nairobi, Kenya
-          </p>
-          <p className="text-[#F5F5F5]/25 text-xs relative z-10">
-            Map embed coming soon
-          </p>
-        </motion.div>
-      </section>
-    </main>
+      </main>
+      <Footer />
+    </>
   );
 }

@@ -1,106 +1,122 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { ArrowRight, Mail } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { CheckCircle2 } from "lucide-react";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
-const categories = ["All", "Branding", "Video", "Design", "Strategy", "Photography"];
+const CATEGORIES = ["All", "Branding", "Video", "Design", "Strategy", "Photography"];
 
 const featuredArticle = {
-  title: "The Future of African Creative Work",
+  title: "The future of African creative work",
   date: "June 2, 2026",
   author: "Kissa Editorial",
   category: "Industry Trends",
   excerpt: [
-    "Africa's creative industry is no longer waiting for permission. Across Nairobi, Lagos, Accra, and Johannesburg, a new generation of studios, agencies, and independent creatives are rewriting the rules — not borrowing frameworks from elsewhere, but building their own. The energy is undeniable, and the output is world-class.",
-    "At the heart of this shift is a refusal to separate culture from commerce. The most compelling African creative work right now is rooted in lived experience — visual languages drawn from local architecture, textile, music, and ritual — reimagined for a digital-first world. It is specific, and that specificity is exactly what makes it universally resonant.",
-    "For agencies like Kissa, this moment is both a responsibility and an opportunity. The question is not whether African creative work will define global culture — it already is. The question is whether we have the infrastructure, the investment, and the intention to sustain it.",
+    "Africa's creative industry is no longer waiting for permission. Across Nairobi, Lagos, Accra, and Johannesburg, a new generation of studios and agencies are rewriting the rules — not borrowing frameworks from elsewhere, but building their own.",
+    "At the heart of this shift is a refusal to separate culture from commerce. The most compelling African creative work right now is rooted in lived experience — specific, and that specificity is exactly what makes it universally resonant.",
   ],
 };
 
 const articles = [
   {
     category: "Branding",
-    title: "Why Brand Consistency Wins in a Noisy Market",
+    title: "Why brand consistency wins in a noisy market",
     excerpt:
-      "In a world of infinite scroll and fleeting attention, the brands that stick are the ones that stay relentlessly consistent across every touchpoint. We break down why consistency is the most underrated brand strategy.",
+      "In a world of infinite scroll and fleeting attention, the brands that stick are the ones that stay relentlessly consistent across every touchpoint.",
     author: "Aisha Mwangi",
     authorInitials: "AM",
-    authorColor: "bg-yellow-500",
     date: "May 28, 2026",
+    gradientBg: "linear-gradient(135deg, #AD1335 0%, #7A0E26 100%)",
   },
   {
     category: "Video",
-    title: "Short-Form Video Is Eating the World — Here's How to Win",
+    title: "Short-form video is eating the world — here's how to win",
     excerpt:
       "Reels, TikToks, YouTube Shorts: the format is everywhere. We break down what makes a short-form video actually convert versus one that gets scrolled past in under two seconds.",
     author: "David Otieno",
     authorInitials: "DO",
-    authorColor: "bg-orange-500",
     date: "May 14, 2026",
+    gradientBg: "linear-gradient(135deg, #2A3F5F 0%, #16100F 100%)",
   },
   {
     category: "Strategy",
-    title: "Social Media Strategy for Brands That Actually Have Something to Say",
+    title: "Social media strategy for brands that actually have something to say",
     excerpt:
-      "Most social media strategies optimise for vanity metrics. The brands winning on social right now are doing something different — they are building communities around ideas, not just products.",
+      "Most social media strategies optimise for vanity metrics. The brands winning on social right now are building communities around ideas, not just products.",
     author: "Priya Nair",
     authorInitials: "PN",
-    authorColor: "bg-pink-500",
     date: "April 30, 2026",
+    gradientBg: "linear-gradient(135deg, #4A4140 0%, #16100F 100%)",
   },
   {
     category: "Design",
-    title: "Color Theory Is Not Decoration — It's Strategy",
+    title: "Color theory is not decoration — it's strategy",
     excerpt:
-      "Color is one of the most powerful and least understood tools in a designer's arsenal. Learn how the world's most effective campaigns use hue, saturation, and contrast to drive emotion and action.",
+      "Color is one of the most powerful and least understood tools in a designer's arsenal. Learn how effective campaigns use hue and contrast to drive emotion.",
     author: "Kissa Editorial",
     authorInitials: "KE",
-    authorColor: "bg-purple-500",
     date: "April 18, 2026",
+    gradientBg: "linear-gradient(135deg, #7A0E26 0%, #AD1335 100%)",
   },
   {
     category: "Design",
-    title: "Inside Kissa's Design Process: From Brief to Final File",
+    title: "Inside the Kissa design process: from brief to final file",
     excerpt:
-      "How does a project actually move from a client brief to a finished deliverable? We pull back the curtain on our internal design process — the thinking, the tools, and the hard conversations that make great work possible.",
+      "How does a project actually move from a client brief to a finished deliverable? We pull back the curtain on our internal process — the thinking, the tools, the hard conversations.",
     author: "Aisha Mwangi",
     authorInitials: "AM",
-    authorColor: "bg-yellow-500",
     date: "April 5, 2026",
+    gradientBg: "linear-gradient(135deg, #16100F 0%, #2A3F5F 100%)",
   },
   {
     category: "Photography",
-    title: "Photography Tips for Brands Shooting on a Budget",
+    title: "Photography tips for brands shooting on a budget",
     excerpt:
-      "You do not need a massive production budget to get stunning brand photography. With the right light, the right framing, and a clear creative brief, a small team can produce images that compete with any big campaign.",
+      "You do not need a massive production budget to get stunning brand photography. With the right light, the right framing, and a clear creative brief, small teams can compete.",
     author: "David Otieno",
     authorInitials: "DO",
-    authorColor: "bg-orange-500",
     date: "March 22, 2026",
+    gradientBg: "linear-gradient(135deg, #AD1335 0%, #4A4140 100%)",
   },
 ];
 
-// ─── Sub-components ────────────────────────────────────────────────────────────
+// ─── Category pill ─────────────────────────────────────────────────────────────
 
-function CategoryBadge({ category, color }: { category: string; color?: string }) {
-  const colorMap: Record<string, string> = {
-    "Industry Trends": "bg-[#FF3CAC]/15 text-[#FF3CAC]",
-    Branding: "bg-[#FFD700]/15 text-[#FFD700]",
-    Video: "bg-[#FF6B35]/15 text-[#FF6B35]",
-    Strategy: "bg-purple-500/15 text-purple-400",
-    Design: "bg-blue-500/15 text-blue-400",
-    Photography: "bg-emerald-500/15 text-emerald-400",
-  };
-  const cls = color ?? colorMap[category] ?? "bg-white/10 text-[#F5F5F5]/70";
+function CategoryPill({
+  label,
+  active,
+  onClick,
+}: {
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}) {
   return (
-    <span className={`inline-block text-xs font-bold px-3 py-1 rounded-full ${cls}`}>
-      {category}
-    </span>
+    <button
+      onClick={onClick}
+      style={{
+        padding: "8px 20px",
+        borderRadius: 40,
+        fontSize: 13,
+        fontFamily: "var(--sans)",
+        fontWeight: 600,
+        border: active ? "1.5px solid var(--crimson)" : "1.5px solid var(--line)",
+        background: active ? "var(--crimson)" : "transparent",
+        color: active ? "#fff" : "var(--fg2)",
+        cursor: "pointer",
+        transition: "all 0.2s",
+      }}
+    >
+      {label}
+    </button>
   );
 }
+
+// ─── Article Card ──────────────────────────────────────────────────────────────
 
 function ArticleCard({
   article,
@@ -115,48 +131,94 @@ function ArticleCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.08 }}
-      className="bg-[#1A1A1A] rounded-2xl border border-white/5 card-hover flex flex-col overflow-hidden"
+      className="k-card"
+      style={{
+        background: "#fff",
+        borderRadius: 16,
+        border: "1px solid var(--line)",
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+      }}
     >
-      {/* Colored header strip */}
+      {/* Image placeholder */}
       <div
-        className="w-full h-1.5"
         style={{
-          background:
-            index % 3 === 0
-              ? "linear-gradient(90deg,#FFD700,#FF6B35)"
-              : index % 3 === 1
-              ? "linear-gradient(90deg,#FF6B35,#FF3CAC)"
-              : "linear-gradient(90deg,#FF3CAC,#FFD700)",
+          width: "100%",
+          aspectRatio: "3/2",
+          background: article.gradientBg,
+          borderRadius: "12px 12px 0 0",
         }}
       />
 
-      <div className="flex flex-col gap-4 p-7 flex-1">
-        <CategoryBadge category={article.category} />
-
-        <h3 className="font-black text-[#F5F5F5] text-base leading-snug group-hover:text-[#FFD700] transition-colors">
+      <div
+        style={{
+          padding: "24px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 12,
+          flex: 1,
+        }}
+      >
+        <p className="k-eyebrow" style={{ color: "var(--crimson)" }}>
+          {article.category}
+        </p>
+        <h3
+          style={{
+            fontFamily: "var(--serif-display)",
+            fontSize: 20,
+            fontWeight: 700,
+            color: "var(--fg1)",
+            lineHeight: 1.3,
+          }}
+        >
           {article.title}
         </h3>
+        <p className="k-body" style={{ color: "var(--fg2)", flex: 1 }}>
+          {article.excerpt}
+        </p>
 
-        <p className="text-[#F5F5F5]/55 text-sm leading-relaxed flex-1">{article.excerpt}</p>
-
-        <div className="flex items-center justify-between pt-2 border-t border-white/5">
-          <div className="flex items-center gap-2.5">
-            <span
-              className={`w-8 h-8 rounded-full ${article.authorColor} flex items-center justify-center text-xs font-black text-[#0A0A0A]`}
-            >
-              {article.authorInitials}
-            </span>
-            <span className="text-xs text-[#F5F5F5]/55 font-medium">{article.author}</span>
-          </div>
-          <span className="text-xs text-[#F5F5F5]/35">{article.date}</span>
-        </div>
-
-        <a
-          href="#"
-          className="text-[#FFD700] text-sm font-bold hover:underline flex items-center gap-1 mt-1 w-fit"
+        {/* Author row */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            paddingTop: 12,
+            borderTop: "1px solid var(--line)",
+          }}
         >
-          Read more <ArrowRight size={13} />
-        </a>
+          <div
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: "50%",
+              background: "var(--crimson)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: 11,
+              fontWeight: 800,
+              color: "#fff",
+              flexShrink: 0,
+            }}
+          >
+            {article.authorInitials}
+          </div>
+          <span className="k-body" style={{ color: "var(--fg2)", fontSize: 14 }}>
+            {article.author}
+          </span>
+          <span
+            style={{
+              marginLeft: "auto",
+              fontFamily: "var(--mono)",
+              fontSize: 12,
+              color: "var(--fg3)",
+            }}
+          >
+            {article.date}
+          </span>
+        </div>
       </div>
     </motion.article>
   );
@@ -180,204 +242,300 @@ export default function BlogPage() {
   }
 
   return (
-    <main className="bg-[#0A0A0A] text-[#F5F5F5] overflow-x-hidden min-h-screen">
-      {/* ── 1. Hero ─────────────────────────────────────────────────────── */}
-      <section className="relative pt-32 pb-20 px-6 text-center overflow-hidden">
-        {/* Orbs */}
-        <motion.div
-          className="absolute rounded-full blur-3xl opacity-15 pointer-events-none"
-          style={{ background: "#FF3CAC", width: 520, height: 520, right: "-10%", top: "-15%" }}
-          animate={{ scale: [1, 1.18, 1] }}
-          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute rounded-full blur-3xl opacity-10 pointer-events-none"
-          style={{ background: "#FFD700", width: 400, height: 400, left: "-5%", bottom: "-10%" }}
-          animate={{ scale: [1, 1.12, 1] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 3 }}
-        />
+    <>
+      <Navbar />
+      <main style={{ background: "var(--paper)", color: "var(--fg1)" }}>
 
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="relative z-10 max-w-3xl mx-auto"
+        {/* ── 1. Hero ─────────────────────────────────────────────────── */}
+        <section
+          style={{
+            background: "var(--ink)",
+            padding: "160px 0 96px",
+            textAlign: "center",
+          }}
         >
-          <p className="text-xs font-bold tracking-widest uppercase text-[#FF3CAC] mb-4">
-            The Kissa Journal
-          </p>
-          <h1 className="text-6xl md:text-7xl font-black leading-none tracking-tight mb-6">
-            <span className="gradient-text">Fresh Perspectives</span>
-          </h1>
-          <p className="text-lg text-[#F5F5F5]/65 leading-relaxed max-w-xl mx-auto">
-            Ideas, insights, and honest takes on branding, design, video, and the creative industry
-            — straight from the studio.
-          </p>
-        </motion.div>
-      </section>
-
-      {/* ── 2. Category Filter Bar ──────────────────────────────────────── */}
-      <section className="px-6 pb-8 max-w-7xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="flex flex-wrap gap-2"
-        >
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`px-5 py-2 rounded-full text-sm font-bold transition-all ${
-                activeCategory === cat
-                  ? "bg-[#FFD700] text-[#0A0A0A]"
-                  : "bg-[#1A1A1A] text-[#F5F5F5]/60 hover:bg-[#2A2A2A] hover:text-[#F5F5F5]"
-              }`}
+          <div className="wrap">
+            <motion.div
+              initial={{ opacity: 0, y: 32 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.75 }}
             >
-              {cat}
-            </button>
-          ))}
-        </motion.div>
-      </section>
+              <p
+                className="k-eyebrow"
+                style={{ color: "var(--fg-on-ink-2)", marginBottom: 20 }}
+              >
+                Fresh perspectives
+              </p>
+              <h1
+                className="k-h1"
+                style={{
+                  color: "var(--fg-on-ink)",
+                  maxWidth: 680,
+                  margin: "0 auto",
+                }}
+              >
+                Stories about{" "}
+                <em className="italic-crimson">storytelling.</em>
+              </h1>
+            </motion.div>
+          </div>
+        </section>
 
-      {/* ── 3. Featured Article ─────────────────────────────────────────── */}
-      {(activeCategory === "All" || activeCategory === "Industry Trends") && (
-        <section className="px-6 pb-16 max-w-7xl mx-auto">
-          <motion.article
-            initial={{ opacity: 0, y: 32 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-            className="bg-[#1A1A1A] rounded-3xl border border-white/5 overflow-hidden"
-          >
-            {/* Banner */}
+        {/* ── 2. Category Filter ──────────────────────────────────────── */}
+        <section
+          style={{
+            background: "var(--paper)",
+            paddingTop: 32,
+            position: "sticky",
+            top: 0,
+            zIndex: 10,
+            borderBottom: "1px solid var(--line)",
+          }}
+        >
+          <div className="wrap">
             <div
-              className="w-full h-2"
               style={{
-                background: "linear-gradient(90deg, #FFD700 0%, #FF6B35 50%, #FF3CAC 100%)",
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 8,
+                paddingBottom: 20,
               }}
-            />
+            >
+              {CATEGORIES.map((cat) => (
+                <CategoryPill
+                  key={cat}
+                  label={cat}
+                  active={activeCategory === cat}
+                  onClick={() => setActiveCategory(cat)}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
 
-            <div className="p-8 md:p-12 flex flex-col gap-6">
-              <div className="flex flex-wrap items-center gap-3">
-                <CategoryBadge category={featuredArticle.category} />
-                <span className="text-xs text-[#F5F5F5]/40">{featuredArticle.date}</span>
-                <span className="text-xs text-[#F5F5F5]/40">·</span>
-                <span className="text-xs font-medium text-[#F5F5F5]/55">
-                  By {featuredArticle.author}
-                </span>
-              </div>
+        {/* ── 3. Featured Article ─────────────────────────────────────── */}
+        {(activeCategory === "All" || activeCategory === "Industry Trends") && (
+          <section style={{ background: "var(--paper)", padding: "48px 0" }}>
+            <div className="wrap">
+              <motion.article
+                initial={{ opacity: 0, y: 32 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7 }}
+                style={{
+                  background: "#fff",
+                  borderRadius: 20,
+                  border: "1px solid var(--line)",
+                  boxShadow: "0 4px 24px rgba(22,16,15,0.08)",
+                  overflow: "hidden",
+                  display: "grid",
+                  gridTemplateColumns: "minmax(0,2fr) minmax(0,3fr)",
+                  gap: 0,
+                }}
+              >
+                {/* Left: image */}
+                <div
+                  style={{
+                    aspectRatio: "4/3",
+                    background: "linear-gradient(135deg, #AD1335 0%, #16100F 100%)",
+                    borderRadius: "16px 0 0 16px",
+                    minHeight: 280,
+                  }}
+                />
+                {/* Right: text */}
+                <div
+                  style={{
+                    padding: "40px 48px",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 16,
+                    justifyContent: "center",
+                  }}
+                >
+                  <p className="k-eyebrow" style={{ color: "var(--crimson)" }}>
+                    {featuredArticle.category}
+                  </p>
+                  <h3
+                    className="k-h3"
+                    style={{
+                      color: "var(--fg1)",
+                      fontFamily: "var(--serif-display)",
+                    }}
+                  >
+                    {featuredArticle.title}
+                  </h3>
+                  <span
+                    style={{
+                      fontFamily: "var(--mono)",
+                      fontSize: 12,
+                      color: "var(--fg3)",
+                    }}
+                  >
+                    {featuredArticle.date}
+                  </span>
+                  {featuredArticle.excerpt.map((para, i) => (
+                    <p
+                      key={i}
+                      className="k-body"
+                      style={{ color: "var(--fg2)" }}
+                    >
+                      {para}
+                    </p>
+                  ))}
+                  <div style={{ marginTop: 8 }}>
+                    <button
+                      className="btn btn-primary"
+                      style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
+                    >
+                      Read the full piece →
+                    </button>
+                  </div>
+                </div>
+              </motion.article>
+            </div>
+          </section>
+        )}
 
-              <h2 className="text-3xl md:text-5xl font-black leading-tight tracking-tight text-[#F5F5F5]">
-                {featuredArticle.title}
+        {/* ── 4. Article Grid ─────────────────────────────────────────── */}
+        <section style={{ background: "var(--paper)", paddingBottom: 96 }}>
+          <div className="wrap">
+            <AnimatePresence mode="wait">
+              {filtered.length > 0 ? (
+                <motion.div
+                  key={activeCategory}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+                    gap: 24,
+                  }}
+                >
+                  {filtered.map((article, i) => (
+                    <ArticleCard key={article.title} article={article} index={i} />
+                  ))}
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="empty"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  style={{
+                    padding: "80px 0",
+                    textAlign: "center",
+                    color: "var(--fg3)",
+                    fontSize: 15,
+                  }}
+                >
+                  No articles in this category yet — check back soon.
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </section>
+
+        {/* ── 5. Newsletter ───────────────────────────────────────────── */}
+        <section style={{ background: "var(--bone)", padding: "64px 0" }}>
+          <div className="wrap" style={{ maxWidth: 580, textAlign: "center" }}>
+            <motion.div
+              initial={{ opacity: 0, y: 28 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7 }}
+            >
+              <p
+                className="k-eyebrow"
+                style={{ color: "var(--fg3)", marginBottom: 12 }}
+              >
+                The Kissa Journal
+              </p>
+              <h2
+                className="k-h2"
+                style={{ color: "var(--fg1)", marginBottom: 24 }}
+              >
+                Stay in the loop.
               </h2>
 
-              <div className="flex flex-col gap-4 max-w-3xl">
-                {featuredArticle.excerpt.map((para, i) => (
-                  <p key={i} className="text-[#F5F5F5]/65 text-base leading-relaxed">
-                    {para}
+              {subscribed ? (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.96 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  style={{
+                    background: "rgba(173,19,53,0.06)",
+                    border: "1.5px solid var(--crimson)",
+                    borderRadius: 16,
+                    padding: "32px",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: 12,
+                  }}
+                >
+                  <CheckCircle2
+                    size={36}
+                    style={{ color: "var(--crimson)" }}
+                  />
+                  <p
+                    className="k-body"
+                    style={{ color: "var(--fg1)", fontWeight: 700 }}
+                  >
+                    You&apos;re in!
                   </p>
-                ))}
-              </div>
-
-              <div>
-                <a
-                  href="#"
-                  className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-black text-sm text-[#0A0A0A] transition-opacity hover:opacity-85"
+                  <p className="k-body" style={{ color: "var(--fg2)" }}>
+                    Expect bold ideas in your inbox soon.
+                  </p>
+                </motion.div>
+              ) : (
+                <form
+                  onSubmit={handleSubscribe}
                   style={{
-                    background: "linear-gradient(135deg, #FFD700 0%, #FF6B35 60%, #FF3CAC 100%)",
+                    display: "flex",
+                    gap: 12,
+                    flexWrap: "wrap",
+                    justifyContent: "center",
                   }}
                 >
-                  Read Full Article <ArrowRight size={15} />
-                </a>
-              </div>
-            </div>
-          </motion.article>
-        </section>
-      )}
-
-      {/* ── 4. Article Grid ─────────────────────────────────────────────── */}
-      <section className="px-6 pb-24 max-w-7xl mx-auto">
-        {filtered.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filtered.map((article, i) => (
-              <ArticleCard key={article.title} article={article} index={i} />
-            ))}
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    style={{
+                      flex: "1 1 280px",
+                      background: "#fff",
+                      border: "1.5px solid var(--line)",
+                      borderRadius: "var(--r-md, 12px)",
+                      padding: "14px 20px",
+                      fontSize: 16,
+                      color: "var(--fg1)",
+                      outline: "none",
+                      fontFamily: "var(--sans)",
+                    }}
+                    onFocus={(e) =>
+                      (e.target.style.borderColor = "var(--crimson)")
+                    }
+                    onBlur={(e) =>
+                      (e.target.style.borderColor = "var(--line)")
+                    }
+                  />
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    style={{ flexShrink: 0 }}
+                  >
+                    Subscribe
+                  </button>
+                </form>
+              )}
+            </motion.div>
           </div>
-        ) : (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="py-20 text-center text-[#F5F5F5]/40 text-sm"
-          >
-            No articles in this category yet — check back soon.
-          </motion.div>
-        )}
-      </section>
+        </section>
 
-      {/* ── 5. Newsletter Signup ────────────────────────────────────────── */}
-      <section className="py-24 px-6 bg-[#111111] border-y border-white/5">
-        <div className="max-w-2xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 28 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-          >
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#1A1A1A] border border-white/10 mb-6 mx-auto">
-              <Mail size={24} className="text-[#FFD700]" />
-            </div>
-            <h2 className="text-4xl md:text-5xl font-black tracking-tight mb-4">
-              Stay in the Loop
-            </h2>
-            <p className="text-[#F5F5F5]/55 text-base leading-relaxed mb-8 max-w-md mx-auto">
-              Get our latest articles, creative insights, and behind-the-scenes studio stories
-              delivered straight to your inbox — no spam, ever.
-            </p>
-
-            {subscribed ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="bg-[#1A1A1A] rounded-2xl border border-[#FFD700]/25 px-8 py-6"
-              >
-                <p className="text-[#FFD700] font-black text-lg mb-1">You&apos;re in!</p>
-                <p className="text-[#F5F5F5]/55 text-sm">
-                  Welcome to the Kissa Journal. Expect bold ideas in your inbox soon.
-                </p>
-              </motion.div>
-            ) : (
-              <form
-                onSubmit={handleSubscribe}
-                className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto"
-              >
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your@email.com"
-                  className="flex-1 bg-[#1A1A1A] border border-white/10 rounded-full px-5 py-3.5 text-sm text-[#F5F5F5] placeholder:text-[#F5F5F5]/25 focus:outline-none focus:border-[#FFD700]/50 transition-colors"
-                />
-                <button
-                  type="submit"
-                  className="px-7 py-3.5 rounded-full font-black text-sm text-[#0A0A0A] transition-opacity hover:opacity-85 whitespace-nowrap"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, #FFD700 0%, #FF6B35 60%, #FF3CAC 100%)",
-                  }}
-                >
-                  Subscribe
-                </button>
-              </form>
-            )}
-
-            <p className="mt-4 text-xs text-[#F5F5F5]/30">
-              Weekly articles · Studio updates · Creative resources · Zero spam
-            </p>
-          </motion.div>
-        </div>
-      </section>
-    </main>
+      </main>
+      <Footer />
+    </>
   );
 }
