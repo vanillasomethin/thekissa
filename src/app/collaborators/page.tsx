@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, Send, ArrowRight } from "lucide-react";
+import { ArrowRight, CheckCircle2, Send } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -45,7 +45,28 @@ const jointProjects = [
   },
 ];
 
-// ─── Sub-components ────────────────────────────────────────────────────────────
+// ─── Shared input style helpers ────────────────────────────────────────────────
+
+const inputStyle: React.CSSProperties = {
+  width: "100%",
+  borderBottom: "1.5px solid var(--line)",
+  background: "transparent",
+  padding: "12px 0",
+  fontSize: 17,
+  color: "var(--fg1)",
+  outline: "none",
+  fontFamily: "var(--sans)",
+  boxSizing: "border-box",
+};
+
+function focusIn(e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
+  e.target.style.borderBottomColor = "var(--crimson)";
+}
+function focusOut(e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
+  e.target.style.borderBottomColor = "var(--line)";
+}
+
+// ─── Collaborator Card ─────────────────────────────────────────────────────────
 
 function CollaboratorCard({
   name,
@@ -72,7 +93,6 @@ function CollaboratorCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.65, delay }}
-      className="bubble-card flex flex-col"
       style={{
         background: "#fff",
         borderRadius: 28,
@@ -95,7 +115,14 @@ function CollaboratorCard({
           justifyContent: "center",
         }}
       >
-        <span style={{ color: accent, fontSize: 56, fontWeight: 900, fontFamily: "var(--serif-display)" }}>
+        <span
+          style={{
+            color: accent,
+            fontSize: 56,
+            fontWeight: 900,
+            fontFamily: "var(--serif-display)",
+          }}
+        >
           {initials}
         </span>
       </div>
@@ -103,14 +130,22 @@ function CollaboratorCard({
       {/* Content */}
       <div style={{ display: "flex", flexDirection: "column", gap: 16, flex: 1 }}>
         <div>
-          <p className="k-eyebrow" style={{ color: accent, marginBottom: 6 }}>{tagline}</p>
-          <h3 className="k-h3" style={{ color: "var(--fg1)" }}>{name}</h3>
+          <p className="k-eyebrow" style={{ color: accent, marginBottom: 6 }}>
+            {tagline}
+          </p>
+          <h3 className="k-h3" style={{ color: "var(--fg1)" }}>
+            {name}
+          </h3>
         </div>
 
-        <p className="k-body" style={{ color: "var(--fg2)" }}>{description}</p>
+        <p className="k-body" style={{ color: "var(--fg2)" }}>
+          {description}
+        </p>
 
         <div>
-          <p className="k-eyebrow" style={{ color: "var(--fg3)", marginBottom: 12 }}>Joint Projects</p>
+          <p className="k-eyebrow" style={{ color: "var(--fg3)", marginBottom: 12 }}>
+            Joint Projects
+          </p>
           <ul style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             {projects.map((project) => (
               <li key={project} className="pa" style={{ color: "var(--fg2)", fontSize: 15 }}>
@@ -121,7 +156,10 @@ function CollaboratorCard({
         </div>
 
         <div style={{ marginTop: "auto", paddingTop: 8 }}>
-          <button className="btn btn-ghost" style={{ color: accent, borderColor: accent }}>
+          <button
+            className="btn btn-ghost"
+            style={{ color: accent, borderColor: accent, display: "inline-flex", alignItems: "center", gap: 6 }}
+          >
             View projects <ArrowRight size={14} />
           </button>
         </div>
@@ -133,10 +171,17 @@ function CollaboratorCard({
 // ─── Page ──────────────────────────────────────────────────────────────────────
 
 export default function CollaboratorsPage() {
-  const [form, setForm] = useState({ name: "", organization: "", collaborationType: "", message: "" });
+  const [form, setForm] = useState({
+    name: "",
+    organization: "",
+    collaborationType: "",
+    message: "",
+  });
   const [submitted, setSubmitted] = useState(false);
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
+  function handleChange(
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }
 
@@ -151,19 +196,32 @@ export default function CollaboratorsPage() {
       <main style={{ background: "var(--paper)", color: "var(--fg1)" }}>
 
         {/* ── 1. Hero ──────────────────────────────────────────────────── */}
-        <section style={{ background: "var(--ink)", padding: "160px 0 96px", textAlign: "center" }}>
+        <section
+          style={{
+            background: "var(--ink)",
+            padding: "160px 0 96px",
+            textAlign: "center",
+          }}
+        >
           <div className="wrap">
             <motion.div
               initial={{ opacity: 0, y: 32 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.75 }}
             >
-              <p className="k-eyebrow" style={{ color: "var(--fg-on-ink-2)", marginBottom: 20 }}>
+              <p
+                className="k-eyebrow"
+                style={{ color: "var(--fg-on-ink-2)", marginBottom: 20 }}
+              >
                 Creative alliances
               </p>
               <h1
                 className="k-h1"
-                style={{ color: "var(--fg-on-ink)", maxWidth: 680, margin: "0 auto" }}
+                style={{
+                  color: "var(--fg-on-ink)",
+                  maxWidth: 680,
+                  margin: "0 auto",
+                }}
               >
                 Where disciplines{" "}
                 <em className="italic-crimson">collide.</em>
@@ -175,12 +233,21 @@ export default function CollaboratorsPage() {
         {/* ── 2. Featured Collaborators ─────────────────────────────── */}
         <section style={{ background: "var(--paper)", padding: "96px 0" }}>
           <div className="wrap">
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 32 }}>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+                gap: 32,
+              }}
+            >
               <CollaboratorCard
                 name="Vanilla"
                 tagline="Architects & Spatial Design"
                 description="Vanilla brings architectural vision to life — designing spaces that speak. Their mastery of form, material, and atmosphere transforms built environments into experiences that resonate long after you leave."
-                projects={["The Form & Function Exhibition", "Spatial Branding for Vault Gallery"]}
+                projects={[
+                  "The Form & Function Exhibition",
+                  "Spatial Branding for Vault Gallery",
+                ]}
                 accent="var(--crimson)"
                 accentBg="rgba(173,19,53,0.07)"
                 initials="VN"
@@ -210,10 +277,18 @@ export default function CollaboratorsPage() {
               transition={{ duration: 0.6 }}
               style={{ marginBottom: 48 }}
             >
-              <h2 className="k-h2" style={{ color: "var(--fg1)" }}>Joint projects</h2>
+              <h2 className="k-h2" style={{ color: "var(--fg1)" }}>
+                Joint projects
+              </h2>
             </motion.div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 24 }}>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+                gap: 24,
+              }}
+            >
               {jointProjects.map((project, i) => (
                 <motion.div
                   key={project.name}
@@ -222,7 +297,11 @@ export default function CollaboratorsPage() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.08 }}
                   className="k-card"
-                  style={{ background: "#fff", borderRadius: 16, overflow: "hidden" }}
+                  style={{
+                    background: "#fff",
+                    borderRadius: 16,
+                    overflow: "hidden",
+                  }}
                 >
                   <div
                     style={{
@@ -232,7 +311,14 @@ export default function CollaboratorsPage() {
                     }}
                   />
                   <div style={{ padding: "20px 24px 24px" }}>
-                    <p className="k-body" style={{ color: "var(--fg1)", fontWeight: 700, marginBottom: 8 }}>
+                    <p
+                      className="k-body"
+                      style={{
+                        color: "var(--fg1)",
+                        fontWeight: 700,
+                        marginBottom: 8,
+                      }}
+                    >
                       {project.name}
                     </p>
                     <span
@@ -242,8 +328,14 @@ export default function CollaboratorsPage() {
                         borderRadius: 20,
                         fontSize: 12,
                         fontFamily: "var(--mono)",
-                        background: project.chip === "crimson" ? "rgba(173,19,53,0.1)" : "rgba(42,63,95,0.1)",
-                        color: project.chip === "crimson" ? "var(--crimson)" : "var(--accent-cool)",
+                        background:
+                          project.chip === "crimson"
+                            ? "rgba(173,19,53,0.1)"
+                            : "rgba(42,63,95,0.1)",
+                        color:
+                          project.chip === "crimson"
+                            ? "var(--crimson)"
+                            : "var(--accent-cool)",
                       }}
                     >
                       {project.collaborator}
@@ -256,7 +348,13 @@ export default function CollaboratorsPage() {
         </section>
 
         {/* ── 4. Philosophy ──────────────────────────────────────────── */}
-        <section style={{ background: "var(--ink)", padding: "96px 0", textAlign: "center" }}>
+        <section
+          style={{
+            background: "var(--ink)",
+            padding: "96px 0",
+            textAlign: "center",
+          }}
+        >
           <div className="wrap" style={{ maxWidth: 780 }}>
             <motion.div
               initial={{ opacity: 0, y: 32 }}
@@ -276,8 +374,17 @@ export default function CollaboratorsPage() {
               >
                 &ldquo;Great work happens at the intersection of disciplines.&rdquo;
               </blockquote>
-              <p className="k-body-l" style={{ color: "var(--fg-on-ink-2)", maxWidth: 600, margin: "0 auto" }}>
-                Every partnership the Kissa enters is built on genuine creative alignment — a shared hunger to push past the obvious and make something that stands apart. When a brand strategist sits beside an architect, the unexpected becomes possible.
+              <p
+                className="k-body-l"
+                style={{
+                  color: "var(--fg-on-ink-2)",
+                  maxWidth: 600,
+                  margin: "0 auto",
+                }}
+              >
+                Every partnership the Kissa enters is built on genuine creative alignment — a
+                shared hunger to push past the obvious and make something that stands apart. When a
+                brand strategist sits beside an architect, the unexpected becomes possible.
               </p>
             </motion.div>
           </div>
@@ -293,10 +400,18 @@ export default function CollaboratorsPage() {
               transition={{ duration: 0.6 }}
               style={{ marginBottom: 40 }}
             >
-              <p className="k-eyebrow" style={{ color: "var(--fg3)", marginBottom: 12 }}>Work with us</p>
-              <h2 className="k-h2" style={{ color: "var(--fg1)", marginBottom: 16 }}>Become a collaborator</h2>
+              <p
+                className="k-eyebrow"
+                style={{ color: "var(--fg3)", marginBottom: 12 }}
+              >
+                Work with us
+              </p>
+              <h2 className="k-h2" style={{ color: "var(--fg1)", marginBottom: 16 }}>
+                Become a collaborator
+              </h2>
               <p className="k-body" style={{ color: "var(--fg2)" }}>
-                We&apos;re always open to conversations with studios, firms, and creatives who want to build something together.
+                The Kissa is always open to conversations with studios, firms, and creatives who
+                want to build something together.
               </p>
             </motion.div>
 
@@ -314,8 +429,16 @@ export default function CollaboratorsPage() {
                     textAlign: "center",
                   }}
                 >
-                  <CheckCircle2 size={40} style={{ color: "var(--crimson)", margin: "0 auto 16px" }} />
-                  <h3 className="k-h3" style={{ color: "var(--fg1)", marginBottom: 8 }}>Message sent!</h3>
+                  <CheckCircle2
+                    size={40}
+                    style={{ color: "var(--crimson)", margin: "0 auto 16px" }}
+                  />
+                  <h3
+                    className="k-h3"
+                    style={{ color: "var(--fg1)", marginBottom: 8 }}
+                  >
+                    Message sent!
+                  </h3>
                   <p className="k-body" style={{ color: "var(--fg2)" }}>
                     We&apos;ll be in touch soon to explore how we can work together.
                   </p>
@@ -329,11 +452,28 @@ export default function CollaboratorsPage() {
                   style={{ display: "flex", flexDirection: "column", gap: 24 }}
                 >
                   {[
-                    { label: "Name", name: "name", type: "text", placeholder: "Your full name" },
-                    { label: "Organization", name: "organization", type: "text", placeholder: "Your studio, firm, or company" },
+                    {
+                      label: "Name",
+                      name: "name",
+                      type: "text",
+                      placeholder: "Your full name",
+                    },
+                    {
+                      label: "Organization",
+                      name: "organization",
+                      type: "text",
+                      placeholder: "Your studio, firm, or company",
+                    },
                   ].map((field) => (
                     <div key={field.name}>
-                      <label className="k-eyebrow" style={{ color: "var(--fg3)", display: "block", marginBottom: 8 }}>
+                      <label
+                        className="k-eyebrow"
+                        style={{
+                          color: "var(--fg3)",
+                          display: "block",
+                          marginBottom: 8,
+                        }}
+                      >
                         {field.label}
                       </label>
                       <input
@@ -343,25 +483,22 @@ export default function CollaboratorsPage() {
                         value={(form as Record<string, string>)[field.name]}
                         onChange={handleChange}
                         placeholder={field.placeholder}
-                        style={{
-                          width: "100%",
-                          borderBottom: "1.5px solid var(--line)",
-                          background: "transparent",
-                          padding: "12px 0",
-                          fontSize: 17,
-                          color: "var(--fg1)",
-                          outline: "none",
-                          fontFamily: "var(--sans)",
-                          boxSizing: "border-box",
-                        }}
-                        onFocus={(e) => (e.target.style.borderBottomColor = "var(--crimson)")}
-                        onBlur={(e) => (e.target.style.borderBottomColor = "var(--line)")}
+                        style={inputStyle}
+                        onFocus={focusIn}
+                        onBlur={focusOut}
                       />
                     </div>
                   ))}
 
                   <div>
-                    <label className="k-eyebrow" style={{ color: "var(--fg3)", display: "block", marginBottom: 8 }}>
+                    <label
+                      className="k-eyebrow"
+                      style={{
+                        color: "var(--fg3)",
+                        display: "block",
+                        marginBottom: 8,
+                      }}
+                    >
                       Collaboration type
                     </label>
                     <select
@@ -369,28 +506,30 @@ export default function CollaboratorsPage() {
                       required
                       value={form.collaborationType}
                       onChange={handleChange}
-                      style={{
-                        width: "100%",
-                        borderBottom: "1.5px solid var(--line)",
-                        background: "transparent",
-                        padding: "12px 0",
-                        fontSize: 17,
-                        color: "var(--fg1)",
-                        outline: "none",
-                        fontFamily: "var(--sans)",
-                        appearance: "none",
-                        boxSizing: "border-box",
-                      }}
+                      style={{ ...inputStyle, appearance: "none" }}
+                      onFocus={focusIn}
+                      onBlur={focusOut}
                     >
-                      <option value="" disabled>Select a type</option>
+                      <option value="" disabled>
+                        Select a type
+                      </option>
                       {collaborationTypes.map((t) => (
-                        <option key={t} value={t}>{t}</option>
+                        <option key={t} value={t}>
+                          {t}
+                        </option>
                       ))}
                     </select>
                   </div>
 
                   <div>
-                    <label className="k-eyebrow" style={{ color: "var(--fg3)", display: "block", marginBottom: 8 }}>
+                    <label
+                      className="k-eyebrow"
+                      style={{
+                        color: "var(--fg3)",
+                        display: "block",
+                        marginBottom: 8,
+                      }}
+                    >
                       Message
                     </label>
                     <textarea
@@ -400,27 +539,22 @@ export default function CollaboratorsPage() {
                       value={form.message}
                       onChange={handleChange}
                       placeholder="Tell us about your work and what you have in mind..."
-                      style={{
-                        width: "100%",
-                        borderBottom: "1.5px solid var(--line)",
-                        background: "transparent",
-                        padding: "12px 0",
-                        fontSize: 17,
-                        color: "var(--fg1)",
-                        outline: "none",
-                        fontFamily: "var(--sans)",
-                        resize: "none",
-                        boxSizing: "border-box",
-                      }}
-                      onFocus={(e) => (e.target.style.borderBottomColor = "var(--crimson)")}
-                      onBlur={(e) => (e.target.style.borderBottomColor = "var(--line)")}
+                      style={{ ...inputStyle, resize: "none" }}
+                      onFocus={focusIn}
+                      onBlur={focusOut}
                     />
                   </div>
 
                   <button
                     type="submit"
                     className="btn btn-primary"
-                    style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, marginTop: 8 }}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: 8,
+                      marginTop: 8,
+                    }}
                   >
                     <Send size={15} />
                     Send message

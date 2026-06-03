@@ -26,18 +26,18 @@ interface Project {
 }
 
 const PROJECTS: Project[] = [
-  { id: 1,  title: "ORÍTHYA",                  client: "Pulse Corp",          category: "Branding",     gradient: "linear-gradient(135deg, #AD1335, #16100F)" },
-  { id: 2,  title: "Bloom Festival",            client: "Bloom Events",        category: "Social",       gradient: "linear-gradient(135deg, #1E3D47, #16100F)" },
-  { id: 3,  title: "Nexus Launch Film",         client: "Nexus Technologies",  category: "Film & Video", gradient: "linear-gradient(135deg, #2E5563, #16100F)" },
-  { id: 4,  title: "Kova Coffee ID",            client: "Kova Coffee",         category: "Branding",     gradient: "linear-gradient(135deg, #7A0E26, #16100F)" },
-  { id: 5,  title: "Urban Flow Series",         client: "Urban Flow",          category: "Photography",  gradient: "linear-gradient(135deg, #4A4140, #16100F)" },
-  { id: 6,  title: "Vanilla × Somethin",        client: "Vanilla & Somethin",  category: "Web & Digital",gradient: "linear-gradient(135deg, #2A3F5F, #16100F)" },
-  { id: 7,  title: "Midnight Glow",             client: "Midnight Labs",        category: "Animation",    gradient: "linear-gradient(135deg, #241A18, #355a5f)" },
-  { id: 8,  title: "Soko Market Rebrand",       client: "Soko Market",         category: "Branding",     gradient: "linear-gradient(135deg, #AD1335, #7A0E26)" },
-  { id: 9,  title: "Verde Restaurant",          client: "Verde Group",         category: "Social",       gradient: "linear-gradient(135deg, #1E3D47, #2E5563)" },
-  { id: 10, title: "Apex Sports Campaign",      client: "Apex Sports",         category: "Film & Video", gradient: "linear-gradient(135deg, #4A4140, #16100F)" },
-  { id: 11, title: "Nomad Coffee Packaging",    client: "Nomad Coffee",        category: "Branding",     gradient: "linear-gradient(135deg, #B97D1E, #16100F)" },
-  { id: 12, title: "Cityscape Series",          client: "Metro Council",       category: "Photography",  gradient: "linear-gradient(135deg, #241A18, #4A4140)" },
+  { id: 1,  title: "ORÍTHYA",               client: "Pulse Corp",         category: "Branding",      gradient: "linear-gradient(135deg, #AD1335, #16100F)" },
+  { id: 2,  title: "Bloom Festival",         client: "Bloom Events",       category: "Social",        gradient: "linear-gradient(135deg, #1E3D47, #16100F)" },
+  { id: 3,  title: "Nexus Launch Film",      client: "Nexus Technologies", category: "Film & Video",  gradient: "linear-gradient(135deg, #2E5563, #16100F)" },
+  { id: 4,  title: "Kova Coffee ID",         client: "Kova Coffee",        category: "Branding",      gradient: "linear-gradient(135deg, #7A0E26, #16100F)" },
+  { id: 5,  title: "Urban Flow Series",      client: "Urban Flow",         category: "Photography",   gradient: "linear-gradient(135deg, #4A4140, #16100F)" },
+  { id: 6,  title: "Vanilla × Somethin",     client: "Vanilla & Somethin", category: "Web & Digital", gradient: "linear-gradient(135deg, #2A3F5F, #16100F)" },
+  { id: 7,  title: "Midnight Glow",          client: "Midnight Labs",      category: "Animation",     gradient: "linear-gradient(135deg, #241A18, #355a5f)" },
+  { id: 8,  title: "Soko Market Rebrand",    client: "Soko Market",        category: "Branding",      gradient: "linear-gradient(135deg, #AD1335, #7A0E26)" },
+  { id: 9,  title: "Verde Restaurant",       client: "Verde Group",        category: "Social",        gradient: "linear-gradient(135deg, #1E3D47, #2E5563)" },
+  { id: 10, title: "Apex Sports Campaign",   client: "Apex Sports",        category: "Film & Video",  gradient: "linear-gradient(135deg, #4A4140, #16100F)" },
+  { id: 11, title: "Nomad Coffee Packaging", client: "Nomad Coffee",       category: "Branding",      gradient: "linear-gradient(135deg, #B97D1E, #16100F)" },
+  { id: 12, title: "Cityscape Series",       client: "Metro Council",      category: "Photography",   gradient: "linear-gradient(135deg, #241A18, #4A4140)" },
 ];
 
 const TESTIMONIALS = [
@@ -45,19 +45,22 @@ const TESTIMONIALS = [
     name: "Amara Osei",
     initials: "AO",
     company: "Pulse Corp",
-    quote: "Kissa Media completely transformed our brand identity. The rebrand resonated instantly with our audience — we saw a 40% uplift in brand recognition within three months.",
+    quote:
+      "Kissa Media completely transformed our brand identity. The rebrand resonated instantly with our audience — we saw a 40% uplift in brand recognition within three months.",
   },
   {
     name: "Sofia Reyes",
     initials: "SR",
     company: "Bloom Events",
-    quote: "The social campaign they crafted for Bloom Festival was electric. Every asset felt intentional, on-brand, and genuinely exciting. Our ticket sales exceeded expectations.",
+    quote:
+      "The social campaign they crafted for Bloom Festival was electric. Every asset felt intentional, on-brand, and genuinely exciting. Our ticket sales exceeded expectations.",
   },
   {
     name: "James Thornton",
     initials: "JT",
     company: "Nexus Technologies",
-    quote: "From concept to final cut, the Kissa team brought a cinematic quality to our product launch that we didn't think was achievable in our timeline. Absolutely world-class.",
+    quote:
+      "From concept to final cut, the Kissa team brought a cinematic quality to our product launch that we didn't think was achievable in our timeline. Absolutely world-class.",
   },
 ];
 
@@ -72,7 +75,7 @@ function ProjectCard({ project }: { project: Project }) {
       className="group relative overflow-hidden cursor-pointer"
       style={{
         background: "#fff",
-        borderRadius: "20px",
+        borderRadius: "var(--r-lg)",
         border: "1px solid var(--line)",
         boxShadow: "var(--sh-1)",
       }}
@@ -84,11 +87,14 @@ function ProjectCard({ project }: { project: Project }) {
       >
         {/* Hover overlay */}
         <div
-          className="absolute inset-0 flex items-end justify-between p-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          style={{ background: "linear-gradient(to top, rgba(22,16,15,0.85) 0%, transparent 60%)" }}
+          className="absolute inset-0 flex items-end p-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          style={{
+            background:
+              "linear-gradient(to top, rgba(22,16,15,0.88) 0%, transparent 65%)",
+          }}
         >
           <span
-            className="text-white text-sm font-semibold"
+            className="text-white text-sm font-semibold flex items-center gap-2"
             style={{ fontFamily: "var(--sans)" }}
           >
             View case study →
@@ -101,13 +107,21 @@ function ProjectCard({ project }: { project: Project }) {
         <div className="min-w-0">
           <p
             className="font-bold leading-snug truncate"
-            style={{ fontFamily: "var(--sans)", fontSize: "17px", color: "var(--fg1)" }}
+            style={{
+              fontFamily: "var(--sans)",
+              fontSize: "17px",
+              color: "var(--fg1)",
+            }}
           >
             {project.title}
           </p>
           <p
             className="mt-0.5 truncate"
-            style={{ fontFamily: "var(--mono)", fontSize: "13px", color: "var(--fg3)" }}
+            style={{
+              fontFamily: "var(--mono)",
+              fontSize: "13px",
+              color: "var(--fg3)",
+            }}
           >
             {project.client}
           </p>
@@ -121,6 +135,7 @@ function ProjectCard({ project }: { project: Project }) {
             fontSize: "13px",
             padding: "4px 12px",
             fontFamily: "var(--sans)",
+            fontWeight: 500,
           }}
         >
           {project.category}
@@ -143,7 +158,11 @@ export default function PortfolioPage() {
         {/* ── Hero ── */}
         <section
           className="relative flex flex-col items-center justify-center text-center overflow-hidden px-6"
-          style={{ background: "var(--ink)", paddingTop: "140px", paddingBottom: "100px" }}
+          style={{
+            background: "var(--ink)",
+            paddingTop: "140px",
+            paddingBottom: "100px",
+          }}
         >
           <motion.p
             initial={{ opacity: 0, y: 16 }}
@@ -168,7 +187,10 @@ export default function PortfolioPage() {
             }}
           >
             Our unforgettable{" "}
-            <em className="italic-crimson not-italic" style={{ fontStyle: "italic" }}>
+            <em
+              className="italic-crimson"
+              style={{ fontStyle: "italic" }}
+            >
               kissas.
             </em>
           </motion.h1>
@@ -177,9 +199,15 @@ export default function PortfolioPage() {
         {/* ── Filter Bar ── */}
         <div
           className="sticky top-0 z-30 px-6 py-4"
-          style={{ background: "var(--paper)", borderBottom: "1px solid var(--line)" }}
+          style={{
+            background: "var(--paper)",
+            borderBottom: "1px solid var(--line)",
+          }}
         >
-          <div className="wrap flex flex-wrap gap-2 justify-center">
+          <div
+            className="wrap flex flex-wrap gap-2 justify-center mx-auto"
+            style={{ maxWidth: "1200px" }}
+          >
             {CATEGORIES.map((cat) => (
               <button
                 key={cat}
@@ -190,9 +218,14 @@ export default function PortfolioPage() {
                   fontWeight: 600,
                   borderRadius: "999px",
                   padding: "6px 18px",
-                  border: active === cat ? "none" : "1px solid var(--line-strong)",
-                  background: active === cat ? "var(--crimson)" : "transparent",
-                  color: active === cat ? "#fff" : "var(--fg2)",
+                  border:
+                    active === cat
+                      ? "1.5px solid var(--crimson)"
+                      : "1.5px solid var(--line-strong)",
+                  background:
+                    active === cat ? "var(--crimson)" : "transparent",
+                  color:
+                    active === cat ? "#fff" : "var(--fg2)",
                   cursor: "pointer",
                   transition: "all 0.18s",
                 }}
@@ -204,12 +237,21 @@ export default function PortfolioPage() {
         </div>
 
         {/* ── Portfolio Grid ── */}
-        <section style={{ background: "var(--paper)", paddingTop: "96px", paddingBottom: "96px" }}>
-          <div className="wrap px-6 mx-auto" style={{ maxWidth: "1200px" }}>
+        <section
+          style={{
+            background: "var(--paper)",
+            paddingTop: "96px",
+            paddingBottom: "96px",
+          }}
+        >
+          <div className="px-6 mx-auto" style={{ maxWidth: "1200px" }}>
             <motion.div
               layout
               className="grid gap-6"
-              style={{ gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))" }}
+              style={{
+                gridTemplateColumns:
+                  "repeat(auto-fill, minmax(min(100%, 340px), 1fr))",
+              }}
             >
               <AnimatePresence mode="popLayout">
                 {filtered.map((project) => (
@@ -218,7 +260,13 @@ export default function PortfolioPage() {
               </AnimatePresence>
             </motion.div>
             {filtered.length === 0 && (
-              <p className="text-center py-20" style={{ color: "var(--fg3)", fontFamily: "var(--sans)" }}>
+              <p
+                className="text-center py-20"
+                style={{
+                  color: "var(--fg3)",
+                  fontFamily: "var(--sans)",
+                }}
+              >
                 No projects in this category yet.
               </p>
             )}
@@ -226,7 +274,13 @@ export default function PortfolioPage() {
         </section>
 
         {/* ── Testimonials ── */}
-        <section style={{ background: "var(--bone)", paddingTop: "96px", paddingBottom: "96px" }}>
+        <section
+          style={{
+            background: "var(--bone)",
+            paddingTop: "96px",
+            paddingBottom: "96px",
+          }}
+        >
           <div className="px-6 mx-auto" style={{ maxWidth: "1200px" }}>
             <motion.div
               initial={{ opacity: 0, y: 24 }}
@@ -235,15 +289,15 @@ export default function PortfolioPage() {
               transition={{ duration: 0.6 }}
               className="text-center mb-14"
             >
-              <p className="k-eyebrow mb-4" style={{ color: "var(--fg3)" }}>
+              <p
+                className="k-eyebrow mb-4"
+                style={{ color: "var(--fg3)", justifyContent: "center" }}
+              >
                 Testimonials
               </p>
               <h2
                 className="k-h2"
-                style={{
-                  fontFamily: "var(--serif-display)",
-                  color: "var(--fg1)",
-                }}
+                style={{ color: "var(--fg1)" }}
               >
                 What our storytellers say.
               </h2>
@@ -259,12 +313,13 @@ export default function PortfolioPage() {
                   transition={{ duration: 0.5, delay: i * 0.12 }}
                   style={{
                     background: "#fff",
-                    borderRadius: "16px",
+                    borderRadius: "var(--r-md)",
                     borderLeft: "4px solid var(--crimson)",
                     padding: "28px",
                     display: "flex",
                     flexDirection: "column",
                     gap: "20px",
+                    boxShadow: "var(--sh-1)",
                   }}
                 >
                   <blockquote
@@ -272,14 +327,18 @@ export default function PortfolioPage() {
                       fontFamily: "var(--serif-display)",
                       fontStyle: "italic",
                       fontSize: "16px",
-                      lineHeight: 1.6,
+                      lineHeight: 1.65,
                       color: "var(--fg2)",
                       flex: 1,
+                      margin: 0,
                     }}
                   >
                     &ldquo;{t.quote}&rdquo;
                   </blockquote>
-                  <div className="flex items-center gap-3 pt-2" style={{ borderTop: "1px solid var(--line)" }}>
+                  <div
+                    className="flex items-center gap-3 pt-4"
+                    style={{ borderTop: "1px solid var(--line)" }}
+                  >
                     <div
                       className="flex items-center justify-center shrink-0"
                       style={{
@@ -296,10 +355,25 @@ export default function PortfolioPage() {
                       {t.initials}
                     </div>
                     <div>
-                      <p style={{ fontFamily: "var(--sans)", fontWeight: 700, fontSize: "14px", color: "var(--fg1)" }}>
+                      <p
+                        style={{
+                          fontFamily: "var(--sans)",
+                          fontWeight: 700,
+                          fontSize: "14px",
+                          color: "var(--fg1)",
+                        }}
+                      >
                         {t.name}
                       </p>
-                      <p style={{ fontFamily: "var(--mono)", fontSize: "12px", textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--fg3)" }}>
+                      <p
+                        style={{
+                          fontFamily: "var(--mono)",
+                          fontSize: "12px",
+                          textTransform: "uppercase",
+                          letterSpacing: "0.08em",
+                          color: "var(--fg3)",
+                        }}
+                      >
                         {t.company}
                       </p>
                     </div>
@@ -313,7 +387,11 @@ export default function PortfolioPage() {
         {/* ── CTA ── */}
         <section
           className="text-center px-6"
-          style={{ background: "var(--ink)", paddingTop: "96px", paddingBottom: "96px" }}
+          style={{
+            background: "var(--ink)",
+            paddingTop: "96px",
+            paddingBottom: "96px",
+          }}
         >
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -331,6 +409,7 @@ export default function PortfolioPage() {
                 color: "#fff",
                 marginBottom: "32px",
                 lineHeight: 1.1,
+                letterSpacing: "-0.01em",
               }}
             >
               Have a project in mind?
