@@ -5,8 +5,7 @@ import "./globals.css";
 const fraunces = Fraunces({
   variable: "--font-serif-display",
   subsets: ["latin"],
-  axes: ["opsz"],
-  weight: ["400", "600", "700"],
+  weight: "variable",
   style: ["normal", "italic"],
 });
 

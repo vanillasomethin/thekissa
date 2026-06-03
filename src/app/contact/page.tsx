@@ -7,7 +7,7 @@ import {
   Phone,
   MapPin,
   AtSign,
-  Linkedin,
+  Link2,
   PlayCircle,
   Clock,
   CheckCircle2,
@@ -410,7 +410,7 @@ export default function ContactPage() {
                         href: "https://instagram.com/thekissa",
                       },
                       {
-                        Icon: Linkedin,
+                        Icon: Link2,
                         label: "LinkedIn",
                         href: "https://linkedin.com/company/thekissa",
                       },

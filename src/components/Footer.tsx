@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { AtSign, Linkedin, PlayCircle } from "lucide-react";
+import { AtSign, Link2, PlayCircle } from "lucide-react";
 
 const studioLinks = [
   { label: "Work", href: "/work" },
@@ -19,7 +19,7 @@ const connectLinks = [
 
 const socialLinks = [
   { Icon: AtSign, href: "https://instagram.com", label: "Instagram" },
-  { Icon: Linkedin, href: "https://linkedin.com", label: "LinkedIn" },
+  { Icon: Link2, href: "https://linkedin.com", label: "LinkedIn" },
   { Icon: PlayCircle, href: "https://youtube.com", label: "YouTube" },
 ];
 

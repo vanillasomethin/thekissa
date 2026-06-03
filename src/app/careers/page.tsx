@@ -395,7 +395,7 @@ function ApplicationModal({ job, onClose }: { job: Job; onClose: () => void }) {
                     <input
                       name={f.name}
                       type={f.type}
-                      value={(form as Record<string, string>)[f.name]}
+                      value={((form as Record<string, unknown>)[f.name] as string) ?? ""}
                       onChange={handleChange}
                       required={f.required}
                       placeholder={f.placeholder}
@@ -445,7 +445,7 @@ function ApplicationModal({ job, onClose }: { job: Job; onClose: () => void }) {
                     <input
                       name={f.name}
                       type="url"
-                      value={(form as Record<string, string>)[f.name]}
+                      value={((form as Record<string, unknown>)[f.name] as string) ?? ""}
                       onChange={handleChange}
                       placeholder={f.placeholder}
                       style={modalInputStyle}
