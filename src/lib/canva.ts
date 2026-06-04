@@ -1,4 +1,5 @@
 // Canva OAuth 2.0 with PKCE helpers
+import crypto from "crypto";
 
 const CANVA_CLIENT_ID = process.env.CANVA_CLIENT_ID ?? "OC-AZ6Nsdbwphgy";
 const CANVA_CLIENT_SECRET = process.env.CANVA_CLIENT_SECRET ?? "";
@@ -13,23 +14,15 @@ export const CANVA_API_BASE = "https://api.canva.com/rest/v1";
 // ── PKCE ──────────────────────────────────────────────────────────────────────
 
 export function generateCodeVerifier(): string {
-  const array = new Uint8Array(32);
-  crypto.getRandomValues(array);
-  return base64urlEncode(array);
+  return crypto.randomBytes(96).toString("base64url");
 }
 
-export async function generateCodeChallenge(verifier: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(verifier);
-  const digest = await crypto.subtle.digest("SHA-256", data);
-  return base64urlEncode(new Uint8Array(digest));
+export function generateCodeChallenge(verifier: string): string {
+  return crypto.createHash("sha256").update(verifier).digest("base64url");
 }
 
-function base64urlEncode(bytes: Uint8Array): string {
-  return btoa(String.fromCharCode(...bytes))
-    .replace(/\+/g, "-")
-    .replace(/\//g, "_")
-    .replace(/=+$/, "");
+export function generateState(): string {
+  return crypto.randomBytes(96).toString("base64url");
 }
 
 // ── Auth URL builder ──────────────────────────────────────────────────────────
@@ -45,7 +38,7 @@ export function buildAuthUrl(codeChallenge: string, state: string): string {
       "design:meta:read",
       "asset:read",
     ].join(" "),
-    code_challenge_method: "S256",
+    code_challenge_method: "s256",
     code_challenge: codeChallenge,
     state,
   });

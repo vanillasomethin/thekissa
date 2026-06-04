@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import { generateCodeVerifier, generateCodeChallenge, buildAuthUrl } from "@/lib/canva";
+import { generateCodeVerifier, generateCodeChallenge, generateState, buildAuthUrl } from "@/lib/canva";
 
 export async function GET() {
   const verifier = generateCodeVerifier();
-  const challenge = await generateCodeChallenge(verifier);
-  const state = crypto.randomUUID();
+  const challenge = generateCodeChallenge(verifier);
+  const state = generateState();
 
   const authUrl = buildAuthUrl(challenge, state);
 
