@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { fetchPortfolioDesigns } from "@/lib/canva";
+import { CANVA_API_BASE } from "@/lib/canva";
+
+const PORTFOLIO_FOLDER_ID = "FAF1YBxSNTM";
 
 export async function GET(request: NextRequest) {
   const accessToken = request.cookies.get("canva_access_token")?.value;
@@ -9,10 +11,33 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const designs = await fetchPortfolioDesigns(accessToken);
-    return NextResponse.json({ designs });
+    const res = await fetch(
+      `${CANVA_API_BASE}/folders/${PORTFOLIO_FOLDER_ID}/items`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+
+    const body = await res.json();
+
+    if (!res.ok) {
+      return NextResponse.json(
+        { error: "canva_api_error", status: res.status, detail: body },
+        { status: 502 }
+      );
+    }
+
+    // Canva returns items as { items: [{ type, design? }] }
+    const items = body.items ?? [];
+    const designs = items
+      .filter((item: { type: string }) => item.type === "design")
+      .map((item: { design: unknown }) => item.design);
+
+    return NextResponse.json({ designs, raw_count: items.length });
   } catch (err) {
-    console.error("Portfolio fetch error:", err);
-    return NextResponse.json({ error: "fetch_failed" }, { status: 500 });
+    const message = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

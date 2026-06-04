@@ -72,20 +72,24 @@ export default function PortfolioPage() {
   const [selected, setSelected] = useState("All");
   const [canvaDesigns, setCanvaDesigns] = useState<CanvaDesign[]>([]);
   const [canvaAuthenticated, setCanvaAuthenticated] = useState(false);
+  const [canvaError, setCanvaError] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/canva/portfolio")
-      .then((r) => {
-        if (r.status === 401) return null;
-        return r.json();
-      })
+      .then((r) => r.json())
       .then((data) => {
+        if (data?.error === "unauthenticated") return;
+        if (data?.error) {
+          setCanvaAuthenticated(true);
+          setCanvaError(JSON.stringify(data, null, 2));
+          return;
+        }
         if (data?.designs) {
           setCanvaDesigns(data.designs);
           setCanvaAuthenticated(true);
         }
       })
-      .catch(() => {});
+      .catch((e) => setCanvaError(e.message));
   }, []);
 
   const filtered =
@@ -239,6 +243,11 @@ export default function PortfolioPage() {
         {/* ── Portfolio Grid ─────────────────────────────────────────────────── */}
         <section style={{ background: "var(--paper)", padding: "80px 0 120px" }}>
           <div className="wrap">
+            {canvaError && (
+              <pre style={{ background: "#1a0a0a", color: "#ff6b6b", padding: 16, borderRadius: 8, fontSize: 12, overflowX: "auto", marginBottom: 24 }}>
+                {canvaError}
+              </pre>
+            )}
             {!canvaAuthenticated && (
               <div
                 style={{
