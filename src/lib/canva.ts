@@ -35,7 +35,6 @@ export function buildAuthUrl(codeChallenge: string, state: string): string {
     scope: [
       "folder:read",
       "design:content:read",
-      "design:meta:read",
       "asset:read",
     ].join(" "),
     code_challenge_method: "s256",
