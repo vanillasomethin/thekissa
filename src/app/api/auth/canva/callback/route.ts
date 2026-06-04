@@ -29,7 +29,9 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const tokens = await exchangeCodeForTokens(code, codeVerifier);
+    const origin = new URL(request.url).origin;
+    const redirectUri = `${origin}/api/auth/canva/callback`;
+    const tokens = await exchangeCodeForTokens(code, codeVerifier, redirectUri);
 
     const response = NextResponse.redirect(new URL("/portfolio", request.url));
 

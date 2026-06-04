@@ -1,16 +1,19 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { generateCodeVerifier, generateCodeChallenge, generateState, buildAuthUrl } from "@/lib/canva";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const verifier = generateCodeVerifier();
   const challenge = generateCodeChallenge(verifier);
   const state = generateState();
 
-  const authUrl = buildAuthUrl(challenge, state);
+  // Use the same origin so cookies survive the round-trip
+  const origin = new URL(request.url).origin;
+  const redirectUri = `${origin}/api/auth/canva/callback`;
+
+  const authUrl = buildAuthUrl(challenge, state, redirectUri);
 
   const response = NextResponse.redirect(authUrl);
 
-  // Store verifier and state in httpOnly cookies (15-min TTL)
   response.cookies.set("canva_code_verifier", verifier, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",

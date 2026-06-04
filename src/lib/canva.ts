@@ -27,11 +27,11 @@ export function generateState(): string {
 
 // ── Auth URL builder ──────────────────────────────────────────────────────────
 
-export function buildAuthUrl(codeChallenge: string, state: string): string {
+export function buildAuthUrl(codeChallenge: string, state: string, redirectUri?: string): string {
   const params = new URLSearchParams({
     response_type: "code",
     client_id: CANVA_CLIENT_ID,
-    redirect_uri: REDIRECT_URI,
+    redirect_uri: redirectUri ?? REDIRECT_URI,
     scope: [
       "folder:read",
       "design:content:read",
@@ -55,12 +55,13 @@ export interface CanvaTokens {
 
 export async function exchangeCodeForTokens(
   code: string,
-  codeVerifier: string
+  codeVerifier: string,
+  redirectUri?: string
 ): Promise<CanvaTokens> {
   const body = new URLSearchParams({
     grant_type: "authorization_code",
     code,
-    redirect_uri: REDIRECT_URI,
+    redirect_uri: redirectUri ?? REDIRECT_URI,
     code_verifier: codeVerifier,
     client_id: CANVA_CLIENT_ID,
   });
