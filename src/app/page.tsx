@@ -6,8 +6,7 @@ import {
   useScroll,
   useTransform,
   useInView,
-  useSpring,
-  AnimatePresence,
+  useReducedMotion,
 } from "framer-motion";
 import { PlayCircle, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
@@ -139,13 +138,14 @@ function ClipReveal({
   duration?: number;
   style?: React.CSSProperties;
 }) {
+  const reduce = useReducedMotion();
   return (
     <div style={{ overflow: "hidden", ...style }}>
       <motion.div
-        initial={{ y: "105%" }}
+        initial={reduce ? false : { y: "105%" }}
         whileInView={{ y: "0%" }}
         viewport={{ once: true, margin: "-5%" }}
-        transition={{ duration, ease, delay }}
+        transition={reduce ? { duration: 0 } : { duration, ease, delay }}
       >
         {children}
       </motion.div>
@@ -299,7 +299,7 @@ export default function HomePage() {
               }}
             >
               the Kissa is a media art agency specialising in branded content, film, and
-              immersive experiences. The name <em>kissa</em> means story — every project
+              immersive experiences. The name <em>kissa</em> means story. Every project
               is one we make unforgettable.
             </motion.p>
 
@@ -420,11 +420,7 @@ export default function HomePage() {
               }}
             />
 
-            <ClipReveal>
-              <p className="k-eyebrow" style={{ marginBottom: 24 }}>What we believe</p>
-            </ClipReveal>
-
-            <ClipReveal delay={0.1}>
+            <ClipReveal delay={0.0}>
               <p
                 style={{
                   fontFamily: "var(--serif-display)",
@@ -477,56 +473,36 @@ export default function HomePage() {
             {/* Section header */}
             <div
               style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: 48,
-                alignItems: "end",
                 borderTop: "1px solid var(--line)",
                 paddingTop: 72,
                 marginBottom: 80,
+                maxWidth: 680,
               }}
             >
-              <div>
-                <ClipReveal>
-                  <h2
-                    style={{
-                      fontFamily: "var(--serif-display)",
-                      fontSize: "clamp(36px, 4.5vw, 64px)",
-                      fontWeight: 700,
-                      color: "var(--ink)",
-                      letterSpacing: "-0.012em",
-                      lineHeight: 1.05,
-                      margin: 0,
-                    }}
-                  >
-                    Three ways
-                  </h2>
-                </ClipReveal>
-                <ClipReveal delay={0.1}>
-                  <h2
-                    style={{
-                      fontFamily: "var(--serif-display)",
-                      fontSize: "clamp(36px, 4.5vw, 64px)",
-                      fontWeight: 700,
-                      color: "var(--ink)",
-                      letterSpacing: "-0.012em",
-                      lineHeight: 1.05,
-                      margin: 0,
-                    }}
-                  >
-                    we tell it.
-                  </h2>
-                </ClipReveal>
-              </div>
+              <ClipReveal>
+                <h2
+                  style={{
+                    fontFamily: "var(--serif-display)",
+                    fontSize: "clamp(36px, 4.5vw, 64px)",
+                    fontWeight: 700,
+                    color: "var(--ink)",
+                    letterSpacing: "-0.012em",
+                    lineHeight: 1.05,
+                    margin: 0,
+                  }}
+                >
+                  Three ways we tell it.
+                </h2>
+              </ClipReveal>
               <motion.p
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2, ease }}
                 className="k-body"
-                style={{ color: "var(--fg2)", margin: 0 }}
+                style={{ color: "var(--fg2)", margin: "20px 0 0" }}
               >
-                One studio, end to end — from the first idea to the final frame. We don&apos;t
+                One studio, end to end. From the first idea to the final frame. We don&apos;t
                 hand off. We stay.
               </motion.p>
             </div>
@@ -623,9 +599,6 @@ export default function HomePage() {
             >
               <div>
                 <ClipReveal>
-                  <p className="k-eyebrow on-ink">Selected work</p>
-                </ClipReveal>
-                <ClipReveal delay={0.12}>
                   <h2
                     style={{
                       fontFamily: "var(--serif-display)",
@@ -634,7 +607,6 @@ export default function HomePage() {
                       color: "var(--fg-on-ink)",
                       letterSpacing: "-0.012em",
                       lineHeight: 1.05,
-                      marginTop: 12,
                       marginBottom: 0,
                     }}
                   >
@@ -823,9 +795,6 @@ export default function HomePage() {
         <section style={{ background: "var(--bone)", padding: "140px 0" }}>
           <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
             <ClipReveal>
-              <p className="k-eyebrow" style={{ marginBottom: 20 }}>Clients</p>
-            </ClipReveal>
-            <ClipReveal delay={0.12}>
               <h2
                 style={{
                   fontFamily: "var(--serif-display)",
@@ -860,7 +829,7 @@ export default function HomePage() {
                     background: "#ffffff",
                     borderRadius: 20,
                     padding: 40,
-                    borderLeft: "3px solid var(--crimson)",
+                    border: "1px solid rgba(173,19,53,0.12)",
                     boxShadow: "0 2px 20px rgba(22,16,15,0.06)",
                   }}
                 >

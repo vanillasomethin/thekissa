@@ -251,7 +251,8 @@ a { color: inherit; text-decoration: none; }
   color: var(--ink);
   border-color: var(--line-strong);
 }
-.btn-ghost:hover { border-color: var(--ink); transform: translateY(-2px); }
+.btn-ghost:hover  { border-color: var(--ink); transform: translateY(-2px); }
+.btn-ghost:active { transform: scale(0.97); }
 
 .btn-ghost.on-ink {
   color: var(--fg-on-ink);
@@ -325,4 +326,62 @@ a { color: inherit; text-decoration: none; }
 }
 @media (max-width: 680px) {
   .wrap { padding: 0 24px; }
+}
+
+/* ============================================================
+   RESPONSIVE GRID UTILITIES
+   ============================================================ */
+.grid-services {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+@media (max-width: 900px) {
+  .grid-services { grid-template-columns: 1fr; }
+}
+
+.grid-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+}
+@media (max-width: 900px) {
+  .grid-stats { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 500px) {
+  .grid-stats { grid-template-columns: 1fr; }
+}
+
+.grid-testimonials {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+@media (max-width: 760px) {
+  .grid-testimonials { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   REDUCED MOTION
+   All movement and position animations collapse;
+   opacity / color transitions remain for comprehension.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .marquee-track {
+    animation: none !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
 }

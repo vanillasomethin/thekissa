@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { ArrowUpRight, Link2 } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import type { CanvaDesign } from "@/lib/canva";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
@@ -50,13 +51,14 @@ function ClipReveal({
   delay?: number;
   style?: React.CSSProperties;
 }) {
+  const reduce = useReducedMotion();
   return (
     <div style={{ overflow: "hidden", ...style }}>
       <motion.div
-        initial={{ y: "105%" }}
+        initial={reduce ? false : { y: "105%" }}
         whileInView={{ y: "0%" }}
         viewport={{ once: true, margin: "-5%" }}
-        transition={{ duration: 0.75, ease, delay }}
+        transition={reduce ? { duration: 0 } : { duration: 0.75, ease, delay }}
       >
         {children}
       </motion.div>
@@ -68,6 +70,23 @@ function ClipReveal({
 
 export default function PortfolioPage() {
   const [selected, setSelected] = useState("All");
+  const [canvaDesigns, setCanvaDesigns] = useState<CanvaDesign[]>([]);
+  const [canvaAuthenticated, setCanvaAuthenticated] = useState(false);
+
+  useEffect(() => {
+    fetch("/api/canva/portfolio")
+      .then((r) => {
+        if (r.status === 401) return null;
+        return r.json();
+      })
+      .then((data) => {
+        if (data?.designs) {
+          setCanvaDesigns(data.designs);
+          setCanvaAuthenticated(true);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const filtered =
     selected === "All" ? PROJECTS : PROJECTS.filter((p) => p.category === selected);
@@ -220,6 +239,33 @@ export default function PortfolioPage() {
         {/* ── Portfolio Grid ─────────────────────────────────────────────────── */}
         <section style={{ background: "var(--paper)", padding: "80px 0 120px" }}>
           <div className="wrap">
+            {!canvaAuthenticated && (
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  background: "var(--bone)",
+                  border: "1px solid var(--line)",
+                  borderRadius: 12,
+                  padding: "14px 20px",
+                  marginBottom: 32,
+                  flexWrap: "wrap",
+                  gap: 12,
+                }}
+              >
+                <p style={{ fontFamily: "var(--sans)", fontSize: 14, color: "var(--fg2)", margin: 0 }}>
+                  Connect Canva to load real project thumbnails.
+                </p>
+                <a
+                  href="/api/auth/canva"
+                  className="btn btn-primary"
+                  style={{ padding: "10px 20px", fontSize: 14 }}
+                >
+                  <Link2 size={14} /> Connect Canva
+                </a>
+              </div>
+            )}
             <motion.div
               layout
               style={{
@@ -229,9 +275,19 @@ export default function PortfolioPage() {
               }}
             >
               <AnimatePresence mode="popLayout">
-                {filtered.map((project, i) => (
-                  <ProjectCard key={project.slug} project={project} index={i} />
-                ))}
+                {filtered.map((project, i) => {
+                  const canvaDesign = canvaDesigns.find(
+                    (d) => d.name.toLowerCase() === project.name.toLowerCase()
+                  );
+                  return (
+                    <ProjectCard
+                      key={project.slug}
+                      project={project}
+                      index={i}
+                      thumbnail={canvaDesign?.thumbnail?.url}
+                    />
+                  );
+                })}
               </AnimatePresence>
             </motion.div>
 
@@ -315,9 +371,11 @@ export default function PortfolioPage() {
 function ProjectCard({
   project,
   index,
+  thumbnail,
 }: {
   project: (typeof PROJECTS)[0];
   index: number;
+  thumbnail?: string;
 }) {
   const [hovered, setHovered] = useState(false);
 
@@ -364,6 +422,23 @@ function ProjectCard({
           overflow: "hidden",
         }}
       >
+        {/* Real thumbnail when available */}
+        {thumbnail && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={thumbnail}
+            alt={project.name}
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              opacity: hovered ? 0.9 : 0.8,
+              transition: "opacity 0.3s ease-out",
+            }}
+          />
+        )}
         {/* Accent radial glow */}
         <div
           style={{
