@@ -7,10 +7,10 @@ export async function GET(request: NextRequest) {
   const state = searchParams.get("state");
   const error = searchParams.get("error");
 
+  const origin = new URL(request.url).origin;
+
   if (error) {
-    return NextResponse.redirect(
-      new URL(`/portfolio?error=${encodeURIComponent(error)}`, request.url)
-    );
+    return NextResponse.redirect(new URL(`/portfolio?error=${encodeURIComponent(error)}`, request.url));
   }
 
   if (!code) {
@@ -29,38 +29,48 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const origin = new URL(request.url).origin;
     const redirectUri = `${origin}/api/auth/canva/callback`;
     const tokens = await exchangeCodeForTokens(code, codeVerifier, redirectUri);
 
-    const response = NextResponse.redirect(new URL("/portfolio", request.url));
+    const cookieOpts = [
+      `Path=/`,
+      `Max-Age=${tokens.expires_in}`,
+      `SameSite=Lax`,
+      process.env.NODE_ENV === "production" ? "Secure" : "",
+      "HttpOnly",
+    ].filter(Boolean).join("; ");
 
-    // Store access token (expires per token TTL, default 1h)
-    response.cookies.set("canva_access_token", tokens.access_token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: tokens.expires_in,
-      path: "/",
+    const refreshOpts = [
+      `Path=/`,
+      `Max-Age=${60 * 60 * 24 * 30}`,
+      `SameSite=Lax`,
+      process.env.NODE_ENV === "production" ? "Secure" : "",
+      "HttpOnly",
+    ].filter(Boolean).join("; ");
+
+    const headers = new Headers({
+      "Content-Type": "text/html; charset=utf-8",
     });
 
+    headers.append("Set-Cookie", `canva_access_token=${tokens.access_token}; ${cookieOpts}`);
     if (tokens.refresh_token) {
-      response.cookies.set("canva_refresh_token", tokens.refresh_token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        maxAge: 60 * 60 * 24 * 30, // 30 days
-        path: "/",
-      });
+      headers.append("Set-Cookie", `canva_refresh_token=${tokens.refresh_token}; ${refreshOpts}`);
     }
+    headers.append("Set-Cookie", `canva_code_verifier=; Path=/; Max-Age=0`);
+    headers.append("Set-Cookie", `canva_oauth_state=; Path=/; Max-Age=0`);
 
-    // Clear PKCE cookies
-    response.cookies.delete("canva_code_verifier");
-    response.cookies.delete("canva_oauth_state");
-
-    return response;
+    // Return HTML that sets cookies then redirects — avoids the Set-Cookie-on-redirect problem
+    return new Response(
+      `<!DOCTYPE html><html><head>
+        <meta http-equiv="refresh" content="0;url=/portfolio">
+      </head><body>
+        <script>window.location.replace("/portfolio");</script>
+      </body></html>`,
+      { status: 200, headers }
+    );
   } catch (err) {
     console.error("Canva token exchange error:", err);
-    return NextResponse.redirect(new URL("/portfolio?error=token_exchange", request.url));
+    const msg = err instanceof Error ? err.message : String(err);
+    return NextResponse.redirect(new URL(`/portfolio?error=${encodeURIComponent(msg)}`, request.url));
   }
 }
