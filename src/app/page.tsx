@@ -125,6 +125,266 @@ const stats = [
   { value: 1, suffix: "", label: "Story per brand. Told right. That's the whole job." },
 ];
 
+// ─── Kissa bubble SVG path (speech bubble pointing left) ─────────────────────
+// Matches the brand mark: rounded rect with tail bottom-left
+const BUBBLE_PATH =
+  "M28,0 L172,0 Q200,0 200,28 L200,132 Q200,160 172,160 L72,160 L48,188 L52,160 L28,160 Q0,160 0,132 L0,28 Q0,0 28,0 Z";
+
+function KissaBubble({
+  size = 200,
+  fill = "none",
+  stroke = "currentColor",
+  strokeWidth = 3,
+  style,
+}: {
+  size?: number;
+  fill?: string;
+  stroke?: string;
+  strokeWidth?: number;
+  style?: React.CSSProperties;
+}) {
+  return (
+    <svg
+      viewBox="0 0 200 188"
+      width={size}
+      height={size * (188 / 200)}
+      fill={fill}
+      stroke={stroke}
+      strokeWidth={strokeWidth}
+      strokeLinejoin="round"
+      style={style}
+    >
+      <path d={BUBBLE_PATH} />
+    </svg>
+  );
+}
+
+// ─── KissaBubbleSection — motion infographic between marquee and statement ────
+function KissaBubbleSection() {
+  const reduce = useReducedMotion();
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const y1 = useTransform(scrollYProgress, [0, 1], [40, -40]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [-20, 40]);
+  const rotate1 = useTransform(scrollYProgress, [0, 1], [-8, 8]);
+  const rotate2 = useTransform(scrollYProgress, [0, 1], [12, -6]);
+
+  const bubbles = [
+    { label: "Story & Brand", x: "8%", y: "10%", size: 180, delay: 0, filled: true },
+    { label: "Motion & Film", x: "62%", y: "5%", size: 140, delay: 0.15, filled: false },
+    { label: "Digital & Immersive", x: "38%", y: "52%", size: 110, delay: 0.28, filled: false },
+    { label: "", x: "78%", y: "48%", size: 80, delay: 0.38, filled: true },
+    { label: "", x: "18%", y: "62%", size: 64, delay: 0.45, filled: false },
+  ];
+
+  return (
+    <section
+      ref={ref}
+      style={{
+        background: "var(--ink)",
+        padding: "100px 0",
+        overflow: "hidden",
+        position: "relative",
+      }}
+    >
+      <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            gap: 64,
+            alignItems: "center",
+          }}
+        >
+          {/* Left: large kinetic type */}
+          <div>
+            <motion.div
+              initial={reduce ? false : { opacity: 0, y: 32 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, ease }}
+            >
+              <p
+                style={{
+                  fontFamily: "var(--mono)",
+                  fontSize: 11,
+                  letterSpacing: "0.16em",
+                  textTransform: "uppercase",
+                  color: "rgba(173,19,53,0.8)",
+                  marginBottom: 20,
+                }}
+              >
+                What we do
+              </p>
+              <h2
+                style={{
+                  fontFamily: "var(--serif-display)",
+                  fontSize: "clamp(48px, 6vw, 80px)",
+                  fontWeight: 700,
+                  color: "var(--fg-on-ink)",
+                  lineHeight: 1.0,
+                  letterSpacing: "-0.018em",
+                  margin: "0 0 28px",
+                }}
+              >
+                Three disciplines.
+                <br />
+                <em style={{ color: "var(--crimson)", fontStyle: "italic" }}>
+                  One story.
+                </em>
+              </h2>
+              <p
+                style={{
+                  fontFamily: "var(--sans)",
+                  fontSize: 16,
+                  color: "var(--fg-on-ink-2)",
+                  lineHeight: 1.7,
+                  maxWidth: "42ch",
+                  margin: "0 0 40px",
+                }}
+              >
+                Brand strategy, film production, and digital experiences — working as one continuous creative act, not three separate deliverables.
+              </p>
+
+              {/* Three service pills with bubble icon */}
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                {[
+                  { label: "Story & Brand", desc: "Identity, strategy, voice" },
+                  { label: "Motion & Film", desc: "Production, direction, post" },
+                  { label: "Digital & Immersive", desc: "Web, AR, installations" },
+                ].map((s, i) => (
+                  <motion.div
+                    key={s.label}
+                    initial={reduce ? false : { opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.1 + i * 0.1, ease }}
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 14,
+                      padding: "12px 16px",
+                      borderRadius: 12,
+                      border: "1px solid rgba(255,255,255,0.07)",
+                      background: "rgba(255,255,255,0.03)",
+                    }}
+                  >
+                    <KissaBubble size={28} fill="var(--crimson)" stroke="none" />
+                    <div>
+                      <p style={{ fontFamily: "var(--sans)", fontWeight: 700, fontSize: 14, color: "#fff", margin: 0 }}>
+                        {s.label}
+                      </p>
+                      <p style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--fg-on-ink-2)", margin: 0, letterSpacing: "0.06em" }}>
+                        {s.desc}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Right: floating bubble illustration */}
+          <div style={{ position: "relative", height: 440, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            {/* Large filled bubble — parallax */}
+            <motion.div
+              style={{ position: "absolute", top: "5%", left: "5%", y: reduce ? 0 : y1, rotate: reduce ? 0 : rotate1 }}
+            >
+              <motion.div
+                initial={reduce ? false : { opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, ease, delay: 0.05 }}
+              >
+                <KissaBubble size={170} fill="var(--crimson)" stroke="none" />
+              </motion.div>
+            </motion.div>
+
+            {/* Outline bubble — parallax counter */}
+            <motion.div
+              style={{ position: "absolute", bottom: "8%", right: "4%", y: reduce ? 0 : y2, rotate: reduce ? 0 : rotate2 }}
+            >
+              <motion.div
+                initial={reduce ? false : { opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.75, ease, delay: 0.2 }}
+              >
+                <KissaBubble size={130} fill="none" stroke="rgba(173,19,53,0.5)" strokeWidth={2.5} />
+              </motion.div>
+            </motion.div>
+
+            {/* Centre bubble with number */}
+            <motion.div
+              initial={reduce ? false : { opacity: 0, scale: 0.7, y: 24 }}
+              whileInView={{ opacity: 1, scale: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.9, ease, delay: 0.1 }}
+              style={{ position: "relative", zIndex: 2 }}
+            >
+              <div style={{ position: "relative", display: "inline-block" }}>
+                <KissaBubble size={220} fill="rgba(173,19,53,0.12)" stroke="var(--crimson)" strokeWidth={1.5} />
+                <div style={{
+                  position: "absolute",
+                  top: "38%",
+                  left: "52%",
+                  transform: "translate(-50%, -50%)",
+                  textAlign: "center",
+                  pointerEvents: "none",
+                }}>
+                  <p style={{
+                    fontFamily: "var(--serif-display)",
+                    fontSize: "clamp(36px, 5vw, 56px)",
+                    fontWeight: 700,
+                    color: "var(--fg-on-ink)",
+                    lineHeight: 1,
+                    margin: 0,
+                  }}>23+</p>
+                  <p style={{
+                    fontFamily: "var(--mono)",
+                    fontSize: 10,
+                    color: "var(--fg-on-ink-2)",
+                    letterSpacing: "0.12em",
+                    textTransform: "uppercase",
+                    margin: "6px 0 0",
+                  }}>Brands</p>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Small accent bubbles */}
+            {bubbles.slice(3).map((b, i) => (
+              <motion.div
+                key={i}
+                initial={reduce ? false : { opacity: 0, scale: 0 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.35 + i * 0.1, ease }}
+                style={{ position: "absolute", left: b.x, top: b.y }}
+              >
+                <KissaBubble
+                  size={b.size}
+                  fill={b.filled ? "rgba(173,19,53,0.2)" : "none"}
+                  stroke={b.filled ? "none" : "rgba(173,19,53,0.25)"}
+                  strokeWidth={1.5}
+                />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Responsive: stack on mobile */}
+      <style>{`
+        @media (max-width: 760px) {
+          .bubble-section-grid { grid-template-columns: 1fr !important; }
+          .bubble-illustration { display: none !important; }
+        }
+      `}</style>
+    </section>
+  );
+}
+
 // ─── ClipReveal — text lines slide up from clip ───────────────────────────────
 
 function ClipReveal({
@@ -254,7 +514,7 @@ export default function HomePage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, ease, delay: 0.1 }}
             >
-              <p className="k-eyebrow on-ink">Media art agency — Nairobi</p>
+              <p className="k-eyebrow on-ink">Media art agency</p>
             </motion.div>
 
             {/* H1 — clip reveal line by line */}
@@ -310,7 +570,7 @@ export default function HomePage() {
               transition={{ duration: 0.6, delay: 1.0, ease }}
               style={{ display: "flex", gap: 16, flexWrap: "wrap", marginTop: 40 }}
             >
-              <a href="mailto:hello@thekissa.co" className="btn btn-primary">
+              <a href="mailto:hello@thekissa.com" className="btn btn-primary">
                 Start your kissa
               </a>
               <a href="#work" className="btn btn-ghost on-ink">
@@ -402,6 +662,9 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* ══ 2b. KISSA BUBBLE MOTION GRAPHIC ══════════════════════════════════ */}
+        <KissaBubbleSection />
 
         {/* ══ 3. STATEMENT ══════════════════════════════════════════════════════ */}
         <section style={{ background: "var(--paper)", padding: "140px 0 120px" }}>
@@ -1048,7 +1311,7 @@ export default function HomePage() {
               style={{ display: "flex", alignItems: "center", gap: 36, flexWrap: "wrap" }}
             >
               <a
-                href="mailto:hello@thekissa.co"
+                href="mailto:hello@thekissa.com"
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -1074,7 +1337,7 @@ export default function HomePage() {
                 Start your kissa <ArrowUpRight size={16} />
               </a>
               <a
-                href="mailto:hello@thekissa.co"
+                href="mailto:hello@thekissa.com"
                 style={{
                   fontFamily: "var(--sans)",
                   fontSize: 15,
@@ -1092,7 +1355,7 @@ export default function HomePage() {
                     "rgba(255,255,255,0.35)")
                 }
               >
-                hello@thekissa.co
+                hello@thekissa.com
               </a>
             </motion.div>
           </div>

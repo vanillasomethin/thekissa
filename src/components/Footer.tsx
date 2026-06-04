@@ -11,8 +11,7 @@ const studioLinks = [
 ];
 
 const connectLinks = [
-  { label: "hello@thekissa.co", href: "mailto:hello@thekissa.co" },
-  { label: "+254 700 000 000", href: "tel:+254700000000" },
+  { label: "hello@thekissa.com", href: "mailto:hello@thekissa.com" },
   { label: "Contact", href: "/contact" },
   { label: "FAQ", href: "/faq" },
 ];
@@ -70,7 +69,7 @@ export default function Footer() {
                 letterSpacing: "0.04em",
               }}
             >
-              Nairobi, Kenya
+              Media Art Agency
             </span>
           </div>
 

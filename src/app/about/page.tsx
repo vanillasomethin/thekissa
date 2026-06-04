@@ -39,7 +39,7 @@ const TEAM = [
   {
     name: "Marcus Webb",
     role: "Photography",
-    bio: "Marcus captures the unseen — raw, textured, and alive. His lens finds beauty in Nairobi's streets and boardrooms alike.",
+    bio: "Marcus captures the unseen — raw, textured, and alive. His lens finds raw texture, energy, and light in every frame.",
     initials: "MW",
     avatarBg: "#4A4140",
   },
@@ -56,7 +56,7 @@ const TIMELINE = [
   {
     year: "2018",
     title: "Founded",
-    desc: "Kissa was born in a small studio in Nairobi's Westlands, driven by a belief that African brands deserved world-class creative work — made right here at home.",
+    desc: "Kissa was born from a belief by a belief that brands everywhere deserved world-class creative work.",
   },
   {
     year: "2020",
@@ -86,7 +86,7 @@ const ACHIEVEMENTS = [
   {
     icon: Trophy,
     title: "Emerging Agency Award",
-    org: "Nairobi Design Week",
+    org: "Creative Week",
     year: "2021",
   },
   {
@@ -260,7 +260,7 @@ export default function AboutPage() {
               maxWidth: "560px",
             }}
           >
-            A media art agency from Nairobi. We tell stories that are impossible to look away from.
+            A media art agency. We tell stories that are impossible to look away from.
           </motion.p>
         </section>
 

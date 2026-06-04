@@ -316,19 +316,19 @@ export default function ContactPage() {
                     {
                       Icon: Mail,
                       label: "Email",
-                      value: "hello@thekissa.co",
-                      href: "mailto:hello@thekissa.co",
+                      value: "hello@thekissa.com",
+                      href: "mailto:hello@thekissa.com",
                     },
                     {
                       Icon: Phone,
                       label: "Phone",
-                      value: "+254 700 000 000",
+                      value: "",
                       href: "tel:+254700000000",
                     },
                     {
                       Icon: MapPin,
                       label: "Location",
-                      value: "Nairobi, Kenya",
+                      value: "",
                       href: undefined,
                     },
                     {
@@ -494,7 +494,7 @@ export default function ContactPage() {
                   color: "var(--fg-on-ink-2)",
                 }}
               >
-                Nairobi, Kenya
+                
               </span>
             </motion.div>
           </div>

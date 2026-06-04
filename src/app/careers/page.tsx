@@ -53,7 +53,7 @@ const JOBS: Job[] = [
   {
     title: "Senior Brand Designer",
     department: "Design",
-    location: "Nairobi",
+    location: "Remote",
     type: "Full-time",
     description:
       "Lead brand identity projects from concept to delivery. Collaborate closely with strategists and clients to craft visual systems that resonate and endure.",
@@ -61,7 +61,7 @@ const JOBS: Job[] = [
   {
     title: "Video Producer",
     department: "Production",
-    location: "Nairobi",
+    location: "Remote",
     type: "Full-time",
     description:
       "Own the full production pipeline — pre-production planning, on-set direction, and post-production oversight. Storytelling is your superpower.",
@@ -377,7 +377,7 @@ function ApplicationModal({ job, onClose }: { job: Job; onClose: () => void }) {
                     label: "Phone",
                     name: "phone",
                     type: "tel",
-                    placeholder: "+254 700 000 000",
+                    placeholder: "Your phone number",
                     required: false,
                   },
                 ].map((f) => (

@@ -272,12 +272,12 @@ export default function Navbar() {
               }}
             >
               <a
-                href="mailto:hello@thekissa.studio"
+                href="mailto:hello@thekissa.com"
                 style={{ color: "inherit", textDecoration: "none" }}
               >
-                hello@thekissa.studio
+                hello@thekissa.com
               </a>
-              <span>Nairobi, Kenya</span>
+              <span>hello@thekissa.com</span>
             </motion.div>
           </motion.div>
         )}

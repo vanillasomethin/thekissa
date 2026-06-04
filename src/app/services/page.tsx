@@ -261,7 +261,7 @@ function QuoteForm() {
             name="phone"
             value={form.phone}
             onChange={handleChange}
-            placeholder="+254 700 000 000"
+            placeholder="Your phone number"
             style={inputStyle}
           />
         </div>
