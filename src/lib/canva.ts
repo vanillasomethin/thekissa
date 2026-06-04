@@ -6,8 +6,8 @@ const REDIRECT_URI =
   process.env.CANVA_REDIRECT_URI ?? "https://www.thekissa.com/api/auth/canva/callback";
 const PORTFOLIO_FOLDER_ID = "FAF1YBxSNTM";
 
-export const CANVA_AUTH_URL = "https://www.canva.com/oauth2/authorize";
-export const CANVA_TOKEN_URL = "https://api.canva.com/rest/v1/oauth/token";
+export const CANVA_AUTH_URL = "https://www.canva.com/api/oauth/authorize";
+export const CANVA_TOKEN_URL = "https://www.canva.com/api/oauth/token";
 export const CANVA_API_BASE = "https://api.canva.com/rest/v1";
 
 // ── PKCE ──────────────────────────────────────────────────────────────────────
