@@ -1,4 +1,5 @@
 // Canva OAuth 2.0 with PKCE helpers
+// Docs: https://www.canva.dev/docs/connect/authentication/
 import crypto from "crypto";
 
 const CANVA_CLIENT_ID = process.env.CANVA_CLIENT_ID ?? "OC-AZ6Nsdbwphgy";
@@ -12,9 +13,10 @@ export const CANVA_TOKEN_URL = "https://www.canva.com/api/oauth/token";
 export const CANVA_API_BASE = "https://api.canva.com/rest/v1";
 
 // ── PKCE ──────────────────────────────────────────────────────────────────────
+// Per Canva docs: verifier must be 43–128 chars, randomBytes(96) → base64url = 128 chars
 
 export function generateCodeVerifier(): string {
-  return crypto.randomBytes(32).toString("base64url");
+  return crypto.randomBytes(96).toString("base64url");
 }
 
 export function generateCodeChallenge(verifier: string): string {
@@ -45,6 +47,8 @@ export function buildAuthUrl(codeChallenge: string, state: string, redirectUri?:
 }
 
 // ── Token exchange ────────────────────────────────────────────────────────────
+// Per Canva docs: use Basic auth with base64(client_id:client_secret).
+// client_id must NOT appear in the request body when using Basic auth.
 
 export interface CanvaTokens {
   access_token: string;
@@ -58,6 +62,15 @@ export async function exchangeCodeForTokens(
   codeVerifier: string,
   redirectUri?: string
 ): Promise<CanvaTokens> {
+  if (!CANVA_CLIENT_SECRET) {
+    throw new Error(
+      "CANVA_CLIENT_SECRET is not set. Add it to your Vercel environment variables. " +
+      "Find it in the Canva Developer Portal under your integration settings."
+    );
+  }
+
+  const creds = Buffer.from(`${CANVA_CLIENT_ID}:${CANVA_CLIENT_SECRET}`).toString("base64");
+
   const body = new URLSearchParams({
     grant_type: "authorization_code",
     code,
@@ -65,26 +78,49 @@ export async function exchangeCodeForTokens(
     code_verifier: codeVerifier,
   });
 
-  const headers: Record<string, string> = {
-    "Content-Type": "application/x-www-form-urlencoded",
-  };
-
-  if (CANVA_CLIENT_SECRET) {
-    const creds = Buffer.from(`${CANVA_CLIENT_ID}:${CANVA_CLIENT_SECRET}`).toString("base64");
-    headers["Authorization"] = `Basic ${creds}`;
-  } else {
-    body.set("client_id", CANVA_CLIENT_ID);
-  }
-
   const res = await fetch(CANVA_TOKEN_URL, {
     method: "POST",
-    headers,
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Authorization": `Basic ${creds}`,
+    },
     body,
   });
 
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(`Token exchange failed ${res.status}: ${text}`);
+    throw new Error(`Canva token exchange failed (${res.status}): ${text}`);
+  }
+
+  return res.json() as Promise<CanvaTokens>;
+}
+
+// ── Refresh token ─────────────────────────────────────────────────────────────
+
+export async function refreshAccessToken(refreshToken: string): Promise<CanvaTokens> {
+  if (!CANVA_CLIENT_SECRET) {
+    throw new Error("CANVA_CLIENT_SECRET is not set.");
+  }
+
+  const creds = Buffer.from(`${CANVA_CLIENT_ID}:${CANVA_CLIENT_SECRET}`).toString("base64");
+
+  const body = new URLSearchParams({
+    grant_type: "refresh_token",
+    refresh_token: refreshToken,
+  });
+
+  const res = await fetch(CANVA_TOKEN_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "Authorization": `Basic ${creds}`,
+    },
+    body,
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Canva token refresh failed (${res.status}): ${text}`);
   }
 
   return res.json() as Promise<CanvaTokens>;
@@ -111,9 +147,7 @@ export interface CanvaDesign {
 export async function fetchPortfolioDesigns(
   accessToken: string
 ): Promise<CanvaDesign[]> {
-  const params = new URLSearchParams({
-    ownership: "owned",
-  });
+  const params = new URLSearchParams({ ownership: "owned" });
 
   const res = await fetch(
     `${CANVA_API_BASE}/folders/${PORTFOLIO_FOLDER_ID}/items?${params}`,
