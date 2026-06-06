@@ -9,6 +9,7 @@ import {
 } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import dynamic from "next/dynamic";
@@ -400,19 +401,86 @@ function ClipReveal({
 }) {
   const reduce = useReducedMotion();
   return (
-    <div style={{ overflow: "hidden", ...style }}>
-      <motion.div
+    <span style={{ display: "block", overflow: "hidden", ...style }}>
+      <motion.span
+        style={{ display: "block" }}
         initial={reduce ? false : { y: "105%" }}
         whileInView={{ y: "0%" }}
         viewport={{ once: true, margin: "-5%" }}
         transition={reduce ? { duration: 0 } : { duration, ease, delay }}
       >
         {children}
-      </motion.div>
-    </div>
+      </motion.span>
+    </span>
   );
 }
 
+
+// ─── Illustration reel (scroll-driven horizontal pan) ────────────────────────
+const REEL_ITEMS = [
+  { src: "/illustrations/01-two-breakpoints.png",   label: "Two perspectives" },
+  { src: "/illustrations/02-sort-by-purpose.png",   label: "Purpose-led thinking" },
+  { src: "/illustrations/04-handoff-path.png",      label: "Seamless delivery" },
+  { src: "/illustrations/05-information-well.png",  label: "Depth of research" },
+  { src: "/illustrations/03-one-fish-many-uses.png", label: "One story, many forms" },
+  { src: "/illustrations/08-trust-bridge.png",      label: "Building trust" },
+];
+
+function IllustrationReel() {
+  const ref = useRef<HTMLElement>(null);
+  const reduce = useReducedMotion();
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
+  const x = useTransform(scrollYProgress, [0, 1], ["4%", "-22%"]);
+
+  return (
+    <section ref={ref} style={{ background: "#f0f0f0", padding: "72px 0", overflow: "hidden" }}>
+      <motion.div
+        style={{
+          display: "flex",
+          gap: 20,
+          paddingLeft: 48,
+          x: reduce ? 0 : x,
+        }}
+      >
+        {REEL_ITEMS.map((ill, i) => (
+          <div
+            key={i}
+            style={{
+              flex: "0 0 320px",
+              borderRadius: 14,
+              overflow: "hidden",
+              background: "#ffffff",
+              border: "1px solid #e0e0e0",
+              boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
+            }}
+          >
+            <div style={{ position: "relative", width: "100%", aspectRatio: "16/9" }}>
+              <Image
+                src={ill.src}
+                alt={ill.label}
+                fill
+                style={{ objectFit: "cover" }}
+                sizes="320px"
+              />
+            </div>
+            <div style={{ padding: "12px 16px" }}>
+              <p style={{
+                fontFamily: "var(--mono)",
+                fontSize: 10,
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                color: "var(--gray-500)",
+                margin: 0,
+              }}>
+                {ill.label}
+              </p>
+            </div>
+          </div>
+        ))}
+      </motion.div>
+    </section>
+  );
+}
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
@@ -455,12 +523,8 @@ export default function HomePage() {
           style={{
             position: "relative",
             minHeight: "100vh",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            paddingTop: 120,
-            paddingBottom: 80,
             overflow: "hidden",
+            background: "var(--ink)",
           }}
         >
           {/* Parallax bg layer */}
@@ -470,94 +534,122 @@ export default function HomePage() {
               inset: "-20%",
               background: "var(--ink)",
               y: bgY,
+              zIndex: 0,
             }}
           />
 
-          {/* 3D WebGL bubble scene — right half of hero */}
+          {/* Burst bubbles — behind everything */}
+          <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none" }}>
+            <BurstBubbles count={5} />
+          </div>
+
+          {/* Two-column grid: text left, 3D right */}
           <div
+            className="wrap"
             style={{
-              position: "absolute",
-              inset: 0,
-              right: 0,
+              maxWidth: 1200,
+              margin: "0 auto",
               width: "100%",
-              pointerEvents: "none",
+              position: "relative",
+              zIndex: 1,
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: 0,
+              alignItems: "center",
+              minHeight: "100vh",
+              paddingTop: 120,
+              paddingBottom: 80,
             }}
           >
-            <BubbleScene3D />
-          </div>
+            {/* Left: text */}
+            <div style={{ position: "relative", zIndex: 2 }}>
+              {/* Eyebrow */}
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, ease, delay: 0.1 }}
+              >
+                <p className="k-eyebrow on-ink">Media art agency</p>
+              </motion.div>
 
-          {/* Burst bubbles ambient bg */}
-          <BurstBubbles count={5} />
-
-          <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto", width: "100%", position: "relative", zIndex: 1 }}>
-            {/* Eyebrow */}
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease, delay: 0.1 }}
-            >
-              <p className="k-eyebrow on-ink">Media art agency</p>
-            </motion.div>
-
-            {/* H1 — clip reveal line by line */}
-            <h1
-              style={{
-                fontFamily: "var(--serif-display)",
-                fontSize: "clamp(64px, 10vw, 118px)",
-                lineHeight: 0.95,
-                fontWeight: 700,
-                letterSpacing: "-0.022em",
-                marginTop: 22,
-                marginBottom: 0,
-                color: "var(--fg-on-ink)",
-              }}
-            >
-              <ClipReveal delay={0.2}>
-                <span>We make stories</span>
-              </ClipReveal>
-              <ClipReveal delay={0.35}>
-                <span>impossible to</span>
-              </ClipReveal>
-              <ClipReveal delay={0.5}>
+              {/* H1 — single block reveal, no per-line overflow clipping */}
+              <motion.h1
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.9, ease, delay: 0.2 }}
+                style={{
+                  fontFamily: "var(--serif-display)",
+                  fontSize: "clamp(52px, 7vw, 100px)",
+                  lineHeight: 1.0,
+                  fontWeight: 700,
+                  letterSpacing: "-0.022em",
+                  marginTop: 22,
+                  marginBottom: 0,
+                  color: "var(--fg-on-ink)",
+                }}
+              >
+                We make stories
+                <br />
+                impossible to
+                <br />
                 <em style={{ fontStyle: "italic" }}>look away.</em>
-              </ClipReveal>
-            </h1>
+              </motion.h1>
 
-            {/* Subtext */}
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.65, delay: 0.85, ease }}
+              {/* Subtext */}
+              <motion.p
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.65, delay: 0.7, ease }}
+                style={{
+                  fontFamily: "var(--sans)",
+                  fontSize: 18,
+                  color: "var(--fg-on-ink-2)",
+                  maxWidth: "44ch",
+                  marginTop: 28,
+                  lineHeight: 1.65,
+                }}
+              >
+                the Kissa is a media art agency specialising in branded content, film, and
+                immersive experiences. The name <em>kissa</em> means story. Every project
+                is one we make unforgettable.
+              </motion.p>
+
+              {/* CTAs */}
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.9, ease }}
+                style={{ display: "flex", gap: 16, flexWrap: "wrap", marginTop: 36 }}
+              >
+                <a href="mailto:hello@thekissa.com" className="btn btn-primary">
+                  Start your kissa
+                </a>
+                <a href="#work" className="btn btn-ghost on-ink">
+                  See the work
+                </a>
+              </motion.div>
+            </div>
+
+            {/* Right: 3D scene contained to this column */}
+            <div
               style={{
-                fontFamily: "var(--sans)",
-                fontSize: 18,
-                color: "var(--fg-on-ink-2)",
-                maxWidth: "46ch",
-                marginTop: 32,
-                lineHeight: 1.65,
+                position: "relative",
+                height: "100%",
+                minHeight: 520,
+                pointerEvents: "none",
               }}
             >
-              the Kissa is a media art agency specialising in branded content, film, and
-              immersive experiences. The name <em>kissa</em> means story. Every project
-              is one we make unforgettable.
-            </motion.p>
-
-            {/* CTAs */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 1.0, ease }}
-              style={{ display: "flex", gap: 16, flexWrap: "wrap", marginTop: 40 }}
-            >
-              <a href="mailto:hello@thekissa.com" className="btn btn-primary">
-                Start your kissa
-              </a>
-              <a href="#work" className="btn btn-ghost on-ink">
-                See the work
-              </a>
-            </motion.div>
-
+              <BubbleScene3D />
+            </div>
           </div>
+
+          {/* Mobile: stack vertically */}
+          <style>{`
+            @media (max-width: 760px) {
+              .hero-grid { grid-template-columns: 1fr !important; }
+              .hero-3d { display: none !important; }
+            }
+          `}</style>
         </section>
 
         {/* ══ 2. MARQUEE STRIP ══════════════════════════════════════════════════ */}
@@ -646,6 +738,81 @@ export default function HomePage() {
               people can&apos;t scroll past — crafted in frames, light, and the cut between
               two shots. From startups to standouts, every brand has a kissa worth telling.
             </motion.p>
+          </div>
+        </section>
+
+        {/* ══ 3b. ILLUSTRATIONS — how we think ═════════════════════════════════ */}
+        <section style={{ background: "#f7f7f7", padding: "100px 0", overflow: "hidden" }}>
+          <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
+            <ClipReveal>
+              <h2
+                style={{
+                  fontFamily: "var(--serif-display)",
+                  fontSize: "clamp(28px, 3.5vw, 44px)",
+                  fontWeight: 700,
+                  color: "var(--ink)",
+                  letterSpacing: "-0.01em",
+                  lineHeight: 1.1,
+                  marginBottom: 56,
+                }}
+              >
+                How we think.
+              </h2>
+            </ClipReveal>
+
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+                gap: 24,
+              }}
+            >
+              {[
+                { src: "/illustrations/06-idea-press.png",          label: "Idea to execution" },
+                { src: "/illustrations/07-content-fermentation.png", label: "Content that matures" },
+                { src: "/illustrations/08-trust-bridge.png",         label: "Building trust" },
+                { src: "/illustrations/03-one-fish-many-uses.png",   label: "One story, many forms" },
+              ].map((ill, i) => (
+                <motion.div
+                  key={ill.src}
+                  initial={{ opacity: 0, y: 28 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-5%" }}
+                  transition={{ duration: 0.55, delay: i * 0.1, ease }}
+                  style={{
+                    borderRadius: 16,
+                    overflow: "hidden",
+                    background: "#ffffff",
+                    border: "1px solid var(--gray-200)",
+                    boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
+                  }}
+                >
+                  <div style={{ position: "relative", width: "100%", aspectRatio: "16/9" }}>
+                    <Image
+                      src={ill.src}
+                      alt={ill.label}
+                      fill
+                      style={{ objectFit: "cover" }}
+                      sizes="(max-width: 600px) 100vw, 320px"
+                    />
+                  </div>
+                  <div style={{ padding: "16px 20px" }}>
+                    <p
+                      style={{
+                        fontFamily: "var(--mono)",
+                        fontSize: 11,
+                        letterSpacing: "0.1em",
+                        textTransform: "uppercase",
+                        color: "var(--fg3)",
+                        margin: 0,
+                      }}
+                    >
+                      {ill.label}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -1072,6 +1239,9 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* ══ 6b. ILLUSTRATION HORIZONTAL SCROLL ═══════════════════════════════ */}
+        <IllustrationReel />
 
         {/* ══ 7. STATS — 3D bubble grid ═════════════════════════════════════════ */}
         <BubbleGrid />
