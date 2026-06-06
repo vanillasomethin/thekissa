@@ -14,7 +14,7 @@ import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import dynamic from "next/dynamic";
-import { BurstBubbles, KineticWordReel, BubbleGrid, Card3D } from "@/components/BubbleKinetic";
+import { BurstBubbles, BubbleGrid } from "@/components/BubbleKinetic";
 
 const BubbleScene3D = dynamic(() => import("@/components/BubbleScene3D"), {
   ssr: false,
@@ -881,9 +881,6 @@ export default function HomePage() {
             </div>
           </div>
         </section>
-
-        {/* ══ 2b. KINETIC WORD REEL ═════════════════════════════════════════════ */}
-        <KineticWordReel />
 
         {/* ══ 3. STATEMENT ══════════════════════════════════════════════════════ */}
         <section style={{ background: "var(--paper)", padding: "140px 0 120px" }}>
