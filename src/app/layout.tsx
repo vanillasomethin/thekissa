@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, Archivo, Spline_Sans_Mono } from "next/font/google";
 import "./globals.css";
+import SmoothScroll from "@/components/SmoothScroll";
 
 const fraunces = Fraunces({
   variable: "--font-serif-display",
@@ -40,7 +41,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${fraunces.variable} ${archivo.variable} ${splineSansMono.variable} h-full`}>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <SmoothScroll>{children}</SmoothScroll>
+      </body>
     </html>
   );
 }

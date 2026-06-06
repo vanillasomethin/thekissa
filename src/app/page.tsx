@@ -1,17 +1,22 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import {
   motion,
   useScroll,
   useTransform,
-  useInView,
   useReducedMotion,
 } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import dynamic from "next/dynamic";
+import { BurstBubbles, KineticWordReel, BubbleGrid, Card3D } from "@/components/BubbleKinetic";
+
+const BubbleScene3D = dynamic(() => import("@/components/BubbleScene3D"), {
+  ssr: false,
+});
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -118,12 +123,6 @@ const testimonials = [
   },
 ];
 
-const stats = [
-  { value: 200, suffix: "M+", label: "Views earned across campaigns we've built." },
-  { value: 55, suffix: "%", label: "Of first impressions are purely visual. We make it matter." },
-  { value: 23, suffix: "+", label: "Brands retold — from startups to market leaders." },
-  { value: 1, suffix: "", label: "Story per brand. Told right. That's the whole job." },
-];
 
 // ─── Kissa bubble SVG path (speech bubble with left-pointing tail at mid-left) ─
 // Matches brand mark: rounded rect, tail protrudes left at ~55% height
@@ -414,34 +413,6 @@ function ClipReveal({
   );
 }
 
-// ─── AnimCounter ──────────────────────────────────────────────────────────────
-
-function AnimCounter({ value, suffix = "" }: { value: number; suffix: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true });
-  const [displayed, setDisplayed] = useState(0);
-
-  useEffect(() => {
-    if (!inView) return;
-    let startTs: number | null = null;
-    const duration = 1400;
-    const step = (ts: number) => {
-      if (!startTs) startTs = ts;
-      const progress = Math.min((ts - startTs) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setDisplayed(Math.round(eased * value));
-      if (progress < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  }, [inView, value]);
-
-  return (
-    <span ref={ref}>
-      {displayed}
-      {suffix}
-    </span>
-  );
-}
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
@@ -497,14 +468,26 @@ export default function HomePage() {
             style={{
               position: "absolute",
               inset: "-20%",
-              background: `
-                radial-gradient(ellipse 60% 50% at 90% 10%, rgba(255,255,255,0.04) 0%, transparent 60%),
-                radial-gradient(ellipse 40% 40% at 10% 90%, rgba(255,255,255,0.02) 0%, transparent 60%),
-                var(--ink)
-              `,
+              background: "var(--ink)",
               y: bgY,
             }}
           />
+
+          {/* 3D WebGL bubble scene — right half of hero */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              right: 0,
+              width: "100%",
+              pointerEvents: "none",
+            }}
+          >
+            <BubbleScene3D />
+          </div>
+
+          {/* Burst bubbles ambient bg */}
+          <BurstBubbles count={5} />
 
           <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto", width: "100%", position: "relative", zIndex: 1 }}>
             {/* Eyebrow */}
@@ -596,7 +579,10 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ══ 2b. KISSA BUBBLE MOTION GRAPHIC ══════════════════════════════════ */}
+        {/* ══ 2b. KINETIC WORD REEL ═════════════════════════════════════════════ */}
+        <KineticWordReel />
+
+        {/* ══ 2c. KISSA BUBBLE MOTION GRAPHIC ══════════════════════════════════ */}
         <KissaBubbleSection />
 
         {/* ══ 3. STATEMENT ══════════════════════════════════════════════════════ */}
@@ -1021,6 +1007,8 @@ export default function HomePage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-5%" }}
                   transition={{ duration: 0.6, delay: i * 0.1, ease }}
+                >
+                <Card3D
                   style={{
                     background: "#ffffff",
                     borderRadius: 20,
@@ -1078,92 +1066,15 @@ export default function HomePage() {
                       </p>
                     </div>
                   </div>
+                </Card3D>
                 </motion.div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* ══ 7. STATS ══════════════════════════════════════════════════════════ */}
-        <section style={{ background: "var(--ink)", padding: "140px 0" }}>
-          <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
-            <div style={{ marginBottom: 80 }}>
-              <ClipReveal>
-                <h2
-                  style={{
-                    fontFamily: "var(--serif-display)",
-                    fontSize: "clamp(40px, 5vw, 68px)",
-                    fontWeight: 700,
-                    color: "var(--fg-on-ink)",
-                    letterSpacing: "-0.012em",
-                    lineHeight: 1.1,
-                    margin: 0,
-                  }}
-                >
-                  Story is the strategy.
-                </h2>
-              </ClipReveal>
-              <ClipReveal delay={0.12}>
-                <h2
-                  style={{
-                    fontFamily: "var(--serif-display)",
-                    fontStyle: "italic",
-                    fontSize: "clamp(40px, 5vw, 68px)",
-                    fontWeight: 700,
-                    color: "var(--fg-on-ink-2)",
-                    letterSpacing: "-0.012em",
-                    lineHeight: 1.1,
-                    margin: 0,
-                  }}
-                >
-                  The numbers just agree.
-                </h2>
-              </ClipReveal>
-            </div>
-
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(4, 1fr)",
-                gap: 32,
-              }}
-            >
-              {stats.map((s, i) => (
-                <motion.div
-                  key={s.value}
-                  initial={{ opacity: 0, y: 24 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.55, delay: i * 0.1, ease }}
-                  style={{ borderTop: "1px solid rgba(255,255,255,0.1)", paddingTop: 32 }}
-                >
-                  <p
-                    style={{
-                      fontFamily: "var(--serif-display)",
-                      fontSize: "clamp(40px, 5vw, 64px)",
-                      fontWeight: 700,
-                      color: "var(--fg-on-ink)",
-                      lineHeight: 1,
-                      marginBottom: 16,
-                    }}
-                  >
-                    <AnimCounter value={s.value} suffix={s.suffix} />
-                  </p>
-                  <p
-                    style={{
-                      fontFamily: "var(--sans)",
-                      fontSize: 14,
-                      color: "var(--fg-on-ink-2)",
-                      lineHeight: 1.6,
-                    }}
-                  >
-                    {s.label}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* ══ 7. STATS — 3D bubble grid ═════════════════════════════════════════ */}
+        <BubbleGrid />
 
         {/* ══ 8. CTA BANNER ═════════════════════════════════════════════════════ */}
         <section
@@ -1174,6 +1085,9 @@ export default function HomePage() {
             overflow: "hidden",
           }}
         >
+          {/* Burst bubbles bg */}
+          <BurstBubbles count={4} />
+
           {/* Big ghost letter bg */}
           <div
             style={{
