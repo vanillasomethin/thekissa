@@ -367,11 +367,11 @@ function TestimonialsSlider() {
   const t = testimonials[current];
 
   return (
-    <section style={{ background: "var(--bone)", padding: "140px 0" }}>
+    <section style={{ background: "rgb(28,28,28)", padding: "140px 0" }}>
       <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
         {/* Header */}
         <ClipReveal>
-          <h2 style={{ fontFamily: "var(--serif-display)", fontSize: "clamp(36px,5vw,68px)", fontWeight: 700, color: "var(--ink)", letterSpacing: "-0.012em", lineHeight: 1.05, marginTop: 0, marginBottom: 72 }}>
+          <h2 style={{ fontFamily: "var(--serif-display)", fontSize: "clamp(36px,5vw,68px)", fontWeight: 700, color: "var(--fg-on-ink)", letterSpacing: "-0.012em", lineHeight: 1.05, marginTop: 0, marginBottom: 72 }}>
             What our clients say.
           </h2>
         </ClipReveal>
@@ -460,19 +460,19 @@ function TestimonialsSlider() {
             <button
               onClick={prev}
               style={{
-                width: 56,
+                width: 70,
                 height: 56,
-                borderRadius: "50%",
+                borderRadius: "0.625rem",
                 background: "transparent",
-                border: "1px solid rgba(0,0,0,0.2)",
+                border: "1px solid rgba(255,255,255,0.25)",
                 cursor: "pointer",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                color: "var(--ink)",
+                color: "rgba(255,255,255,0.8)",
                 transition: "background 0.18s ease, border-color 0.18s ease",
               }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "rgba(0,0,0,0.06)"; }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.08)"; }}
               onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "transparent"; }}
               aria-label="Previous"
             >
@@ -481,19 +481,19 @@ function TestimonialsSlider() {
             <button
               onClick={next}
               style={{
-                width: 56,
+                width: 70,
                 height: 56,
-                borderRadius: "50%",
+                borderRadius: "0.625rem",
                 background: "transparent",
-                border: "1px solid rgba(0,0,0,0.2)",
+                border: "1px solid rgba(255,255,255,0.25)",
                 cursor: "pointer",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                color: "var(--ink)",
+                color: "rgba(255,255,255,0.8)",
                 transition: "background 0.18s ease, border-color 0.18s ease",
               }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "rgba(0,0,0,0.06)"; }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.08)"; }}
               onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "transparent"; }}
               aria-label="Next"
             >
@@ -508,8 +508,8 @@ function TestimonialsSlider() {
                     width: i === current ? 40 : 14,
                     height: 14,
                     borderRadius: "0.625rem",
-                    background: i === current ? "var(--ink)" : "transparent",
-                    border: "1px solid rgba(0,0,0,0.25)",
+                    background: i === current ? "#ffffff" : "transparent",
+                    border: "1px solid rgba(255,255,255,0.3)",
                     cursor: "pointer",
                     transition: "width 0.3s ease, background 0.3s ease",
                     padding: 0,
@@ -518,7 +518,7 @@ function TestimonialsSlider() {
                 />
               ))}
             </div>
-            <span style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--fg3)", letterSpacing: "0.1em", marginLeft: "auto" }}>
+            <span style={{ fontFamily: "var(--mono)", fontSize: 11, color: "rgba(255,255,255,0.35)", letterSpacing: "0.1em", marginLeft: "auto" }}>
               {String(current + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
             </span>
           </div>
@@ -539,7 +539,7 @@ function TestimonialsSlider() {
 // ─── ClientLogosStrip ─────────────────────────────────────────────────────────
 function ClientLogosStrip() {
   return (
-    <section style={{ background: "var(--paper)", padding: "72px 0", overflow: "hidden", borderTop: "1px solid var(--line)" }}>
+    <section style={{ background: "rgb(18,18,18)", padding: "60px 0", overflow: "hidden", borderTop: "1px solid rgba(255,255,255,0.08)" }}>
       <div
         style={{
           display: "flex",
@@ -556,15 +556,15 @@ function ClientLogosStrip() {
               gap: 24,
               fontFamily: "var(--sans)",
               fontWeight: 700,
-              fontSize: "clamp(20px,2.5vw,32px)",
+              fontSize: "clamp(20px,2.5vw,30px)",
               letterSpacing: "0.08em",
               textTransform: "uppercase",
-              color: "rgb(41,41,41)",
+              color: "rgba(255,255,255,0.55)",
               marginRight: 24,
               userSelect: "none",
             }}
           >
-            {i > 0 && <span style={{ opacity: 0.35, fontWeight: 400 }}>/</span>}
+            {i > 0 && <span style={{ opacity: 0.3, fontWeight: 400 }}>/</span>}
             {name}
           </span>
         ))}
@@ -813,22 +813,22 @@ export default function HomePage() {
         <KineticWordReel />
 
         {/* ══ 3. STATEMENT ══════════════════════════════════════════════════════ */}
-        <section style={{ background: "var(--paper)", padding: "140px 0 120px" }}>
+        <section style={{ background: "var(--ink)", padding: "120px 0 100px", borderTop: "1px solid rgba(255,255,255,0.08)" }}>
           <div className="wrap" style={{ maxWidth: 860, margin: "0 auto" }}>
             <motion.div
               initial={{ scaleX: 0 }}
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, ease }}
-              style={{ height: 1, background: "var(--ink)", transformOrigin: "left", marginBottom: 40 }}
+              style={{ height: 1, background: "rgba(255,255,255,0.12)", transformOrigin: "left", marginBottom: 40 }}
             />
             <ClipReveal delay={0.0}>
-              <p style={{ fontFamily: "var(--serif-display)", fontSize: "clamp(40px, 5.5vw, 72px)", fontWeight: 700, color: "var(--ink)", lineHeight: 1.05, letterSpacing: "-0.012em", margin: 0 }}>
+              <p style={{ fontFamily: "var(--serif-display)", fontSize: "clamp(40px, 5.5vw, 72px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1.05, letterSpacing: "-0.012em", margin: 0 }}>
                 We don&apos;t make content.
               </p>
             </ClipReveal>
             <ClipReveal delay={0.2}>
-              <p style={{ fontFamily: "var(--serif-display)", fontStyle: "italic", fontSize: "clamp(40px, 5.5vw, 72px)", fontWeight: 700, color: "var(--ink)", lineHeight: 1.05, letterSpacing: "-0.012em", margin: 0 }}>
+              <p style={{ fontFamily: "var(--serif-display)", fontStyle: "italic", fontSize: "clamp(40px, 5.5vw, 72px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1.05, letterSpacing: "-0.012em", margin: 0 }}>
                 We make kissa.
               </p>
             </ClipReveal>
@@ -838,7 +838,7 @@ export default function HomePage() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.35, ease }}
               className="k-body-l"
-              style={{ color: "var(--fg2)", marginTop: 36, maxWidth: "62ch" }}
+              style={{ color: "var(--fg-on-ink-2)", marginTop: 36, maxWidth: "62ch" }}
             >
               A campaign isn&apos;t a deliverable. It&apos;s a story told well enough that
               people can&apos;t scroll past — crafted in frames, light, and the cut between
@@ -847,144 +847,25 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ══ 4. SERVICES — tabbed (MAD pattern) ═══════════════════════════════ */}
+        {/* ══ 4. SERVICES — tabbed ══════════════════════════════════════════════ */}
         <ServicesTabbed />
 
-        {/* ══ 4. SERVICES ═══════════════════════════════════════════════════════ */}
-        <section style={{ background: "var(--paper)", padding: "0 0 140px" }}>
-          <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
-            {/* Section header */}
-            <div
-              style={{
-                borderTop: "1px solid var(--line)",
-                paddingTop: 72,
-                marginBottom: 80,
-                maxWidth: 680,
-              }}
-            >
-              <ClipReveal>
-                <h2
-                  style={{
-                    fontFamily: "var(--serif-display)",
-                    fontSize: "clamp(36px, 4.5vw, 64px)",
-                    fontWeight: 700,
-                    color: "var(--ink)",
-                    letterSpacing: "-0.012em",
-                    lineHeight: 1.05,
-                    margin: 0,
-                  }}
-                >
-                  Three ways we tell it.
-                </h2>
-              </ClipReveal>
-              <motion.p
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.2, ease }}
-                className="k-body"
-                style={{ color: "var(--fg2)", margin: "20px 0 0" }}
-              >
-                One studio, end to end. From the first idea to the final frame. We don&apos;t
-                hand off. We stay.
-              </motion.p>
-            </div>
-
-            {/* Service pillars */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
-                gap: 32,
-              }}
-            >
-              {services.map((s, i) => (
-                <motion.div
-                  key={s.num}
-                  initial={{ opacity: 0, y: 32 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-5%" }}
-                  transition={{ duration: 0.6, delay: i * 0.12, ease }}
-                  style={{ borderTop: "1px solid var(--line)", paddingTop: 32 }}
-                >
-                  <p
-                    style={{
-                      fontFamily: "var(--mono)",
-                      fontSize: 12,
-                      letterSpacing: "0.1em",
-                      color: "var(--fg3)",
-                      marginBottom: 16,
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    {s.num}
-                  </p>
-                  <h3
-                    style={{
-                      fontFamily: "var(--sans)",
-                      fontSize: 22,
-                      fontWeight: 700,
-                      color: "var(--fg1)",
-                      marginBottom: 10,
-                    }}
-                  >
-                    {s.title}
-                  </h3>
-                  <p
-                    style={{
-                      fontFamily: "var(--serif-display)",
-                      fontStyle: "italic",
-                      fontSize: 18,
-                      color: "var(--fg2)",
-                      marginBottom: 14,
-                      lineHeight: 1.4,
-                    }}
-                  >
-                    {s.headline}
-                  </p>
-                  <p className="k-body" style={{ color: "var(--fg2)", marginBottom: 24 }}>
-                    {s.body}
-                  </p>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                    {s.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        style={{
-                          background: "var(--bone)",
-                          color: "var(--fg3)",
-                          border: "1px solid var(--line)",
-                          borderRadius: 20,
-                          fontSize: 12,
-                          padding: "5px 12px",
-                          fontFamily: "var(--sans)",
-                        }}
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* ══ 5. SELECTED WORK ══════════════════════════════════════════════════ */}
-        <section id="work" style={{ background: "var(--paper)", padding: "120px 0 140px" }}>
+        <section id="work" style={{ background: "rgb(18,18,18)", padding: "120px 0 140px" }}>
           <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 56 }}>
               <div>
                 <ClipReveal>
-                  <h2 style={{ fontFamily: "var(--serif-display)", fontSize: "clamp(36px, 5vw, 72px)", fontWeight: 700, color: "var(--fg1)", letterSpacing: "-0.012em", lineHeight: 1.05, marginBottom: 0 }}>
+                  <h2 style={{ fontFamily: "var(--serif-display)", fontSize: "clamp(36px, 5vw, 72px)", fontWeight: 700, color: "var(--fg-on-ink)", letterSpacing: "-0.012em", lineHeight: 1.05, marginBottom: 0 }}>
                     Our maddest hits.
                   </h2>
                 </ClipReveal>
               </div>
               <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 12 }}>
-                <span style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.1em", color: "var(--fg3)", userSelect: "none" }}>
+                <span style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.1em", color: "rgba(255,255,255,0.35)", userSelect: "none" }}>
                   drag to explore →
                 </span>
-                <Link href="/portfolio" style={{ fontFamily: "var(--sans)", fontSize: 14, fontWeight: 600, color: "var(--fg1)", textDecoration: "none", display: "flex", alignItems: "center", gap: 4 }}>
+                <Link href="/portfolio" style={{ fontFamily: "var(--sans)", fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.7)", textDecoration: "none", display: "flex", alignItems: "center", gap: 4 }}>
                   View all work <ArrowUpRight size={14} />
                 </Link>
               </div>
