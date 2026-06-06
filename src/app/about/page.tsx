@@ -13,7 +13,7 @@ const TEAM = [
     role: "Creative Director",
     bio: "The visionary behind Kissa's aesthetic. Kissa sets the creative tone and ensures every project pushes the boundary of what's expected.",
     initials: "KN",
-    avatarBg: "#AD1335",
+    avatarBg: "#111111",
   },
   {
     name: "Amara Oduya",
@@ -27,7 +27,7 @@ const TEAM = [
     role: "Video Director",
     bio: "Theo brings stories to life on screen. From storyboard to final grade, he commands every frame with cinematic precision.",
     initials: "TK",
-    avatarBg: "#7A0E26",
+    avatarBg: "#000000",
   },
   {
     name: "Priya Nair",
@@ -611,7 +611,7 @@ export default function AboutPage() {
                         width: "44px",
                         height: "44px",
                         borderRadius: "var(--r-md)",
-                        background: "rgba(173,19,53,0.25)",
+                        background: "rgba(0,0,0,0.25)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",

@@ -8,7 +8,7 @@ import {
   useInView,
   useReducedMotion,
 } from "framer-motion";
-import { PlayCircle, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -125,10 +125,10 @@ const stats = [
   { value: 1, suffix: "", label: "Story per brand. Told right. That's the whole job." },
 ];
 
-// ─── Kissa bubble SVG path (speech bubble pointing left) ─────────────────────
-// Matches the brand mark: rounded rect with tail bottom-left
+// ─── Kissa bubble SVG path (speech bubble with left-pointing tail at mid-left) ─
+// Matches brand mark: rounded rect, tail protrudes left at ~55% height
 const BUBBLE_PATH =
-  "M28,0 L172,0 Q200,0 200,28 L200,132 Q200,160 172,160 L72,160 L48,188 L52,160 L28,160 Q0,160 0,132 L0,28 Q0,0 28,0 Z";
+  "M 68,0 L 196,0 Q 220,0 220,24 L 220,176 Q 220,200 196,200 L 68,200 Q 40,200 40,176 L 40,135 L 0,115 L 40,78 L 40,24 Q 40,0 68,0 Z";
 
 function KissaBubble({
   size = 200,
@@ -145,9 +145,9 @@ function KissaBubble({
 }) {
   return (
     <svg
-      viewBox="0 0 200 188"
+      viewBox="0 0 220 200"
       width={size}
-      height={size * (188 / 200)}
+      height={size}
       fill={fill}
       stroke={stroke}
       strokeWidth={strokeWidth}
@@ -189,6 +189,7 @@ function KissaBubbleSection() {
     >
       <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
         <div
+          className="bubble-section-grid"
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
@@ -210,7 +211,7 @@ function KissaBubbleSection() {
                   fontSize: 11,
                   letterSpacing: "0.16em",
                   textTransform: "uppercase",
-                  color: "rgba(173,19,53,0.8)",
+                  color: "rgba(255,255,255,0.45)",
                   marginBottom: 20,
                 }}
               >
@@ -229,7 +230,7 @@ function KissaBubbleSection() {
               >
                 Three disciplines.
                 <br />
-                <em style={{ color: "var(--crimson)", fontStyle: "italic" }}>
+                <em style={{ color: "var(--fg-on-ink)", fontStyle: "italic" }}>
                   One story.
                 </em>
               </h2>
@@ -269,7 +270,7 @@ function KissaBubbleSection() {
                       background: "rgba(255,255,255,0.03)",
                     }}
                   >
-                    <KissaBubble size={28} fill="var(--crimson)" stroke="none" />
+                    <KissaBubble size={28} fill="#ffffff" stroke="none" />
                     <div>
                       <p style={{ fontFamily: "var(--sans)", fontWeight: 700, fontSize: 14, color: "#fff", margin: 0 }}>
                         {s.label}
@@ -296,7 +297,7 @@ function KissaBubbleSection() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, ease, delay: 0.05 }}
               >
-                <KissaBubble size={170} fill="var(--crimson)" stroke="none" />
+                <KissaBubble size={170} fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.6)" strokeWidth={1.5} />
               </motion.div>
             </motion.div>
 
@@ -310,7 +311,7 @@ function KissaBubbleSection() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.75, ease, delay: 0.2 }}
               >
-                <KissaBubble size={130} fill="none" stroke="rgba(173,19,53,0.5)" strokeWidth={2.5} />
+                <KissaBubble size={130} fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth={2.5} />
               </motion.div>
             </motion.div>
 
@@ -323,7 +324,7 @@ function KissaBubbleSection() {
               style={{ position: "relative", zIndex: 2 }}
             >
               <div style={{ position: "relative", display: "inline-block" }}>
-                <KissaBubble size={220} fill="rgba(173,19,53,0.12)" stroke="var(--crimson)" strokeWidth={1.5} />
+                <KissaBubble size={220} fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.4)" strokeWidth={1.5} />
                 <div style={{
                   position: "absolute",
                   top: "38%",
@@ -364,8 +365,8 @@ function KissaBubbleSection() {
               >
                 <KissaBubble
                   size={b.size}
-                  fill={b.filled ? "rgba(173,19,53,0.2)" : "none"}
-                  stroke={b.filled ? "none" : "rgba(173,19,53,0.25)"}
+                  fill={b.filled ? "rgba(255,255,255,0.08)" : "none"}
+                  stroke={b.filled ? "none" : "rgba(255,255,255,0.2)"}
                   strokeWidth={1.5}
                 />
               </motion.div>
@@ -451,14 +452,12 @@ export default function HomePage() {
   const [dragStart, setDragStart] = useState({ x: 0, scrollLeft: 0 });
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
-  // Parallax for hero bg + showreel
+  // Parallax for hero bg
   const { scrollYProgress: heroScroll } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
   });
   const bgY = useTransform(heroScroll, [0, 1], ["0%", "20%"]);
-  const showreelY = useTransform(heroScroll, [0, 1], ["0%", "12%"]);
-  const heroOpacity = useTransform(heroScroll, [0, 0.6], [1, 0]);
 
   function onPointerDown(e: React.PointerEvent) {
     if (!carouselRef.current) return;
@@ -499,8 +498,8 @@ export default function HomePage() {
               position: "absolute",
               inset: "-20%",
               background: `
-                radial-gradient(ellipse 60% 50% at 90% 10%, rgba(173,19,53,0.14) 0%, transparent 60%),
-                radial-gradient(ellipse 40% 40% at 10% 90%, rgba(173,19,53,0.04) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 50% at 90% 10%, rgba(255,255,255,0.04) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 40% at 10% 90%, rgba(255,255,255,0.02) 0%, transparent 60%),
                 var(--ink)
               `,
               y: bgY,
@@ -534,13 +533,10 @@ export default function HomePage() {
                 <span>We make stories</span>
               </ClipReveal>
               <ClipReveal delay={0.35}>
-                <span>
-                  impossible{" "}
-                  <em style={{ fontStyle: "italic", color: "var(--crimson)" }}>to</em>
-                </span>
+                <span>impossible to</span>
               </ClipReveal>
               <ClipReveal delay={0.5}>
-                <em style={{ fontStyle: "italic", color: "var(--crimson)" }}>look away.</em>
+                <em style={{ fontStyle: "italic" }}>look away.</em>
               </ClipReveal>
             </h1>
 
@@ -578,69 +574,6 @@ export default function HomePage() {
               </a>
             </motion.div>
 
-            {/* Showreel — parallax offset */}
-            <motion.div
-              initial={{ opacity: 0, y: 48 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, delay: 1.15, ease }}
-              style={{ marginTop: 72, maxWidth: 960, width: "100%", y: showreelY }}
-            >
-              <div
-                style={{
-                  width: "100%",
-                  aspectRatio: "16/9",
-                  borderRadius: 20,
-                  background:
-                    "linear-gradient(135deg, #1E2D35 0%, rgba(22,16,15,0.98) 60%, #16100F 100%)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  cursor: "pointer",
-                  position: "relative",
-                  overflow: "hidden",
-                  border: "1px solid rgba(255,255,255,0.05)",
-                }}
-              >
-                {/* Film-grain overlay via repeating gradient */}
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    backgroundImage:
-                      "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E\")",
-                    backgroundRepeat: "repeat",
-                    backgroundSize: "128px",
-                    pointerEvents: "none",
-                    opacity: 0.4,
-                  }}
-                />
-                <motion.div
-                  whileHover={{ scale: 1.08 }}
-                  transition={{ duration: 0.3, ease }}
-                >
-                  <PlayCircle
-                    size={68}
-                    strokeWidth={1}
-                    style={{ color: "rgba(244,239,233,0.4)" }}
-                  />
-                </motion.div>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  marginTop: 14,
-                  fontFamily: "var(--mono)",
-                  fontSize: 11,
-                  letterSpacing: "0.14em",
-                  textTransform: "uppercase",
-                  color: "var(--fg-on-ink-2)",
-                }}
-              >
-                <span>SHOWREEL · 2026</span>
-                <span>DIR. the Kissa</span>
-              </div>
-            </motion.div>
           </div>
         </section>
 
@@ -705,7 +638,7 @@ export default function HomePage() {
                   fontStyle: "italic",
                   fontSize: "clamp(40px, 5.5vw, 72px)",
                   fontWeight: 700,
-                  color: "var(--crimson)",
+                  color: "var(--ink)",
                   lineHeight: 1.05,
                   letterSpacing: "-0.012em",
                   margin: 0,
@@ -815,7 +748,7 @@ export default function HomePage() {
                       fontFamily: "var(--serif-display)",
                       fontStyle: "italic",
                       fontSize: 18,
-                      color: "var(--crimson)",
+                      color: "var(--fg2)",
                       marginBottom: 14,
                       lineHeight: 1.4,
                     }}
@@ -895,7 +828,7 @@ export default function HomePage() {
                     fontFamily: "var(--sans)",
                     fontSize: 14,
                     fontWeight: 600,
-                    color: "var(--crimson)",
+                    color: "var(--fg-on-ink)",
                     textDecoration: "none",
                     display: "flex",
                     alignItems: "center",
@@ -1038,7 +971,7 @@ export default function HomePage() {
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
                       style={{
-                        color: hoveredCard === p.name ? "var(--crimson)" : "rgba(244,239,233,0.5)",
+                        color: hoveredCard === p.name ? "#ffffff" : "rgba(244,239,233,0.5)",
                         transition: "color 0.2s",
                         display: "flex",
                         alignItems: "center",
@@ -1092,7 +1025,7 @@ export default function HomePage() {
                     background: "#ffffff",
                     borderRadius: 20,
                     padding: 40,
-                    border: "1px solid rgba(173,19,53,0.12)",
+                    border: "1px solid rgba(0,0,0,0.08)",
                     boxShadow: "0 2px 20px rgba(22,16,15,0.06)",
                   }}
                 >
@@ -1114,7 +1047,7 @@ export default function HomePage() {
                         width: 40,
                         height: 40,
                         borderRadius: "50%",
-                        background: "var(--crimson)",
+                        background: "var(--ink)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
@@ -1177,7 +1110,7 @@ export default function HomePage() {
                     fontStyle: "italic",
                     fontSize: "clamp(40px, 5vw, 68px)",
                     fontWeight: 700,
-                    color: "var(--crimson)",
+                    color: "var(--fg-on-ink-2)",
                     letterSpacing: "-0.012em",
                     lineHeight: 1.1,
                     margin: 0,
@@ -1235,7 +1168,7 @@ export default function HomePage() {
         {/* ══ 8. CTA BANNER ═════════════════════════════════════════════════════ */}
         <section
           style={{
-            background: "var(--crimson)",
+            background: "var(--ink)",
             padding: "140px 0",
             position: "relative",
             overflow: "hidden",
@@ -1317,7 +1250,8 @@ export default function HomePage() {
                   alignItems: "center",
                   gap: 8,
                   padding: "15px 30px",
-                  background: "var(--ink)",
+                  background: "#1a1a1a",
+                  border: "1px solid rgba(255,255,255,0.2)",
                   color: "#fff",
                   borderRadius: 10,
                   fontFamily: "var(--sans)",
@@ -1328,10 +1262,10 @@ export default function HomePage() {
                   transition: "background 0.18s ease-out",
                 }}
                 onMouseEnter={(e) =>
-                  ((e.currentTarget as HTMLAnchorElement).style.background = "#2a0e18")
+                  ((e.currentTarget as HTMLAnchorElement).style.background = "#333333")
                 }
                 onMouseLeave={(e) =>
-                  ((e.currentTarget as HTMLAnchorElement).style.background = "var(--ink)")
+                  ((e.currentTarget as HTMLAnchorElement).style.background = "#1a1a1a")
                 }
               >
                 Start your kissa <ArrowUpRight size={16} />

@@ -6,21 +6,21 @@
    ============================================================ */
 
 :root {
-  /* --- Brand Core --- */
-  --crimson:        #AD1335;
-  --crimson-deep:   #7A0E26;
-  --crimson-bright: #D11A41;
+  /* --- Brand Core (monochrome) --- */
+  --crimson:        #0F0F0F;
+  --crimson-deep:   #000000;
+  --crimson-bright: #2A2A2A;
 
-  /* --- Warm Neutrals --- */
-  --ink:            #16100F;
-  --gray-900:       #241A18;
-  --gray-700:       #4A4140;
-  --gray-500:       #7C7270;
-  --gray-400:       #A79D98;
-  --gray-300:       #C9C0BB;
-  --gray-200:       #E4DCD5;
-  --bone:           #F4EFE9;
-  --paper:          #FBF8F4;
+  /* --- Neutrals --- */
+  --ink:            #111111;
+  --gray-900:       #1A1A1A;
+  --gray-700:       #444444;
+  --gray-500:       #777777;
+  --gray-400:       #A0A0A0;
+  --gray-300:       #C8C8C8;
+  --gray-200:       #E4E4E4;
+  --bone:           #F2F2F2;
+  --paper:          #FAFAFA;
 
   /* --- Accents --- */
   --accent-dark:    #1A1A1A;
@@ -35,8 +35,8 @@
   --fg1:            var(--ink);
   --fg2:            var(--gray-700);
   --fg3:            var(--gray-500);
-  --fg-on-ink:      #F4EFE9;
-  --fg-on-ink-2:    #B9ADA7;
+  --fg-on-ink:      #F5F5F5;
+  --fg-on-ink-2:    #AAAAAA;
   --line:           var(--gray-200);
   --line-strong:    var(--gray-300);
   --focus:          var(--crimson);
@@ -62,7 +62,7 @@
   --sh-1: 0 1px 2px rgba(22,16,15,0.06), 0 1px 3px rgba(22,16,15,0.05);
   --sh-2: 0 4px 12px rgba(22,16,15,0.08), 0 1px 3px rgba(22,16,15,0.05);
   --sh-3: 0 14px 38px rgba(22,16,15,0.13), 0 4px 10px rgba(22,16,15,0.07);
-  --sh-crimson: 0 14px 34px rgba(122,14,38,0.28);
+  --sh-crimson: 0 14px 34px rgba(0,0,0,0.22);
 
   /* --- Motion --- */
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -296,7 +296,7 @@ a { color: inherit; text-decoration: none; }
 .bubble-card {
   background: var(--surface);
   border-radius: var(--r-bubble);
-  border: 2px solid var(--crimson);
+  border: 2px solid var(--ink);
   padding: var(--sp-7);
   box-shadow: var(--sh-2);
 }

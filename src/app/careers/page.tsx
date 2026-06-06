@@ -680,7 +680,7 @@ export default function CareersPage() {
                       width: 48,
                       height: 48,
                       borderRadius: 12,
-                      background: "rgba(173,19,53,0.07)",
+                      background: "rgba(0,0,0,0.07)",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",

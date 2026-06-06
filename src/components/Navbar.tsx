@@ -38,8 +38,8 @@ export default function Navbar() {
         style={{
           backdropFilter: scrolled ? "blur(14px)" : "none",
           WebkitBackdropFilter: scrolled ? "blur(14px)" : "none",
-          backgroundColor: scrolled ? "rgba(251,248,244,0.88)" : "transparent",
-          boxShadow: scrolled ? "0 1px 0 #E4DCD5" : "none",
+          backgroundColor: scrolled ? "rgba(250,250,250,0.92)" : "transparent",
+          boxShadow: scrolled ? "0 1px 0 #E4E4E4" : "none",
         }}
       >
         <nav
@@ -49,7 +49,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" aria-label="the Kissa — home">
             <Image
-              src={scrolled ? "/logo-crimson.png" : "/logo-white.png"}
+              src={scrolled ? "/logo-ink.png" : "/logo-white.png"}
               alt="the Kissa"
               height={44}
               width={132}

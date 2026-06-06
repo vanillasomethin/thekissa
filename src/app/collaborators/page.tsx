@@ -22,13 +22,13 @@ const jointProjects = [
   {
     name: "The Form & Function Exhibition",
     collaborator: "Kissa × Vanilla",
-    bg: "linear-gradient(135deg, #AD1335 0%, #7A0E26 100%)",
+    bg: "linear-gradient(135deg, #111111 0%, #000000 100%)",
     chip: "crimson",
   },
   {
     name: "Spatial Branding for Vault Gallery",
     collaborator: "Kissa × Vanilla",
-    bg: "linear-gradient(135deg, #7A0E26 0%, #16100F 100%)",
+    bg: "linear-gradient(135deg, #000000 0%, #16100F 100%)",
     chip: "crimson",
   },
   {
@@ -249,7 +249,7 @@ export default function CollaboratorsPage() {
                   "Spatial Branding for Vault Gallery",
                 ]}
                 accent="var(--crimson)"
-                accentBg="rgba(173,19,53,0.07)"
+                accentBg="rgba(0,0,0,0.07)"
                 initials="VN"
                 delay={0}
               />
@@ -330,7 +330,7 @@ export default function CollaboratorsPage() {
                         fontFamily: "var(--mono)",
                         background:
                           project.chip === "crimson"
-                            ? "rgba(173,19,53,0.1)"
+                            ? "rgba(0,0,0,0.1)"
                             : "rgba(42,63,95,0.1)",
                         color:
                           project.chip === "crimson"
@@ -422,7 +422,7 @@ export default function CollaboratorsPage() {
                   initial={{ opacity: 0, scale: 0.96 }}
                   animate={{ opacity: 1, scale: 1 }}
                   style={{
-                    background: "rgba(173,19,53,0.06)",
+                    background: "rgba(0,0,0,0.06)",
                     border: "1.5px solid var(--crimson)",
                     borderRadius: 20,
                     padding: 48,

@@ -14,7 +14,7 @@ export const CANVA_API_BASE = "https://api.canva.com/rest/v1";
 // ── PKCE ──────────────────────────────────────────────────────────────────────
 
 export function generateCodeVerifier(): string {
-  return crypto.randomBytes(96).toString("base64url");
+  return crypto.randomBytes(32).toString("base64url");
 }
 
 export function generateCodeChallenge(verifier: string): string {
@@ -63,22 +63,28 @@ export async function exchangeCodeForTokens(
     code,
     redirect_uri: redirectUri ?? REDIRECT_URI,
     code_verifier: codeVerifier,
-    client_id: CANVA_CLIENT_ID,
   });
 
+  const headers: Record<string, string> = {
+    "Content-Type": "application/x-www-form-urlencoded",
+  };
+
   if (CANVA_CLIENT_SECRET) {
-    body.set("client_secret", CANVA_CLIENT_SECRET);
+    const creds = Buffer.from(`${CANVA_CLIENT_ID}:${CANVA_CLIENT_SECRET}`).toString("base64");
+    headers["Authorization"] = `Basic ${creds}`;
+  } else {
+    body.set("client_id", CANVA_CLIENT_ID);
   }
 
   const res = await fetch(CANVA_TOKEN_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    headers,
     body,
   });
 
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(`Token exchange failed: ${res.status} ${text}`);
+    throw new Error(`Token exchange failed ${res.status}: ${text}`);
   }
 
   return res.json() as Promise<CanvaTokens>;

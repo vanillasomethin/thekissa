@@ -30,7 +30,7 @@ const articles = [
     author: "Aisha Mwangi",
     authorInitials: "AM",
     date: "May 28, 2026",
-    gradientBg: "linear-gradient(135deg, #AD1335 0%, #7A0E26 100%)",
+    gradientBg: "linear-gradient(135deg, #111111 0%, #000000 100%)",
   },
   {
     category: "Video",
@@ -60,7 +60,7 @@ const articles = [
     author: "Kissa Editorial",
     authorInitials: "KE",
     date: "April 18, 2026",
-    gradientBg: "linear-gradient(135deg, #7A0E26 0%, #AD1335 100%)",
+    gradientBg: "linear-gradient(135deg, #000000 0%, #111111 100%)",
   },
   {
     category: "Design",
@@ -80,7 +80,7 @@ const articles = [
     author: "David Otieno",
     authorInitials: "DO",
     date: "March 22, 2026",
-    gradientBg: "linear-gradient(135deg, #AD1335 0%, #4A4140 100%)",
+    gradientBg: "linear-gradient(135deg, #111111 0%, #4A4140 100%)",
   },
 ];
 
@@ -337,7 +337,7 @@ export default function BlogPage() {
                 <div
                   style={{
                     aspectRatio: "4/3",
-                    background: "linear-gradient(135deg, #AD1335 0%, #16100F 100%)",
+                    background: "linear-gradient(135deg, #111111 0%, #16100F 100%)",
                     borderRadius: "16px 0 0 16px",
                     minHeight: 280,
                   }}
@@ -463,7 +463,7 @@ export default function BlogPage() {
                   initial={{ opacity: 0, scale: 0.96 }}
                   animate={{ opacity: 1, scale: 1 }}
                   style={{
-                    background: "rgba(173,19,53,0.06)",
+                    background: "rgba(0,0,0,0.06)",
                     border: "1.5px solid var(--crimson)",
                     borderRadius: 16,
                     padding: "32px",

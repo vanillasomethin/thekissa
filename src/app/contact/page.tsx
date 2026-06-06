@@ -147,7 +147,7 @@ export default function ContactPage() {
                       initial={{ opacity: 0, scale: 0.96 }}
                       animate={{ opacity: 1, scale: 1 }}
                       style={{
-                        background: "rgba(173,19,53,0.06)",
+                        background: "rgba(0,0,0,0.06)",
                         border: "1.5px solid var(--crimson)",
                         borderRadius: 20,
                         padding: 48,
@@ -351,8 +351,8 @@ export default function ContactPage() {
                             width: 44,
                             height: 44,
                             borderRadius: 12,
-                            background: "rgba(173,19,53,0.07)",
-                            border: "1px solid rgba(173,19,53,0.15)",
+                            background: "rgba(0,0,0,0.07)",
+                            border: "1px solid rgba(0,0,0,0.15)",
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
