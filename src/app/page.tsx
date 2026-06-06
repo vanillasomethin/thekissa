@@ -6,8 +6,9 @@ import {
   useScroll,
   useTransform,
   useReducedMotion,
+  AnimatePresence,
 } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -25,31 +26,35 @@ const ease = [0.22, 1, 0.36, 1] as [number, number, number, number];
 const MARQUEE_TEXT =
   "BRANDED CONTENT · VIDEO PRODUCTION · BRAND STRATEGY · SOCIAL CAMPAIGNS · PHOTOGRAPHY · ANIMATION · IMMERSIVE EXPERIENCES · ";
 
+const CLIENT_LOGOS = [
+  "FYTURE", "TECFIDES", "NATURA", "MEZZE", "SCRIBBLES", "LYFSENSE",
+  "FYTURE", "TECFIDES", "NATURA", "MEZZE", "SCRIBBLES", "LYFSENSE",
+];
+
 const services = [
   {
     num: "01",
     title: "Story & Brand",
-    lead: "Strategy that sounds like you.",
+    headline: "Strategic, fearless, and built to last.",
     body: "We dig into who you are and why it matters, then build the language and visuals to say it clearly. Every touchpoint becomes part of a coherent, compelling narrative.",
-    tags: ["Brand strategy", "Visual identity", "Branded content", "Campaigns"],
+    tags: ["Brand strategy", "Visual identity", "Branded content", "Campaigns", "Copywriting"],
   },
   {
     num: "02",
     title: "Motion & Film",
-    lead: "Frames that move people.",
+    headline: "Frames that move people.",
     body: "From concept to cut, we make films that earn attention rather than demand it. Craft-led production, purposeful direction, and post that never forgets the story.",
-    tags: ["Video production", "Film & direction", "Animation", "Motion design"],
+    tags: ["Video production", "Film & direction", "Animation", "Motion design", "Creative direction"],
   },
   {
     num: "03",
     title: "Digital & Immersive",
-    lead: "Experiences you step inside.",
+    headline: "Experiences you step inside.",
     body: "Beyond the screen, into the room. We design environments, installations, and interactive worlds that blur the boundary between audience and story.",
-    tags: ["Immersive", "Installations", "Web", "AR/social"],
+    tags: ["Immersive", "Installations", "Web", "AR/social", "Brand activation"],
   },
 ];
 
-// Real Kissa projects (first 6 from the Canva portfolio)
 const featuredProjects = [
   {
     name: "FYTURE",
@@ -101,7 +106,6 @@ const testimonials = [
     name: "Wanjiku M.",
     role: "Brand Director",
     company: "TECFIDES",
-    initials: "WM",
   },
   {
     quote: "the Kissa turns complex ideas into something you feel before you understand it. Our launch campaign exceeded every benchmark.",
@@ -123,9 +127,7 @@ const testimonials = [
   },
 ];
 
-
-// ─── Kissa bubble SVG path (speech bubble with left-pointing tail at mid-left) ─
-// Matches brand mark: rounded rect, tail protrudes left at ~55% height
+// ─── Kissa bubble SVG ─────────────────────────────────────────────────────────
 const BUBBLE_PATH =
   "M 68,0 L 196,0 Q 220,0 220,24 L 220,176 Q 220,200 196,200 L 68,200 Q 40,200 40,176 L 40,135 L 0,115 L 40,78 L 40,24 Q 40,0 68,0 Z";
 
@@ -158,235 +160,7 @@ function KissaBubble({
   );
 }
 
-// ─── KissaBubbleSection — motion infographic between marquee and statement ────
-function KissaBubbleSection() {
-  const reduce = useReducedMotion();
-  const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y1 = useTransform(scrollYProgress, [0, 1], [40, -40]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [-20, 40]);
-  const rotate1 = useTransform(scrollYProgress, [0, 1], [-8, 8]);
-  const rotate2 = useTransform(scrollYProgress, [0, 1], [12, -6]);
-
-  const bubbles = [
-    { label: "Story & Brand", x: "8%", y: "10%", size: 180, delay: 0, filled: true },
-    { label: "Motion & Film", x: "62%", y: "5%", size: 140, delay: 0.15, filled: false },
-    { label: "Digital & Immersive", x: "38%", y: "52%", size: 110, delay: 0.28, filled: false },
-    { label: "", x: "78%", y: "48%", size: 80, delay: 0.38, filled: true },
-    { label: "", x: "18%", y: "62%", size: 64, delay: 0.45, filled: false },
-  ];
-
-  return (
-    <section
-      ref={ref}
-      style={{
-        background: "var(--ink)",
-        padding: "100px 0",
-        overflow: "hidden",
-        position: "relative",
-      }}
-    >
-      <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
-        <div
-          className="bubble-section-grid"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: 64,
-            alignItems: "center",
-          }}
-        >
-          {/* Left: large kinetic type */}
-          <div>
-            <motion.div
-              initial={reduce ? false : { opacity: 0, y: 32 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, ease }}
-            >
-              <p
-                style={{
-                  fontFamily: "var(--mono)",
-                  fontSize: 11,
-                  letterSpacing: "0.16em",
-                  textTransform: "uppercase",
-                  color: "rgba(255,255,255,0.45)",
-                  marginBottom: 20,
-                }}
-              >
-                What we do
-              </p>
-              <h2
-                style={{
-                  fontFamily: "var(--serif-display)",
-                  fontSize: "clamp(48px, 6vw, 80px)",
-                  fontWeight: 700,
-                  color: "var(--fg-on-ink)",
-                  lineHeight: 1.0,
-                  letterSpacing: "-0.018em",
-                  margin: "0 0 28px",
-                }}
-              >
-                Three disciplines.
-                <br />
-                <em style={{ color: "var(--fg-on-ink)", fontStyle: "italic" }}>
-                  One story.
-                </em>
-              </h2>
-              <p
-                style={{
-                  fontFamily: "var(--sans)",
-                  fontSize: 16,
-                  color: "var(--fg-on-ink-2)",
-                  lineHeight: 1.7,
-                  maxWidth: "42ch",
-                  margin: "0 0 40px",
-                }}
-              >
-                Brand strategy, film production, and digital experiences — working as one continuous creative act, not three separate deliverables.
-              </p>
-
-              {/* Three service pills with bubble icon */}
-              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                {[
-                  { label: "Story & Brand", desc: "Identity, strategy, voice" },
-                  { label: "Motion & Film", desc: "Production, direction, post" },
-                  { label: "Digital & Immersive", desc: "Web, AR, installations" },
-                ].map((s, i) => (
-                  <motion.div
-                    key={s.label}
-                    initial={reduce ? false : { opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: 0.1 + i * 0.1, ease }}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 14,
-                      padding: "12px 16px",
-                      borderRadius: 12,
-                      border: "1px solid rgba(255,255,255,0.07)",
-                      background: "rgba(255,255,255,0.03)",
-                    }}
-                  >
-                    <KissaBubble size={28} fill="#ffffff" stroke="none" />
-                    <div>
-                      <p style={{ fontFamily: "var(--sans)", fontWeight: 700, fontSize: 14, color: "#fff", margin: 0 }}>
-                        {s.label}
-                      </p>
-                      <p style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--fg-on-ink-2)", margin: 0, letterSpacing: "0.06em" }}>
-                        {s.desc}
-                      </p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Right: floating bubble illustration */}
-          <div style={{ position: "relative", height: 440, display: "flex", alignItems: "center", justifyContent: "center" }}>
-            {/* Large filled bubble — parallax */}
-            <motion.div
-              style={{ position: "absolute", top: "5%", left: "5%", y: reduce ? 0 : y1, rotate: reduce ? 0 : rotate1 }}
-            >
-              <motion.div
-                initial={reduce ? false : { opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, ease, delay: 0.05 }}
-              >
-                <KissaBubble size={170} fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.6)" strokeWidth={1.5} />
-              </motion.div>
-            </motion.div>
-
-            {/* Outline bubble — parallax counter */}
-            <motion.div
-              style={{ position: "absolute", bottom: "8%", right: "4%", y: reduce ? 0 : y2, rotate: reduce ? 0 : rotate2 }}
-            >
-              <motion.div
-                initial={reduce ? false : { opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.75, ease, delay: 0.2 }}
-              >
-                <KissaBubble size={130} fill="none" stroke="rgba(255,255,255,0.3)" strokeWidth={2.5} />
-              </motion.div>
-            </motion.div>
-
-            {/* Centre bubble with number */}
-            <motion.div
-              initial={reduce ? false : { opacity: 0, scale: 0.7, y: 24 }}
-              whileInView={{ opacity: 1, scale: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.9, ease, delay: 0.1 }}
-              style={{ position: "relative", zIndex: 2 }}
-            >
-              <div style={{ position: "relative", display: "inline-block" }}>
-                <KissaBubble size={220} fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.4)" strokeWidth={1.5} />
-                <div style={{
-                  position: "absolute",
-                  top: "38%",
-                  left: "52%",
-                  transform: "translate(-50%, -50%)",
-                  textAlign: "center",
-                  pointerEvents: "none",
-                }}>
-                  <p style={{
-                    fontFamily: "var(--serif-display)",
-                    fontSize: "clamp(36px, 5vw, 56px)",
-                    fontWeight: 700,
-                    color: "var(--fg-on-ink)",
-                    lineHeight: 1,
-                    margin: 0,
-                  }}>23+</p>
-                  <p style={{
-                    fontFamily: "var(--mono)",
-                    fontSize: 10,
-                    color: "var(--fg-on-ink-2)",
-                    letterSpacing: "0.12em",
-                    textTransform: "uppercase",
-                    margin: "6px 0 0",
-                  }}>Brands</p>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Small accent bubbles */}
-            {bubbles.slice(3).map((b, i) => (
-              <motion.div
-                key={i}
-                initial={reduce ? false : { opacity: 0, scale: 0 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.35 + i * 0.1, ease }}
-                style={{ position: "absolute", left: b.x, top: b.y }}
-              >
-                <KissaBubble
-                  size={b.size}
-                  fill={b.filled ? "rgba(255,255,255,0.08)" : "none"}
-                  stroke={b.filled ? "none" : "rgba(255,255,255,0.2)"}
-                  strokeWidth={1.5}
-                />
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Responsive: stack on mobile */}
-      <style>{`
-        @media (max-width: 760px) {
-          .bubble-section-grid { grid-template-columns: 1fr !important; }
-          .bubble-illustration { display: none !important; }
-        }
-      `}</style>
-    </section>
-  );
-}
-
-// ─── ClipReveal — text lines slide up from clip ───────────────────────────────
-
+// ─── ClipReveal ───────────────────────────────────────────────────────────────
 function ClipReveal({
   children,
   delay = 0,
@@ -413,6 +187,396 @@ function ClipReveal({
   );
 }
 
+// ─── ServiceVisual — animated bubble illustration per service tab ──────────────
+function ServiceVisual({ index }: { index: number }) {
+  const visuals = [
+    // Story & Brand
+    <div key={0} style={{ position: "relative", width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <KissaBubble size={260} fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.35)" strokeWidth={1.5} />
+      <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-44%, -46%)", textAlign: "center", pointerEvents: "none" }}>
+        <p style={{ fontFamily: "var(--serif-display)", fontSize: "clamp(48px,6vw,72px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1, margin: 0 }}>01</p>
+        <p style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--fg-on-ink-2)", letterSpacing: "0.14em", textTransform: "uppercase", margin: "6px 0 0" }}>Story</p>
+      </div>
+      <KissaBubble size={110} fill="rgba(255,255,255,0.08)" stroke="none" style={{ position: "absolute", top: "8%", right: "10%" }} />
+      <KissaBubble size={72} fill="none" stroke="rgba(255,255,255,0.18)" strokeWidth={1.5} style={{ position: "absolute", bottom: "12%", left: "8%" }} />
+    </div>,
+    // Motion & Film
+    <div key={1} style={{ position: "relative", width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <KissaBubble size={220} fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.4)" strokeWidth={2} />
+      <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-44%, -46%)", textAlign: "center", pointerEvents: "none" }}>
+        <p style={{ fontFamily: "var(--serif-display)", fontSize: "clamp(48px,6vw,72px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1, margin: 0 }}>02</p>
+        <p style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--fg-on-ink-2)", letterSpacing: "0.14em", textTransform: "uppercase", margin: "6px 0 0" }}>Motion</p>
+      </div>
+      <KissaBubble size={140} fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.2)" strokeWidth={1.5} style={{ position: "absolute", bottom: "5%", right: "5%" }} />
+      <KissaBubble size={60} fill="rgba(255,255,255,0.1)" stroke="none" style={{ position: "absolute", top: "10%", left: "12%" }} />
+    </div>,
+    // Digital & Immersive
+    <div key={2} style={{ position: "relative", width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <KissaBubble size={180} fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.5)" strokeWidth={1} />
+      <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-44%, -46%)", textAlign: "center", pointerEvents: "none" }}>
+        <p style={{ fontFamily: "var(--serif-display)", fontSize: "clamp(48px,6vw,72px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1, margin: 0 }}>03</p>
+        <p style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--fg-on-ink-2)", letterSpacing: "0.14em", textTransform: "uppercase", margin: "6px 0 0" }}>Digital</p>
+      </div>
+      <KissaBubble size={90} fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth={2} style={{ position: "absolute", top: "5%", right: "8%" }} />
+      <KissaBubble size={50} fill="rgba(255,255,255,0.12)" stroke="none" style={{ position: "absolute", bottom: "15%", left: "5%" }} />
+      <KissaBubble size={50} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth={1.5} style={{ position: "absolute", top: "20%", left: "0%" }} />
+    </div>,
+  ];
+  return visuals[index] ?? visuals[0];
+}
+
+// ─── ServicesTabbed ───────────────────────────────────────────────────────────
+function ServicesTabbed() {
+  const [active, setActive] = useState(0);
+  const reduce = useReducedMotion();
+
+  return (
+    <section style={{ background: "var(--ink)", padding: "120px 0 140px" }}>
+      <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
+        {/* Header */}
+        <div style={{ marginBottom: 72 }}>
+          <ClipReveal>
+            <p style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.16em", textTransform: "uppercase", color: "rgba(255,255,255,0.45)", marginBottom: 16 }}>
+              What we do
+            </p>
+          </ClipReveal>
+          <ClipReveal delay={0.1}>
+            <h2 style={{ fontFamily: "var(--serif-display)", fontSize: "clamp(36px,5vw,68px)", fontWeight: 700, color: "var(--fg-on-ink)", letterSpacing: "-0.014em", lineHeight: 1.0, margin: 0 }}>
+              Three ways we tell it.
+            </h2>
+          </ClipReveal>
+        </div>
+
+        {/* Tab bar */}
+        <div style={{ display: "flex", gap: 2, marginBottom: 56, borderBottom: "1px solid rgba(255,255,255,0.08)", paddingBottom: 0 }}>
+          {services.map((s, i) => (
+            <button
+              key={s.num}
+              onClick={() => setActive(i)}
+              style={{
+                fontFamily: "var(--sans)",
+                fontWeight: 600,
+                fontSize: 15,
+                color: active === i ? "#fff" : "rgba(255,255,255,0.38)",
+                background: "none",
+                border: "none",
+                borderBottom: active === i ? "2px solid #fff" : "2px solid transparent",
+                cursor: "pointer",
+                padding: "0 0 20px",
+                marginRight: 40,
+                letterSpacing: "0.01em",
+                transition: "color 0.2s ease, border-color 0.2s ease",
+              }}
+            >
+              {s.title}
+            </button>
+          ))}
+        </div>
+
+        {/* Tab content */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={active}
+            initial={reduce ? false : { opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.4, ease }}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: 64,
+              alignItems: "center",
+            }}
+            className="services-grid"
+          >
+            {/* Left: visual */}
+            <div style={{ position: "relative", height: 420, background: "rgba(255,255,255,0.03)", borderRadius: 20, border: "1px solid rgba(255,255,255,0.06)", overflow: "hidden" }}>
+              <ServiceVisual index={active} />
+            </div>
+
+            {/* Right: content */}
+            <div>
+              <p style={{ fontFamily: "var(--mono)", fontSize: 12, letterSpacing: "0.1em", color: "rgba(255,255,255,0.4)", textTransform: "uppercase", marginBottom: 20 }}>
+                {services[active].num}
+              </p>
+              <h3 style={{ fontFamily: "var(--serif-display)", fontSize: "clamp(28px,3.5vw,46px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1.1, letterSpacing: "-0.01em", marginBottom: 16 }}>
+                {services[active].headline}
+              </h3>
+              <p style={{ fontFamily: "var(--sans)", fontSize: 17, color: "rgba(255,255,255,0.6)", lineHeight: 1.7, marginBottom: 32, maxWidth: "50ch" }}>
+                {services[active].body}
+              </p>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+                {services[active].tags.map((tag) => (
+                  <span
+                    key={tag}
+                    style={{
+                      background: "rgb(28,28,28)",
+                      color: "rgba(255,255,255,0.75)",
+                      borderRadius: "4.25rem",
+                      fontSize: 11,
+                      fontWeight: 600,
+                      letterSpacing: "0.08em",
+                      textTransform: "uppercase",
+                      padding: "8px 16px",
+                      fontFamily: "var(--sans)",
+                    }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              {/* Progress indicators */}
+              <div style={{ display: "flex", gap: 8, marginTop: 48 }}>
+                {services.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setActive(i)}
+                    style={{
+                      height: 14,
+                      width: active === i ? 40 : 14,
+                      borderRadius: "0.625rem",
+                      background: active === i ? "#fff" : "rgba(255,255,255,0)",
+                      border: "1px solid rgba(255,255,255,0.35)",
+                      cursor: "pointer",
+                      transition: "width 0.3s ease, background 0.3s ease",
+                      padding: 0,
+                    }}
+                    aria-label={`Tab ${i + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      <style>{`
+        @media (max-width: 760px) {
+          .services-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
+    </section>
+  );
+}
+
+// ─── TestimonialsSlider ───────────────────────────────────────────────────────
+function TestimonialsSlider() {
+  const [current, setCurrent] = useState(0);
+  const reduce = useReducedMotion();
+  const total = testimonials.length;
+
+  function prev() { setCurrent((c) => (c - 1 + total) % total); }
+  function next() { setCurrent((c) => (c + 1) % total); }
+
+  const t = testimonials[current];
+
+  return (
+    <section style={{ background: "var(--bone)", padding: "140px 0" }}>
+      <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
+        {/* Header */}
+        <ClipReveal>
+          <h2 style={{ fontFamily: "var(--serif-display)", fontSize: "clamp(36px,5vw,68px)", fontWeight: 700, color: "var(--ink)", letterSpacing: "-0.012em", lineHeight: 1.05, marginTop: 0, marginBottom: 72 }}>
+            What our clients say.
+          </h2>
+        </ClipReveal>
+
+        {/* Slider */}
+        <div style={{ position: "relative" }}>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={current}
+              initial={reduce ? false : { opacity: 0, x: 32 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -32 }}
+              transition={{ duration: 0.45, ease }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  background: "rgb(28,28,28)",
+                  borderRadius: 20,
+                  overflow: "hidden",
+                  maxWidth: 1100,
+                }}
+                className="testimonial-card"
+              >
+                {/* Left: client info */}
+                <div
+                  style={{
+                    width: "34%",
+                    flexShrink: 0,
+                    padding: "72px 40px 72px 64px",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                  }}
+                  className="testimonial-left"
+                >
+                  <div
+                    style={{
+                      width: 80,
+                      height: 80,
+                      borderRadius: "50%",
+                      background: "rgba(255,255,255,0.08)",
+                      border: "1px solid rgba(255,255,255,0.12)",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontFamily: "var(--sans)",
+                      fontWeight: 700,
+                      fontSize: 22,
+                      color: "#fff",
+                      marginBottom: 64,
+                    }}
+                  >
+                    {t.name.split(" ").map((n) => n[0]).join("")}
+                  </div>
+                  <div>
+                    <p style={{ fontFamily: "var(--sans)", fontWeight: 700, fontSize: 18, color: "#fff", margin: "0 0 8px" }}>{t.name}</p>
+                    <p style={{ fontFamily: "var(--mono)", fontSize: 12, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.45)", margin: 0 }}>
+                      {t.role} · {t.company}
+                    </p>
+                  </div>
+                </div>
+
+                {/* Right: quote */}
+                <div
+                  style={{
+                    flex: 1,
+                    background: "rgb(21,21,21)",
+                    borderRadius: 20,
+                    padding: "80px 64px",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                  className="testimonial-right"
+                >
+                  <p style={{ fontFamily: "var(--serif-display)", fontStyle: "italic", fontSize: "clamp(18px,1.8vw,22px)", color: "rgba(255,255,255,0.85)", lineHeight: 1.7, margin: 0 }}>
+                    &ldquo;{t.quote}&rdquo;
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Controls */}
+          <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: 40 }}>
+            <button
+              onClick={prev}
+              style={{
+                width: 56,
+                height: 56,
+                borderRadius: "50%",
+                background: "transparent",
+                border: "1px solid rgba(0,0,0,0.2)",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "var(--ink)",
+                transition: "background 0.18s ease, border-color 0.18s ease",
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "rgba(0,0,0,0.06)"; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "transparent"; }}
+              aria-label="Previous"
+            >
+              <ArrowLeft size={18} />
+            </button>
+            <button
+              onClick={next}
+              style={{
+                width: 56,
+                height: 56,
+                borderRadius: "50%",
+                background: "transparent",
+                border: "1px solid rgba(0,0,0,0.2)",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "var(--ink)",
+                transition: "background 0.18s ease, border-color 0.18s ease",
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "rgba(0,0,0,0.06)"; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLButtonElement).style.background = "transparent"; }}
+              aria-label="Next"
+            >
+              <ArrowRight size={18} />
+            </button>
+            <div style={{ display: "flex", gap: 8, marginLeft: 8 }}>
+              {testimonials.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrent(i)}
+                  style={{
+                    width: i === current ? 40 : 14,
+                    height: 14,
+                    borderRadius: "0.625rem",
+                    background: i === current ? "var(--ink)" : "transparent",
+                    border: "1px solid rgba(0,0,0,0.25)",
+                    cursor: "pointer",
+                    transition: "width 0.3s ease, background 0.3s ease",
+                    padding: 0,
+                  }}
+                  aria-label={`Testimonial ${i + 1}`}
+                />
+              ))}
+            </div>
+            <span style={{ fontFamily: "var(--mono)", fontSize: 11, color: "var(--fg3)", letterSpacing: "0.1em", marginLeft: "auto" }}>
+              {String(current + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <style>{`
+        @media (max-width: 760px) {
+          .testimonial-card { flex-direction: column !important; }
+          .testimonial-left { width: 100% !important; padding: 40px 32px 32px !important; }
+          .testimonial-right { padding: 32px !important; }
+        }
+      `}</style>
+    </section>
+  );
+}
+
+// ─── ClientLogosStrip ─────────────────────────────────────────────────────────
+function ClientLogosStrip() {
+  return (
+    <section style={{ background: "var(--paper)", padding: "72px 0", overflow: "hidden", borderTop: "1px solid var(--line)" }}>
+      <div
+        style={{
+          display: "flex",
+          width: "max-content",
+          animation: "marquee 28s linear infinite",
+        }}
+      >
+        {CLIENT_LOGOS.map((name, i) => (
+          <span
+            key={i}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 24,
+              fontFamily: "var(--sans)",
+              fontWeight: 700,
+              fontSize: "clamp(20px,2.5vw,32px)",
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              color: "rgb(41,41,41)",
+              marginRight: 24,
+              userSelect: "none",
+            }}
+          >
+            {i > 0 && <span style={{ opacity: 0.35, fontWeight: 400 }}>/</span>}
+            {name}
+          </span>
+        ))}
+      </div>
+    </section>
+  );
+}
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
@@ -423,7 +587,6 @@ export default function HomePage() {
   const [dragStart, setDragStart] = useState({ x: 0, scrollLeft: 0 });
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
-  // Parallax for hero bg
   const { scrollYProgress: heroScroll } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
@@ -440,9 +603,7 @@ export default function HomePage() {
     if (!dragging || !carouselRef.current) return;
     carouselRef.current.scrollLeft = dragStart.scrollLeft - (e.pageX - dragStart.x);
   }
-  function onPointerUp() {
-    setDragging(false);
-  }
+  function onPointerUp() { setDragging(false); }
 
   return (
     <>
@@ -463,7 +624,6 @@ export default function HomePage() {
             overflow: "hidden",
           }}
         >
-          {/* Parallax bg layer */}
           <motion.div
             style={{
               position: "absolute",
@@ -472,34 +632,16 @@ export default function HomePage() {
               y: bgY,
             }}
           />
-
-          {/* 3D WebGL bubble scene — right half of hero */}
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              right: 0,
-              width: "100%",
-              pointerEvents: "none",
-            }}
-          >
+          <div style={{ position: "absolute", inset: 0, width: "100%", pointerEvents: "none" }}>
             <BubbleScene3D />
           </div>
-
-          {/* Burst bubbles ambient bg */}
           <BurstBubbles count={5} />
 
           <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto", width: "100%", position: "relative", zIndex: 1 }}>
-            {/* Eyebrow */}
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease, delay: 0.1 }}
-            >
+            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease, delay: 0.1 }}>
               <p className="k-eyebrow on-ink">Media art agency</p>
             </motion.div>
 
-            {/* H1 — clip reveal line by line */}
             <h1
               style={{
                 fontFamily: "var(--serif-display)",
@@ -512,68 +654,38 @@ export default function HomePage() {
                 color: "var(--fg-on-ink)",
               }}
             >
-              <ClipReveal delay={0.2}>
-                <span>We make stories</span>
-              </ClipReveal>
-              <ClipReveal delay={0.35}>
-                <span>impossible to</span>
-              </ClipReveal>
-              <ClipReveal delay={0.5}>
-                <em style={{ fontStyle: "italic" }}>look away.</em>
-              </ClipReveal>
+              <ClipReveal delay={0.2}><span>We make stories</span></ClipReveal>
+              <ClipReveal delay={0.35}><span>impossible to</span></ClipReveal>
+              <ClipReveal delay={0.5}><em style={{ fontStyle: "italic" }}>look away.</em></ClipReveal>
             </h1>
 
-            {/* Subtext */}
             <motion.p
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.65, delay: 0.85, ease }}
-              style={{
-                fontFamily: "var(--sans)",
-                fontSize: 18,
-                color: "var(--fg-on-ink-2)",
-                maxWidth: "46ch",
-                marginTop: 32,
-                lineHeight: 1.65,
-              }}
+              style={{ fontFamily: "var(--sans)", fontSize: 18, color: "var(--fg-on-ink-2)", maxWidth: "46ch", marginTop: 32, lineHeight: 1.65 }}
             >
               the Kissa is a media art agency specialising in branded content, film, and
               immersive experiences. The name <em>kissa</em> means story. Every project
               is one we make unforgettable.
             </motion.p>
 
-            {/* CTAs */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 1.0, ease }}
               style={{ display: "flex", gap: 16, flexWrap: "wrap", marginTop: 40 }}
             >
-              <a href="mailto:hello@thekissa.com" className="btn btn-primary">
-                Start your kissa
-              </a>
-              <a href="#work" className="btn btn-ghost on-ink">
-                See the work
-              </a>
+              <a href="mailto:hello@thekissa.com" className="btn btn-primary">Start your kissa</a>
+              <a href="#work" className="btn btn-ghost on-ink">See the work</a>
             </motion.div>
-
           </div>
         </section>
 
         {/* ══ 2. MARQUEE STRIP ══════════════════════════════════════════════════ */}
         <section style={{ background: "#111109", padding: "18px 0", overflow: "hidden" }}>
           <div className="marquee-track">
-            <div
-              style={{
-                fontFamily: "var(--sans)",
-                fontSize: 11,
-                letterSpacing: "0.22em",
-                textTransform: "uppercase",
-                fontWeight: 600,
-                color: "rgba(244,239,233,0.35)",
-                whiteSpace: "nowrap",
-              }}
-            >
+            <div style={{ fontFamily: "var(--sans)", fontSize: 11, letterSpacing: "0.22em", textTransform: "uppercase", fontWeight: 600, color: "rgba(244,239,233,0.35)", whiteSpace: "nowrap" }}>
               {MARQUEE_TEXT}{MARQUEE_TEXT}
             </div>
           </div>
@@ -582,58 +694,26 @@ export default function HomePage() {
         {/* ══ 2b. KINETIC WORD REEL ═════════════════════════════════════════════ */}
         <KineticWordReel />
 
-        {/* ══ 2c. KISSA BUBBLE MOTION GRAPHIC ══════════════════════════════════ */}
-        <KissaBubbleSection />
-
         {/* ══ 3. STATEMENT ══════════════════════════════════════════════════════ */}
         <section style={{ background: "var(--paper)", padding: "140px 0 120px" }}>
           <div className="wrap" style={{ maxWidth: 860, margin: "0 auto" }}>
-            {/* Animated rule */}
             <motion.div
               initial={{ scaleX: 0 }}
               whileInView={{ scaleX: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, ease }}
-              style={{
-                height: 1,
-                background: "var(--ink)",
-                transformOrigin: "left",
-                marginBottom: 40,
-              }}
+              style={{ height: 1, background: "var(--ink)", transformOrigin: "left", marginBottom: 40 }}
             />
-
             <ClipReveal delay={0.0}>
-              <p
-                style={{
-                  fontFamily: "var(--serif-display)",
-                  fontSize: "clamp(40px, 5.5vw, 72px)",
-                  fontWeight: 700,
-                  color: "var(--ink)",
-                  lineHeight: 1.05,
-                  letterSpacing: "-0.012em",
-                  margin: 0,
-                }}
-              >
+              <p style={{ fontFamily: "var(--serif-display)", fontSize: "clamp(40px, 5.5vw, 72px)", fontWeight: 700, color: "var(--ink)", lineHeight: 1.05, letterSpacing: "-0.012em", margin: 0 }}>
                 We don&apos;t make content.
               </p>
             </ClipReveal>
             <ClipReveal delay={0.2}>
-              <p
-                style={{
-                  fontFamily: "var(--serif-display)",
-                  fontStyle: "italic",
-                  fontSize: "clamp(40px, 5.5vw, 72px)",
-                  fontWeight: 700,
-                  color: "var(--ink)",
-                  lineHeight: 1.05,
-                  letterSpacing: "-0.012em",
-                  margin: 0,
-                }}
-              >
+              <p style={{ fontFamily: "var(--serif-display)", fontStyle: "italic", fontSize: "clamp(40px, 5.5vw, 72px)", fontWeight: 700, color: "var(--ink)", lineHeight: 1.05, letterSpacing: "-0.012em", margin: 0 }}>
                 We make kissa.
               </p>
             </ClipReveal>
-
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -649,178 +729,25 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ══ 4. SERVICES ═══════════════════════════════════════════════════════ */}
-        <section style={{ background: "var(--paper)", padding: "0 0 140px" }}>
-          <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
-            {/* Section header */}
-            <div
-              style={{
-                borderTop: "1px solid var(--line)",
-                paddingTop: 72,
-                marginBottom: 80,
-                maxWidth: 680,
-              }}
-            >
-              <ClipReveal>
-                <h2
-                  style={{
-                    fontFamily: "var(--serif-display)",
-                    fontSize: "clamp(36px, 4.5vw, 64px)",
-                    fontWeight: 700,
-                    color: "var(--ink)",
-                    letterSpacing: "-0.012em",
-                    lineHeight: 1.05,
-                    margin: 0,
-                  }}
-                >
-                  Three ways we tell it.
-                </h2>
-              </ClipReveal>
-              <motion.p
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.2, ease }}
-                className="k-body"
-                style={{ color: "var(--fg2)", margin: "20px 0 0" }}
-              >
-                One studio, end to end. From the first idea to the final frame. We don&apos;t
-                hand off. We stay.
-              </motion.p>
-            </div>
-
-            {/* Service pillars */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
-                gap: 32,
-              }}
-            >
-              {services.map((s, i) => (
-                <motion.div
-                  key={s.num}
-                  initial={{ opacity: 0, y: 32 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-5%" }}
-                  transition={{ duration: 0.6, delay: i * 0.12, ease }}
-                  style={{ borderTop: "1px solid var(--line)", paddingTop: 32 }}
-                >
-                  <p
-                    style={{
-                      fontFamily: "var(--mono)",
-                      fontSize: 12,
-                      letterSpacing: "0.1em",
-                      color: "var(--fg3)",
-                      marginBottom: 16,
-                      textTransform: "uppercase",
-                    }}
-                  >
-                    {s.num}
-                  </p>
-                  <h3
-                    style={{
-                      fontFamily: "var(--sans)",
-                      fontSize: 22,
-                      fontWeight: 700,
-                      color: "var(--fg1)",
-                      marginBottom: 10,
-                    }}
-                  >
-                    {s.title}
-                  </h3>
-                  <p
-                    style={{
-                      fontFamily: "var(--serif-display)",
-                      fontStyle: "italic",
-                      fontSize: 18,
-                      color: "var(--fg2)",
-                      marginBottom: 14,
-                      lineHeight: 1.4,
-                    }}
-                  >
-                    {s.lead}
-                  </p>
-                  <p className="k-body" style={{ color: "var(--fg2)", marginBottom: 24 }}>
-                    {s.body}
-                  </p>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-                    {s.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        style={{
-                          background: "var(--bone)",
-                          color: "var(--fg3)",
-                          border: "1px solid var(--line)",
-                          borderRadius: 20,
-                          fontSize: 12,
-                          padding: "5px 12px",
-                          fontFamily: "var(--sans)",
-                        }}
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* ══ 4. SERVICES — tabbed (MAD pattern) ═══════════════════════════════ */}
+        <ServicesTabbed />
 
         {/* ══ 5. SELECTED WORK ══════════════════════════════════════════════════ */}
-        <section id="work" style={{ background: "var(--ink)", padding: "120px 0 140px" }}>
+        <section id="work" style={{ background: "var(--paper)", padding: "120px 0 140px" }}>
           <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "flex-end",
-                marginBottom: 56,
-              }}
-            >
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 56 }}>
               <div>
                 <ClipReveal>
-                  <h2
-                    style={{
-                      fontFamily: "var(--serif-display)",
-                      fontSize: "clamp(36px, 5vw, 72px)",
-                      fontWeight: 700,
-                      color: "var(--fg-on-ink)",
-                      letterSpacing: "-0.012em",
-                      lineHeight: 1.05,
-                      marginBottom: 0,
-                    }}
-                  >
-                    Our kissas.
+                  <h2 style={{ fontFamily: "var(--serif-display)", fontSize: "clamp(36px, 5vw, 72px)", fontWeight: 700, color: "var(--fg1)", letterSpacing: "-0.012em", lineHeight: 1.05, marginBottom: 0 }}>
+                    Our maddest hits.
                   </h2>
                 </ClipReveal>
               </div>
               <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 12 }}>
-                <span
-                  style={{
-                    fontFamily: "var(--mono)",
-                    fontSize: 11,
-                    letterSpacing: "0.1em",
-                    color: "var(--fg-on-ink-2)",
-                    userSelect: "none",
-                  }}
-                >
+                <span style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.1em", color: "var(--fg3)", userSelect: "none" }}>
                   drag to explore →
                 </span>
-                <Link
-                  href="/portfolio"
-                  style={{
-                    fontFamily: "var(--sans)",
-                    fontSize: 14,
-                    fontWeight: 600,
-                    color: "var(--fg-on-ink)",
-                    textDecoration: "none",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 4,
-                  }}
-                >
+                <Link href="/portfolio" style={{ fontFamily: "var(--sans)", fontSize: 14, fontWeight: 600, color: "var(--fg1)", textDecoration: "none", display: "flex", alignItems: "center", gap: 4 }}>
                   View all work <ArrowUpRight size={14} />
                 </Link>
               </div>
@@ -864,106 +791,23 @@ export default function HomePage() {
                   cursor: dragging ? "grabbing" : "grab",
                   transition: "transform 0.25s ease-out, box-shadow 0.25s ease-out",
                   transform: hoveredCard === p.name ? "translateY(-8px)" : "translateY(0)",
-                  boxShadow:
-                    hoveredCard === p.name
-                      ? "0 32px 64px rgba(0,0,0,0.65)"
-                      : "0 8px 24px rgba(0,0,0,0.35)",
+                  boxShadow: hoveredCard === p.name ? "0 32px 64px rgba(0,0,0,0.28)" : "0 4px 20px rgba(0,0,0,0.1)",
                 }}
                 onMouseEnter={() => setHoveredCard(p.name)}
                 onMouseLeave={() => setHoveredCard(null)}
               >
-                {/* Texture overlay */}
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    backgroundImage:
-                      `radial-gradient(ellipse 80% 50% at 20% 20%, ${p.accent}22 0%, transparent 70%)`,
-                    pointerEvents: "none",
-                  }}
-                />
-
-                {/* Giant bg letter for character */}
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    fontFamily: "var(--serif-display)",
-                    fontSize: "clamp(120px, 20vw, 200px)",
-                    fontWeight: 700,
-                    color: "rgba(255,255,255,0.04)",
-                    lineHeight: 1,
-                    letterSpacing: "-0.05em",
-                    userSelect: "none",
-                    whiteSpace: "nowrap",
-                    pointerEvents: "none",
-                  }}
-                >
+                <div style={{ position: "absolute", inset: 0, backgroundImage: `radial-gradient(ellipse 80% 50% at 20% 20%, ${p.accent}22 0%, transparent 70%)`, pointerEvents: "none" }} />
+                <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", fontFamily: "var(--serif-display)", fontSize: "clamp(120px, 20vw, 200px)", fontWeight: 700, color: "rgba(0,0,0,0.08)", lineHeight: 1, letterSpacing: "-0.05em", userSelect: "none", whiteSpace: "nowrap", pointerEvents: "none" }}>
                   {p.name[0]}
                 </div>
-
-                {/* Bottom overlay */}
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    background: `linear-gradient(to top, rgba(22,16,15,${hoveredCard === p.name ? 0.9 : 0.75}) 0%, transparent 55%)`,
-                    transition: "background 0.25s ease-out",
-                  }}
-                />
-
-                {/* Card info */}
-                <div
-                  style={{
-                    position: "absolute",
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    padding: "28px 24px",
-                  }}
-                >
-                  <p
-                    style={{
-                      fontFamily: "var(--serif-display)",
-                      fontSize: 28,
-                      fontWeight: 700,
-                      color: "#fff",
-                      marginBottom: 8,
-                      lineHeight: 1.1,
-                    }}
-                  >
-                    {p.name}
-                  </p>
+                <div style={{ position: "absolute", inset: 0, background: `linear-gradient(to top, rgba(0,0,0,${hoveredCard === p.name ? 0.82 : 0.65}) 0%, transparent 55%)`, transition: "background 0.25s ease-out" }} />
+                <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "28px 24px" }}>
+                  <p style={{ fontFamily: "var(--serif-display)", fontSize: 28, fontWeight: 700, color: "#fff", marginBottom: 12, lineHeight: 1.1 }}>{p.name}</p>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <span
-                      style={{
-                        background: "rgba(255,255,255,0.1)",
-                        color: "rgba(244,239,233,0.8)",
-                        borderRadius: 20,
-                        fontSize: 11,
-                        padding: "4px 12px",
-                        fontFamily: "var(--mono)",
-                        letterSpacing: "0.08em",
-                        textTransform: "uppercase",
-                      }}
-                    >
+                    <span style={{ background: "rgba(0,0,0,0.35)", color: "rgba(255,255,255,0.85)", borderRadius: "4.25rem", fontSize: 10, fontWeight: 600, padding: "6px 14px", fontFamily: "var(--sans)", letterSpacing: "0.08em", textTransform: "uppercase" }}>
                       {p.category}
                     </span>
-                    <a
-                      href={p.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      style={{
-                        color: hoveredCard === p.name ? "#ffffff" : "rgba(244,239,233,0.5)",
-                        transition: "color 0.2s",
-                        display: "flex",
-                        alignItems: "center",
-                        textDecoration: "none",
-                      }}
-                    >
+                    <a href={p.href} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} style={{ color: hoveredCard === p.name ? "#ffffff" : "rgba(255,255,255,0.5)", transition: "color 0.2s", display: "flex", alignItems: "center", textDecoration: "none" }}>
                       <ArrowUpRight size={18} />
                     </a>
                   </div>
@@ -973,180 +817,33 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ══ 6. TESTIMONIALS ═══════════════════════════════════════════════════ */}
-        <section style={{ background: "var(--bone)", padding: "140px 0" }}>
-          <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
-            <ClipReveal>
-              <h2
-                style={{
-                  fontFamily: "var(--serif-display)",
-                  fontSize: "clamp(36px, 5vw, 68px)",
-                  fontWeight: 700,
-                  color: "var(--ink)",
-                  letterSpacing: "-0.012em",
-                  lineHeight: 1.05,
-                  marginTop: 0,
-                  marginBottom: 72,
-                }}
-              >
-                What our clients say.
-              </h2>
-            </ClipReveal>
+        {/* ══ 6. CLIENT LOGOS STRIP (MAD pattern) ══════════════════════════════ */}
+        <ClientLogosStrip />
 
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2, 1fr)",
-                gap: 24,
-              }}
-            >
-              {testimonials.map((t, i) => (
-                <motion.div
-                  key={t.name}
-                  initial={{ opacity: 0, y: 32 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-5%" }}
-                  transition={{ duration: 0.6, delay: i * 0.1, ease }}
-                >
-                <Card3D
-                  style={{
-                    background: "#ffffff",
-                    borderRadius: 20,
-                    padding: 40,
-                    border: "1px solid rgba(0,0,0,0.08)",
-                    boxShadow: "0 2px 20px rgba(22,16,15,0.06)",
-                  }}
-                >
-                  <p
-                    style={{
-                      fontFamily: "var(--serif-display)",
-                      fontStyle: "italic",
-                      fontSize: 19,
-                      color: "var(--fg1)",
-                      lineHeight: 1.65,
-                      marginBottom: 28,
-                    }}
-                  >
-                    &ldquo;{t.quote}&rdquo;
-                  </p>
-                  <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                    <div
-                      style={{
-                        width: 40,
-                        height: 40,
-                        borderRadius: "50%",
-                        background: "var(--ink)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "#fff",
-                        fontFamily: "var(--sans)",
-                        fontWeight: 700,
-                        fontSize: 13,
-                        flexShrink: 0,
-                      }}
-                    >
-                      {t.name.split(" ").map((n) => n[0]).join("")}
-                    </div>
-                    <div>
-                      <p style={{ fontFamily: "var(--sans)", fontWeight: 700, fontSize: 14, color: "var(--fg1)", margin: 0 }}>
-                        {t.name}
-                      </p>
-                      <p
-                        style={{
-                          fontFamily: "var(--mono)",
-                          fontSize: 11,
-                          textTransform: "uppercase",
-                          letterSpacing: "0.1em",
-                          color: "var(--fg3)",
-                          margin: "2px 0 0",
-                        }}
-                      >
-                        {t.role} · {t.company}
-                      </p>
-                    </div>
-                  </div>
-                </Card3D>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* ══ 7. TESTIMONIALS — slideshow (MAD pattern) ════════════════════════ */}
+        <TestimonialsSlider />
 
-        {/* ══ 7. STATS — 3D bubble grid ═════════════════════════════════════════ */}
+        {/* ══ 8. STATS — 3D bubble grid ═════════════════════════════════════════ */}
         <BubbleGrid />
 
-        {/* ══ 8. CTA BANNER ═════════════════════════════════════════════════════ */}
-        <section
-          style={{
-            background: "var(--ink)",
-            padding: "140px 0",
-            position: "relative",
-            overflow: "hidden",
-          }}
-        >
-          {/* Burst bubbles bg */}
+        {/* ══ 9. CTA BANNER ═════════════════════════════════════════════════════ */}
+        <section style={{ background: "var(--ink)", padding: "140px 0", position: "relative", overflow: "hidden" }}>
           <BurstBubbles count={4} />
-
-          {/* Big ghost letter bg */}
-          <div
-            style={{
-              position: "absolute",
-              right: "-5%",
-              top: "50%",
-              transform: "translateY(-50%)",
-              fontFamily: "var(--serif-display)",
-              fontSize: "clamp(200px, 30vw, 420px)",
-              fontWeight: 700,
-              color: "rgba(255,255,255,0.05)",
-              lineHeight: 1,
-              letterSpacing: "-0.05em",
-              userSelect: "none",
-              pointerEvents: "none",
-            }}
-          >
-            K
-          </div>
+          <div style={{ position: "absolute", right: "-5%", top: "50%", transform: "translateY(-50%)", fontFamily: "var(--serif-display)", fontSize: "clamp(200px, 30vw, 420px)", fontWeight: 700, color: "rgba(255,255,255,0.05)", lineHeight: 1, letterSpacing: "-0.05em", userSelect: "none", pointerEvents: "none" }}>K</div>
 
           <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto", position: "relative", zIndex: 1 }}>
             <ClipReveal>
-              <p
-                style={{
-                  fontFamily: "var(--mono)",
-                  fontSize: 11,
-                  letterSpacing: "0.14em",
-                  textTransform: "uppercase",
-                  color: "rgba(255,255,255,0.7)",
-                  marginBottom: 24,
-                }}
-              >
+              <p style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.7)", marginBottom: 24 }}>
                 Let&apos;s make something unforgettable
               </p>
             </ClipReveal>
             <ClipReveal delay={0.1}>
-              <h2
-                style={{
-                  fontFamily: "var(--serif-display)",
-                  fontSize: "clamp(52px, 8vw, 100px)",
-                  fontWeight: 700,
-                  color: "#ffffff",
-                  letterSpacing: "-0.022em",
-                  lineHeight: 0.95,
-                  marginBottom: 12,
-                }}
-              >
+              <h2 style={{ fontFamily: "var(--serif-display)", fontSize: "clamp(52px, 8vw, 100px)", fontWeight: 700, color: "#ffffff", letterSpacing: "-0.022em", lineHeight: 0.95, marginBottom: 12 }}>
                 Tell us your story.
               </h2>
             </ClipReveal>
             <ClipReveal delay={0.2}>
-              <p
-                style={{
-                  fontFamily: "var(--sans)",
-                  fontSize: 19,
-                  color: "rgba(255,255,255,0.65)",
-                  marginBottom: 52,
-                }}
-              >
+              <p style={{ fontFamily: "var(--sans)", fontSize: 19, color: "rgba(255,255,255,0.65)", marginBottom: 52 }}>
                 We make sure nobody looks away.
               </p>
             </ClipReveal>
@@ -1159,49 +856,17 @@ export default function HomePage() {
             >
               <a
                 href="mailto:hello@thekissa.com"
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 8,
-                  padding: "15px 30px",
-                  background: "#1a1a1a",
-                  border: "1px solid rgba(255,255,255,0.2)",
-                  color: "#fff",
-                  borderRadius: 10,
-                  fontFamily: "var(--sans)",
-                  fontWeight: 600,
-                  fontSize: 15,
-                  textDecoration: "none",
-                  letterSpacing: "0.01em",
-                  transition: "background 0.18s ease-out",
-                }}
-                onMouseEnter={(e) =>
-                  ((e.currentTarget as HTMLAnchorElement).style.background = "#333333")
-                }
-                onMouseLeave={(e) =>
-                  ((e.currentTarget as HTMLAnchorElement).style.background = "#1a1a1a")
-                }
+                style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "15px 30px", background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", borderRadius: 10, fontFamily: "var(--sans)", fontWeight: 600, fontSize: 15, textDecoration: "none", letterSpacing: "0.01em", transition: "background 0.18s ease-out" }}
+                onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.background = "#333")}
+                onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.background = "#1a1a1a")}
               >
                 Start your kissa <ArrowUpRight size={16} />
               </a>
               <a
                 href="mailto:hello@thekissa.com"
-                style={{
-                  fontFamily: "var(--sans)",
-                  fontSize: 15,
-                  color: "#fff",
-                  textDecoration: "none",
-                  borderBottom: "1px solid rgba(255,255,255,0.35)",
-                  paddingBottom: 2,
-                  transition: "border-color 0.18s ease-out",
-                }}
-                onMouseEnter={(e) =>
-                  ((e.currentTarget as HTMLAnchorElement).style.borderColor = "#fff")
-                }
-                onMouseLeave={(e) =>
-                  ((e.currentTarget as HTMLAnchorElement).style.borderColor =
-                    "rgba(255,255,255,0.35)")
-                }
+                style={{ fontFamily: "var(--sans)", fontSize: 15, color: "#fff", textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.35)", paddingBottom: 2, transition: "border-color 0.18s ease-out" }}
+                onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.borderColor = "#fff")}
+                onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(255,255,255,0.35)")}
               >
                 hello@thekissa.com
               </a>
