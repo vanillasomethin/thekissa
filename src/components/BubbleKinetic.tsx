@@ -298,40 +298,6 @@ export function BubbleGrid() {
                 >
                   <path d={BUBBLE_PATH} />
                 </svg>
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "40%",
-                    left: "58%",
-                    transform: "translate(-50%, -50%)",
-                    textAlign: "center",
-                  }}
-                >
-                  <p
-                    style={{
-                      fontFamily: "var(--serif-display)",
-                      fontSize: `clamp(${Math.round(item.size * 0.18)}px, ${item.size * 0.025}vw, ${Math.round(item.size * 0.28)}px)`,
-                      fontWeight: 700,
-                      color: "#ffffff",
-                      lineHeight: 1,
-                      margin: 0,
-                    }}
-                  >
-                    {item.label}
-                  </p>
-                  <p
-                    style={{
-                      fontFamily: "var(--mono)",
-                      fontSize: 10,
-                      color: "rgba(255,255,255,0.55)",
-                      letterSpacing: "0.14em",
-                      textTransform: "uppercase",
-                      margin: "5px 0 0",
-                    }}
-                  >
-                    {item.sub}
-                  </p>
-                </div>
               </div>
             </div>
           ))}
