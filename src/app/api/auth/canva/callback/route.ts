@@ -2,30 +2,38 @@ import { NextRequest, NextResponse } from "next/server";
 import { exchangeCodeForTokens } from "@/lib/canva";
 
 export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
+  // Use request.nextUrl — it survives Vercel's edge rewrites intact
+  const { searchParams } = request.nextUrl;
   const code = searchParams.get("code");
   const state = searchParams.get("state");
   const error = searchParams.get("error");
 
-  const origin = new URL(request.url).origin;
+  const origin = request.nextUrl.origin;
 
   if (error) {
-    return NextResponse.redirect(new URL(`/portfolio?error=${encodeURIComponent(error)}`, request.url));
+    return NextResponse.redirect(new URL(`/portfolio?error=${encodeURIComponent(error)}`, origin));
   }
 
   if (!code) {
-    return NextResponse.redirect(new URL("/portfolio?error=missing_code", request.url));
+    // Dump what we actually received so we can diagnose
+    const raw = request.nextUrl.toString();
+    const allParams = [...searchParams.entries()].map(([k, v]) => `${k}=${v.slice(0, 20)}`).join("&");
+    return NextResponse.redirect(
+      new URL(`/portfolio?error=missing_code&debug=${encodeURIComponent(allParams || "no_params")}&url=${encodeURIComponent(raw.slice(0, 100))}`, origin)
+    );
   }
 
   const storedState = request.cookies.get("canva_oauth_state")?.value;
   const codeVerifier = request.cookies.get("canva_code_verifier")?.value;
 
   if (!storedState || storedState !== state) {
-    return NextResponse.redirect(new URL("/portfolio?error=invalid_state", request.url));
+    return NextResponse.redirect(
+      new URL(`/portfolio?error=invalid_state&got=${encodeURIComponent(state ?? "none")}&stored=${encodeURIComponent(storedState ?? "none")}`, origin)
+    );
   }
 
   if (!codeVerifier) {
-    return NextResponse.redirect(new URL("/portfolio?error=missing_verifier", request.url));
+    return NextResponse.redirect(new URL("/portfolio?error=missing_verifier", origin));
   }
 
   try {
@@ -48,10 +56,7 @@ export async function GET(request: NextRequest) {
       "HttpOnly",
     ].filter(Boolean).join("; ");
 
-    const headers = new Headers({
-      "Content-Type": "text/html; charset=utf-8",
-    });
-
+    const headers = new Headers({ "Content-Type": "text/html; charset=utf-8" });
     headers.append("Set-Cookie", `canva_access_token=${tokens.access_token}; ${cookieOpts}`);
     if (tokens.refresh_token) {
       headers.append("Set-Cookie", `canva_refresh_token=${tokens.refresh_token}; ${refreshOpts}`);
@@ -59,7 +64,6 @@ export async function GET(request: NextRequest) {
     headers.append("Set-Cookie", `canva_code_verifier=; Path=/; Max-Age=0`);
     headers.append("Set-Cookie", `canva_oauth_state=; Path=/; Max-Age=0`);
 
-    // Return HTML that sets cookies then redirects — avoids the Set-Cookie-on-redirect problem
     return new Response(
       `<!DOCTYPE html><html><head>
         <meta http-equiv="refresh" content="0;url=/portfolio">
@@ -71,6 +75,8 @@ export async function GET(request: NextRequest) {
   } catch (err) {
     console.error("Canva token exchange error:", err);
     const msg = err instanceof Error ? err.message : String(err);
-    return NextResponse.redirect(new URL(`/portfolio?error=${encodeURIComponent(msg)}`, request.url));
+    return NextResponse.redirect(
+      new URL(`/portfolio?error=${encodeURIComponent(msg)}`, origin)
+    );
   }
 }

@@ -6,8 +6,8 @@ export async function GET(request: NextRequest) {
   const challenge = generateCodeChallenge(verifier);
   const state = generateState();
 
-  // Use the same origin so cookies survive the round-trip
-  const origin = new URL(request.url).origin;
+  // Use request.nextUrl.origin — survives Vercel edge rewrites
+  const origin = request.nextUrl.origin;
   const redirectUri = `${origin}/api/auth/canva/callback`;
 
   const authUrl = buildAuthUrl(challenge, state, redirectUri);
