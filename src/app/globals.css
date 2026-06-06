@@ -19,13 +19,14 @@
   --gray-400:       #A0A0A0;
   --gray-300:       #C8C8C8;
   --gray-200:       #E4E4E4;
-  --bone:           #F2F2F2;
-  --paper:          #FAFAFA;
+  --bone:           #EDECE9;
+  --paper:          #F5F4F1;
 
-  /* --- Accents --- */
+  /* --- Accents & Iridescent --- */
   --accent-dark:    #1A1A1A;
   --accent-cool:    #2A3F5F;
   --accent-soft:    #E8E8E8;
+  --gradient-iridescent: linear-gradient(255deg, rgb(250,203,14), rgb(240,107,168) 30%, rgb(120,186,230) 65%, rgba(255,255,255,0.12));
 
   /* --- Semantic --- */
   --bg:             var(--paper);

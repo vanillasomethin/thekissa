@@ -12,12 +12,7 @@ import { ArrowUpRight, ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import dynamic from "next/dynamic";
 import { BurstBubbles, KineticWordReel, BubbleGrid, Card3D } from "@/components/BubbleKinetic";
-
-const BubbleScene3D = dynamic(() => import("@/components/BubbleScene3D"), {
-  ssr: false,
-});
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -578,21 +573,6 @@ function ClientLogosStrip() {
   );
 }
 
-    <span style={{ display: "block", overflow: "hidden", ...style }}>
-      <motion.span
-        style={{ display: "block" }}
-        initial={reduce ? false : { y: "105%" }}
-        whileInView={{ y: "0%" }}
-        viewport={{ once: true, margin: "-5%" }}
-        transition={reduce ? { duration: 0 } : { duration, ease, delay }}
-      >
-        {children}
-      </motion.span>
-    </span>
-  );
-}
-
-
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
@@ -633,8 +613,11 @@ export default function HomePage() {
             minHeight: "100vh",
             overflow: "hidden",
             background: "var(--ink)",
+            display: "flex",
+            alignItems: "center",
           }}
         >
+          {/* Parallax bg layer */}
           <motion.div
             style={{
               position: "absolute",
@@ -644,60 +627,68 @@ export default function HomePage() {
               zIndex: 0,
             }}
           />
-          <div style={{ position: "absolute", inset: 0, width: "100%", pointerEvents: "none" }}>
-            <BubbleScene3D />
+
+          {/* Iridescent bubble — sole chromatic event (OFF+BRAND pattern) */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.82 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+            style={{
+              position: "absolute",
+              right: "-8%",
+              top: "50%",
+              transform: "translateY(-50%)",
+              width: "clamp(380px, 44vw, 680px)",
+              height: "clamp(380px, 44vw, 680px)",
+              zIndex: 0,
+              pointerEvents: "none",
+            }}
+          >
+            {/* Iridescent gradient fills the Kissa speech bubble shape */}
+            <svg
+              viewBox="0 0 220 200"
+              width="100%"
+              height="100%"
+              style={{ display: "block", filter: "blur(0px)" }}
+            >
+              <defs>
+                <linearGradient id="iridescent-fill" x1="0%" y1="0%" x2="100%" y2="100%" gradientTransform="rotate(25, 0.5, 0.5)">
+                  <stop offset="0%"   stopColor="#FACB0E" />
+                  <stop offset="28%"  stopColor="#F06BA8" />
+                  <stop offset="62%"  stopColor="#78BAE6" />
+                  <stop offset="100%" stopColor="rgba(255,255,255,0.12)" />
+                </linearGradient>
+                <radialGradient id="iridescent-inner" cx="38%" cy="32%" r="60%">
+                  <stop offset="0%"   stopColor="rgba(255,255,255,0.22)" />
+                  <stop offset="100%" stopColor="rgba(0,0,0,0)" />
+                </radialGradient>
+              </defs>
+              <path
+                d="M 68,0 L 196,0 Q 220,0 220,24 L 220,176 Q 220,200 196,200 L 68,200 Q 40,200 40,176 L 40,135 L 0,115 L 40,78 L 40,24 Q 40,0 68,0 Z"
+                fill="url(#iridescent-fill)"
+              />
+              <path
+                d="M 68,0 L 196,0 Q 220,0 220,24 L 220,176 Q 220,200 196,200 L 68,200 Q 40,200 40,176 L 40,135 L 0,115 L 40,78 L 40,24 Q 40,0 68,0 Z"
+                fill="url(#iridescent-inner)"
+              />
+            </svg>
+          </motion.div>
+
+          {/* Concentric circle ornament — structural depth */}
+          <div style={{ position: "absolute", right: "6%", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", zIndex: 0 }}>
+            {[600, 480, 360].map((r, i) => (
+              <div key={r} style={{
+                position: "absolute",
+                width: r, height: r,
+                top: "50%", left: "50%",
+                transform: "translate(-50%, -50%)",
+                borderRadius: "50%",
+                border: `1px solid rgba(255,255,255,${0.04 - i * 0.01})`,
+              }} />
+            ))}
           </div>
-          <BurstBubbles count={5} />
 
-          <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto", width: "100%", position: "relative", zIndex: 1 }}>
-            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease, delay: 0.1 }}>
-              <p className="k-eyebrow on-ink">Media art agency</p>
-            </motion.div>
-
-            <h1
-              style={{
-                fontFamily: "var(--serif-display)",
-                fontSize: "clamp(64px, 10vw, 118px)",
-                lineHeight: 0.95,
-                fontWeight: 700,
-                letterSpacing: "-0.022em",
-                marginTop: 22,
-                marginBottom: 0,
-                color: "var(--fg-on-ink)",
-              }}
-            >
-              <ClipReveal delay={0.2}><span>We make stories</span></ClipReveal>
-              <ClipReveal delay={0.35}><span>impossible to</span></ClipReveal>
-              <ClipReveal delay={0.5}><em style={{ fontStyle: "italic" }}>look away.</em></ClipReveal>
-            </h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.65, delay: 0.85, ease }}
-              style={{ fontFamily: "var(--sans)", fontSize: 18, color: "var(--fg-on-ink-2)", maxWidth: "46ch", marginTop: 32, lineHeight: 1.65 }}
-            >
-              the Kissa is a media art agency specialising in branded content, film, and
-              immersive experiences. The name <em>kissa</em> means story. Every project
-              is one we make unforgettable.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 1.0, ease }}
-              style={{ display: "flex", gap: 16, flexWrap: "wrap", marginTop: 40 }}
-            >
-              <a href="mailto:hello@thekissa.com" className="btn btn-primary">Start your kissa</a>
-              <a href="#work" className="btn btn-ghost on-ink">See the work</a>
-            </motion.div>
-
-          {/* Burst bubbles — behind everything */}
-          <div style={{ position: "absolute", inset: 0, zIndex: 0, pointerEvents: "none" }}>
-            <BurstBubbles count={5} />
-          </div>
-
-          {/* Two-column grid: text left, 3D right */}
+          {/* Hero content — text left column */}
           <div
             className="wrap"
             style={{
@@ -706,39 +697,33 @@ export default function HomePage() {
               width: "100%",
               position: "relative",
               zIndex: 1,
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: 0,
-              alignItems: "center",
-              minHeight: "100vh",
               paddingTop: 120,
               paddingBottom: 80,
             }}
           >
-            {/* Left: text */}
-            <div style={{ position: "relative", zIndex: 2 }}>
-              {/* Eyebrow */}
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease, delay: 0.1 }}
-              >
-                <p className="k-eyebrow on-ink">Media art agency</p>
+            <div style={{ maxWidth: "55%" }}>
+              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease, delay: 0.1 }}>
+                <p style={{
+                  fontFamily: "var(--mono)",
+                  fontSize: 11,
+                  letterSpacing: "0.18em",
+                  textTransform: "uppercase",
+                  color: "rgba(255,255,255,0.45)",
+                  marginBottom: 28,
+                }}>Media art agency</p>
               </motion.div>
 
-              {/* H1 — single block reveal, no per-line overflow clipping */}
               <motion.h1
                 initial={{ opacity: 0, y: 40 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.9, ease, delay: 0.2 }}
                 style={{
                   fontFamily: "var(--serif-display)",
-                  fontSize: "clamp(52px, 7vw, 100px)",
-                  lineHeight: 1.0,
+                  fontSize: "clamp(60px, 7.5vw, 110px)",
+                  lineHeight: 0.95,
                   fontWeight: 700,
                   letterSpacing: "-0.022em",
-                  marginTop: 22,
-                  marginBottom: 0,
+                  margin: 0,
                   color: "var(--fg-on-ink)",
                 }}
               >
@@ -749,7 +734,6 @@ export default function HomePage() {
                 <em style={{ fontStyle: "italic" }}>look away.</em>
               </motion.h1>
 
-              {/* Subtext */}
               <motion.p
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -759,7 +743,7 @@ export default function HomePage() {
                   fontSize: 18,
                   color: "var(--fg-on-ink-2)",
                   maxWidth: "44ch",
-                  marginTop: 28,
+                  marginTop: 32,
                   lineHeight: 1.65,
                 }}
               >
@@ -768,40 +752,50 @@ export default function HomePage() {
                 is one we make unforgettable.
               </motion.p>
 
-              {/* CTAs */}
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.9, ease }}
-                style={{ display: "flex", gap: 16, flexWrap: "wrap", marginTop: 36 }}
+                style={{ display: "flex", gap: 16, flexWrap: "wrap", marginTop: 40 }}
               >
-                <a href="mailto:hello@thekissa.com" className="btn btn-primary">
-                  Start your kissa
-                </a>
-                <a href="#work" className="btn btn-ghost on-ink">
-                  See the work
-                </a>
+                <a href="mailto:hello@thekissa.com" className="btn btn-primary">Start your kissa</a>
+                <a href="#work" className="btn btn-ghost on-ink">See the work</a>
               </motion.div>
-            </div>
-
-            {/* Right: 3D scene contained to this column */}
-            <div
-              style={{
-                position: "relative",
-                height: "100%",
-                minHeight: 520,
-                pointerEvents: "none",
-              }}
-            >
-              <BubbleScene3D />
             </div>
           </div>
 
-          {/* Mobile: stack vertically */}
+          {/* Scroll indicator — bottom right */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.5, duration: 0.6 }}
+            style={{
+              position: "absolute",
+              bottom: 36,
+              right: 48,
+              fontFamily: "var(--mono)",
+              fontSize: 10,
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              color: "rgba(255,255,255,0.35)",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 8,
+              zIndex: 1,
+            }}
+          >
+            <span>Scroll</span>
+            <motion.div
+              animate={{ y: [0, 6, 0] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+              style={{ width: 1, height: 28, background: "rgba(255,255,255,0.25)" }}
+            />
+          </motion.div>
+
           <style>{`
-            @media (max-width: 760px) {
-              .hero-grid { grid-template-columns: 1fr !important; }
-              .hero-3d { display: none !important; }
+            @media (max-width: 680px) {
+              .hero-text-col { max-width: 100% !important; }
             }
           `}</style>
         </section>
@@ -946,7 +940,7 @@ export default function HomePage() {
                       lineHeight: 1.4,
                     }}
                   >
-                    {s.lead}
+                    {s.headline}
                   </p>
                   <p className="k-body" style={{ color: "var(--fg2)", marginBottom: 24 }}>
                     {s.body}
