@@ -5,7 +5,7 @@ import crypto from "crypto";
 const CANVA_CLIENT_ID = process.env.CANVA_CLIENT_ID ?? "OC-AZ6Nsdbwphgy";
 const CANVA_CLIENT_SECRET = process.env.CANVA_CLIENT_SECRET ?? "";
 const REDIRECT_URI =
-  process.env.CANVA_REDIRECT_URI ?? "https://www.thekissa.com/api/auth/canva/callback";
+  process.env.CANVA_REDIRECT_URI ?? "https://www.thekissa.com/api/canva-callback";
 const PORTFOLIO_FOLDER_ID = "FAF1YBxSNTM";
 
 export const CANVA_AUTH_URL = "https://www.canva.com/api/oauth/authorize";
