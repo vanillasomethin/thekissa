@@ -2,25 +2,63 @@ import { NextRequest, NextResponse } from "next/server";
 import { exchangeCodeForTokens } from "@/lib/canva";
 
 export async function GET(request: NextRequest) {
-  // Use request.nextUrl — it survives Vercel's edge rewrites intact
-  const { searchParams } = request.nextUrl;
-  const code = searchParams.get("code");
-  const state = searchParams.get("state");
-  const error = searchParams.get("error");
+  // Check every possible place the URL could be
+  const rawUrl = request.url;
+  const nextUrl = request.nextUrl.toString();
+  const xForwardedHost = request.headers.get("x-forwarded-host") ?? "";
+  const xOrigUrl = request.headers.get("x-original-url") ?? "";
+  const xRealIp = request.headers.get("x-real-ip") ?? "";
+  const xVercelId = request.headers.get("x-vercel-id") ?? "";
+  const referer = request.headers.get("referer") ?? "";
 
-  const origin = request.nextUrl.origin;
+  // Pull params from ALL possible sources
+  let code: string | null = null;
+  let state: string | null = null;
+  let error: string | null = null;
+
+  // 1. Try request.nextUrl first
+  code = request.nextUrl.searchParams.get("code");
+  state = request.nextUrl.searchParams.get("state");
+  error = request.nextUrl.searchParams.get("error");
+
+  // 2. If missing, try parsing request.url directly
+  if (!code && rawUrl.includes("?")) {
+    try {
+      const raw = new URL(rawUrl);
+      code = raw.searchParams.get("code");
+      state = raw.searchParams.get("state");
+      error = raw.searchParams.get("error");
+    } catch {}
+  }
+
+  // 3. If still missing, try x-original-url header (some reverse proxies)
+  if (!code && xOrigUrl.includes("?")) {
+    try {
+      const origParams = new URL(xOrigUrl, "https://thekissa.vercel.app").searchParams;
+      code = origParams.get("code");
+      state = origParams.get("state");
+      error = origParams.get("error");
+    } catch {}
+  }
+
+  const origin = request.nextUrl.origin || "https://thekissa.vercel.app";
+
+  if (!code) {
+    const debug = {
+      rawUrl: rawUrl.slice(0, 150),
+      nextUrl: nextUrl.slice(0, 150),
+      xOrigUrl: xOrigUrl.slice(0, 100),
+      xForwardedHost,
+      hasQS_raw: rawUrl.includes("?"),
+      hasQS_next: nextUrl.includes("?"),
+    };
+    return NextResponse.redirect(
+      new URL(`/portfolio?error=missing_code&d=${encodeURIComponent(JSON.stringify(debug))}`, origin)
+    );
+  }
 
   if (error) {
     return NextResponse.redirect(new URL(`/portfolio?error=${encodeURIComponent(error)}`, origin));
-  }
-
-  if (!code) {
-    // Dump what we actually received so we can diagnose
-    const raw = request.nextUrl.toString();
-    const allParams = [...searchParams.entries()].map(([k, v]) => `${k}=${v.slice(0, 20)}`).join("&");
-    return NextResponse.redirect(
-      new URL(`/portfolio?error=missing_code&debug=${encodeURIComponent(allParams || "no_params")}&url=${encodeURIComponent(raw.slice(0, 100))}`, origin)
-    );
   }
 
   const storedState = request.cookies.get("canva_oauth_state")?.value;
