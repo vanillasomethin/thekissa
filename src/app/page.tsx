@@ -10,7 +10,6 @@ import {
 } from "framer-motion";
 import { ArrowUpRight, ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import dynamic from "next/dynamic";
@@ -594,72 +593,6 @@ function ClientLogosStrip() {
 }
 
 
-// ─── Illustration reel (scroll-driven horizontal pan) ────────────────────────
-const REEL_ITEMS = [
-  { src: "/illustrations/01-two-breakpoints.png",   label: "Two perspectives" },
-  { src: "/illustrations/02-sort-by-purpose.png",   label: "Purpose-led thinking" },
-  { src: "/illustrations/04-handoff-path.png",      label: "Seamless delivery" },
-  { src: "/illustrations/05-information-well.png",  label: "Depth of research" },
-  { src: "/illustrations/03-one-fish-many-uses.png", label: "One story, many forms" },
-  { src: "/illustrations/08-trust-bridge.png",      label: "Building trust" },
-];
-
-function IllustrationReel() {
-  const ref = useRef<HTMLElement>(null);
-  const reduce = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const x = useTransform(scrollYProgress, [0, 1], ["4%", "-22%"]);
-
-  return (
-    <section ref={ref} style={{ background: "#f0f0f0", padding: "72px 0", overflow: "hidden" }}>
-      <motion.div
-        style={{
-          display: "flex",
-          gap: 20,
-          paddingLeft: 48,
-          x: reduce ? 0 : x,
-        }}
-      >
-        {REEL_ITEMS.map((ill, i) => (
-          <div
-            key={i}
-            style={{
-              flex: "0 0 320px",
-              borderRadius: 14,
-              overflow: "hidden",
-              background: "#ffffff",
-              border: "1px solid #e0e0e0",
-              boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
-            }}
-          >
-            <div style={{ position: "relative", width: "100%", aspectRatio: "16/9" }}>
-              <Image
-                src={ill.src}
-                alt={ill.label}
-                fill
-                style={{ objectFit: "cover" }}
-                sizes="320px"
-              />
-            </div>
-            <div style={{ padding: "12px 16px" }}>
-              <p style={{
-                fontFamily: "var(--mono)",
-                fontSize: 10,
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                color: "var(--gray-500)",
-                margin: 0,
-              }}>
-                {ill.label}
-              </p>
-            </div>
-          </div>
-        ))}
-      </motion.div>
-    </section>
-  );
-}
-
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
@@ -922,80 +855,6 @@ export default function HomePage() {
 
         {/* ══ 4. SERVICES — tabbed (MAD pattern) ═══════════════════════════════ */}
         <ServicesTabbed />
-        {/* ══ 3b. ILLUSTRATIONS — how we think ═════════════════════════════════ */}
-        <section style={{ background: "#f7f7f7", padding: "100px 0", overflow: "hidden" }}>
-          <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
-            <ClipReveal>
-              <h2
-                style={{
-                  fontFamily: "var(--serif-display)",
-                  fontSize: "clamp(28px, 3.5vw, 44px)",
-                  fontWeight: 700,
-                  color: "var(--ink)",
-                  letterSpacing: "-0.01em",
-                  lineHeight: 1.1,
-                  marginBottom: 56,
-                }}
-              >
-                How we think.
-              </h2>
-            </ClipReveal>
-
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-                gap: 24,
-              }}
-            >
-              {[
-                { src: "/illustrations/06-idea-press.png",          label: "Idea to execution" },
-                { src: "/illustrations/07-content-fermentation.png", label: "Content that matures" },
-                { src: "/illustrations/08-trust-bridge.png",         label: "Building trust" },
-                { src: "/illustrations/03-one-fish-many-uses.png",   label: "One story, many forms" },
-              ].map((ill, i) => (
-                <motion.div
-                  key={ill.src}
-                  initial={{ opacity: 0, y: 28 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: "-5%" }}
-                  transition={{ duration: 0.55, delay: i * 0.1, ease }}
-                  style={{
-                    borderRadius: 16,
-                    overflow: "hidden",
-                    background: "#ffffff",
-                    border: "1px solid var(--gray-200)",
-                    boxShadow: "0 2px 12px rgba(0,0,0,0.06)",
-                  }}
-                >
-                  <div style={{ position: "relative", width: "100%", aspectRatio: "16/9" }}>
-                    <Image
-                      src={ill.src}
-                      alt={ill.label}
-                      fill
-                      style={{ objectFit: "cover" }}
-                      sizes="(max-width: 600px) 100vw, 320px"
-                    />
-                  </div>
-                  <div style={{ padding: "16px 20px" }}>
-                    <p
-                      style={{
-                        fontFamily: "var(--mono)",
-                        fontSize: 11,
-                        letterSpacing: "0.1em",
-                        textTransform: "uppercase",
-                        color: "var(--fg3)",
-                        margin: 0,
-                      }}
-                    >
-                      {ill.label}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
 
         {/* ══ 4. SERVICES ═══════════════════════════════════════════════════════ */}
         <section style={{ background: "var(--paper)", padding: "0 0 140px" }}>
@@ -1208,10 +1067,6 @@ export default function HomePage() {
         <TestimonialsSlider />
 
         {/* ══ 8. STATS — 3D bubble grid ═════════════════════════════════════════ */}
-        {/* ══ 6b. ILLUSTRATION HORIZONTAL SCROLL ═══════════════════════════════ */}
-        <IllustrationReel />
-
-        {/* ══ 7. STATS — 3D bubble grid ═════════════════════════════════════════ */}
         <BubbleGrid />
 
         {/* ══ 9. CTA BANNER ═════════════════════════════════════════════════════ */}
