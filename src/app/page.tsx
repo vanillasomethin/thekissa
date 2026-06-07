@@ -300,6 +300,77 @@ function CTAOrbitMark() {
   );
 }
 
+// ─── Hero cycling headlines ───────────────────────────────────────────────────
+const HERO_LINES = [
+  { l1: "We make the work",          l2: "people cannot stop thinking about." },
+  { l1: "Brand. Film. Space.",        l2: "Built to last in memory." },
+  { l1: "Every frame is an argument.", l2: "Every mark is intentional." },
+];
+
+// Three distinct transition styles — each phrase gets its own motion character
+const HERO_VARIANTS = [
+  // 0 → clip-path wipe up
+  {
+    initial: { clipPath: "inset(100% 0% 0% 0%)", y: 20  },
+    animate: { clipPath: "inset(0% 0% 0% 0%)",   y: 0   },
+    exit:    { clipPath: "inset(0% 0% 100% 0%)",  y: -20 },
+    transition: { duration: 0.7, ease: [0.76, 0, 0.24, 1] },
+  },
+  // 1 → blur + scale
+  {
+    initial: { opacity: 0, scale: 1.08, filter: "blur(12px)" },
+    animate: { opacity: 1, scale: 1,    filter: "blur(0px)"  },
+    exit:    { opacity: 0, scale: 0.94, filter: "blur(8px)"  },
+    transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] },
+  },
+  // 2 → horizontal slide
+  {
+    initial: { opacity: 0, x: 60  },
+    animate: { opacity: 1, x: 0   },
+    exit:    { opacity: 0, x: -60 },
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+  },
+];
+
+function HeroText() {
+  const [idx, setIdx] = useState(0);
+
+  useEffect(() => {
+    const t = setInterval(() => setIdx(i => (i + 1) % HERO_LINES.length), 4000);
+    return () => clearInterval(t);
+  }, []);
+
+  const v = HERO_VARIANTS[idx % HERO_VARIANTS.length];
+  const lines = HERO_LINES[idx];
+
+  return (
+    <div style={{ overflow: "hidden", position: "relative" }}>
+      <AnimatePresence mode="wait">
+        <motion.h1
+          key={idx}
+          initial={v.initial as object}
+          animate={v.animate as object}
+          exit={v.exit as object}
+          transition={v.transition}
+          style={{
+            fontFamily: "var(--sans)",
+            fontSize: "clamp(56px, 7vw, 104px)",
+            lineHeight: 0.97,
+            fontWeight: 700,
+            letterSpacing: "-0.022em",
+            margin: 0,
+            color: "var(--fg-on-ink)",
+          }}
+        >
+          {lines.l1}
+          <br />
+          {lines.l2}
+        </motion.h1>
+      </AnimatePresence>
+    </div>
+  );
+}
+
 // ─── Hero orbit mark — large, right-column background ornament ────────────────
 function HeroOrbitMark() {
   const r1Ref = useRef<SVGGElement>(null);
@@ -1089,46 +1160,6 @@ export default function HomePage() {
             }}
           />
 
-          {/* Iridescent bubble — sole chromatic event (OFF+BRAND pattern) */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.82 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
-            style={{
-              position: "absolute",
-              right: "-8%",
-              top: "50%",
-              transform: "translateY(-50%)",
-              width: "clamp(380px, 44vw, 680px)",
-              height: "clamp(380px, 44vw, 680px)",
-              zIndex: 0,
-              pointerEvents: "none",
-            }}
-          >
-            {/* Iridescent brand bubble — exact Kissa shape */}
-            <svg
-              viewBox={BUBBLE_VB}
-              width="100%"
-              height="100%"
-              style={{ display: "block" }}
-            >
-              <defs>
-                <linearGradient id="iridescent-fill" x1="0%" y1="0%" x2="100%" y2="100%" gradientTransform="rotate(25, 0.5, 0.5)">
-                  <stop offset="0%"   stopColor="#FACB0E" />
-                  <stop offset="28%"  stopColor="#F06BA8" />
-                  <stop offset="62%"  stopColor="#78BAE6" />
-                  <stop offset="100%" stopColor="rgba(255,255,255,0.12)" />
-                </linearGradient>
-                <radialGradient id="iridescent-inner" cx="38%" cy="32%" r="60%">
-                  <stop offset="0%"   stopColor="rgba(255,255,255,0.22)" />
-                  <stop offset="100%" stopColor="rgba(0,0,0,0)" />
-                </radialGradient>
-              </defs>
-              <path d={BUBBLE_PATH} fill="url(#iridescent-fill)" />
-              <path d={BUBBLE_PATH} fill="url(#iridescent-inner)" />
-            </svg>
-          </motion.div>
-
           {/* Hero animated orbit mark — right side */}
           <HeroOrbitMark />
 
@@ -1163,24 +1194,7 @@ export default function HomePage() {
                 }}>A media art agency</p>
               </motion.div>
 
-              <motion.h1
-                initial={{ opacity: 0, y: 40 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.9, ease, delay: 0.2 }}
-                style={{
-                  fontFamily: "var(--sans)",
-                  fontSize: "clamp(60px, 7.5vw, 110px)",
-                  lineHeight: 0.95,
-                  fontWeight: 700,
-                  letterSpacing: "-0.022em",
-                  margin: 0,
-                  color: "var(--fg-on-ink)",
-                }}
-              >
-                We make the work
-                <br />
-                people cannot stop thinking about.
-              </motion.h1>
+              <HeroText />
 
               <motion.p
                 initial={{ opacity: 0, y: 16 }}
