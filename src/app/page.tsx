@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { gsap } from "gsap";
 import {
   motion,
   useScroll,
@@ -185,6 +184,52 @@ function ClipReveal({
   );
 }
 
+// ─── CTA orbit mark — anime.js driven spinning rings ──────────────────────────
+function CTAOrbitMark() {
+  const outerRef = useRef<SVGGElement>(null);
+  const innerRef = useRef<SVGGElement>(null);
+  const dotRef   = useRef<SVGGElement>(null);
+
+  useEffect(() => {
+    if (!outerRef.current || !innerRef.current || !dotRef.current) return;
+    const { animate: animeAnimate } = require("animejs");
+    animeAnimate(outerRef.current, { rotate: "360deg", duration: 12000, ease: "linear", loop: true });
+    animeAnimate(innerRef.current, { rotate: "-360deg", duration: 7000, ease: "linear", loop: true });
+    animeAnimate(dotRef.current, { rotate: "360deg", duration: 4500, ease: "linear", loop: true });
+  }, []);
+
+  const size = 160;
+  const cx = size / 2, cy = size / 2;
+
+  return (
+    <div style={{ flexShrink: 0, width: size, height: size }}>
+      <svg viewBox={`0 0 ${size} ${size}`} width={size} height={size} fill="none">
+        {/* Outer static ring */}
+        <circle cx={cx} cy={cy} r={70} stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
+        {/* Outer spinning ring with dash */}
+        <g ref={outerRef} style={{ transformOrigin: `${cx}px ${cy}px` }}>
+          <circle cx={cx} cy={cy} r={70} stroke="rgba(255,255,255,0.5)" strokeWidth="1.5"
+            strokeDasharray="14 8" strokeLinecap="round" />
+        </g>
+        {/* Inner ring counter-spin */}
+        <g ref={innerRef} style={{ transformOrigin: `${cx}px ${cy}px` }}>
+          <circle cx={cx} cy={cy} r={46} stroke="rgba(255,255,255,0.3)" strokeWidth="1.5"
+            strokeDasharray="6 10" strokeLinecap="round" />
+        </g>
+        {/* Orbiting dot */}
+        <g ref={dotRef} style={{ transformOrigin: `${cx}px ${cy}px` }}>
+          <circle cx={cx} cy={cy - 70} r={5} fill="#ffffff" />
+          <circle cx={cx} cy={cy + 46} r={3} fill="rgba(255,255,255,0.5)" />
+        </g>
+        {/* Centre cross */}
+        <line x1={cx - 10} y1={cy} x2={cx + 10} y2={cy} stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1={cx} y1={cy - 10} x2={cx} y2={cy + 10} stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" strokeLinecap="round" />
+        <circle cx={cx} cy={cy} r={3} fill="rgba(255,255,255,0.9)" />
+      </svg>
+    </div>
+  );
+}
+
 // ─── Service illustrations ─────────────────────────────────────────────────────
 
 // 01 Story & Brand — open book with a speech bubble emerging from the pages
@@ -214,14 +259,12 @@ const IllustrationBrand = () => (
     <line x1="68" y1="152" x2="124" y2="152" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" strokeLinecap="round" />
     <line x1="68" y1="165" x2="100" y2="165" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5" strokeLinecap="round" />
 
-    {/* Right page — kissa brand mark + speech bubble */}
-    {/* Small Kissa bubble */}
-    <g transform="translate(152,72) scale(0.42)">
-      <path d="M 95,0 L 155,0 Q 176,0 176,37 L 176,120 Q 176,155 155,155 L 95,155 Q 60,155 60,120 L 60,100 L 30,86 L 60,72 L 60,37 Q 60,0 95,0 Z"
-        fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.7)" strokeWidth="3.5" strokeLinejoin="round" />
-      <text x="118" y="80" textAnchor="middle" dominantBaseline="middle"
-        fontFamily="var(--sans)" fontSize="52" fontWeight="700" fill="white" letterSpacing="-2">K</text>
-    </g>
+    {/* Right page — identity / logo placeholder */}
+    {/* Abstract mark: two intersecting lines + circle */}
+    <circle cx="188" cy="108" r="28" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" />
+    <circle cx="188" cy="108" r="14" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.3)" strokeWidth="1" />
+    <line x1="170" y1="90" x2="206" y2="126" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" strokeLinecap="round" />
+    <line x1="206" y1="90" x2="170" y2="126" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" strokeLinecap="round" />
 
     {/* Right page text lines */}
     <line x1="156" y1="152" x2="220" y2="152" stroke="rgba(255,255,255,0.2)"  strokeWidth="1.5" strokeLinecap="round" />
@@ -394,11 +437,15 @@ function ServiceIllustration({ index, active }: { index: number; active: boolean
   useEffect(() => {
     if (reduce || !ringRef.current || !active) return;
     const circ = 2 * Math.PI * 145;
-    gsap.fromTo(
-      ringRef.current,
-      { strokeDashoffset: circ, strokeDasharray: circ },
-      { strokeDashoffset: 0, duration: 1.2, ease: "power2.out", delay: 0.1 }
-    );
+    ringRef.current.style.strokeDasharray = String(circ);
+    ringRef.current.style.strokeDashoffset = String(circ);
+    const { animate: animeAnimate } = require("animejs");
+    animeAnimate(ringRef.current, {
+      strokeDashoffset: [circ, 0],
+      duration: 1100,
+      ease: "outQuart",
+      delay: 80,
+    });
   }, [active, reduce]);
 
   return (
@@ -1150,22 +1197,8 @@ export default function HomePage() {
                 flexWrap: "wrap",
               }}
             >
-              {/* Kissa bubble icon */}
-              <motion.div
-                animate={{ rotate: [0, 4, -4, 0] }}
-                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                style={{ flexShrink: 0 }}
-              >
-                <svg viewBox={BUBBLE_VB} width={154} height={178} fill="none" style={{ filter: "drop-shadow(0 0 32px rgba(255,255,255,0.12))" }}>
-                  <path
-                    d={BUBBLE_PATH}
-                    fill="rgba(255,255,255,0.06)"
-                    stroke="rgba(255,255,255,0.35)"
-                    strokeWidth={1.5}
-                  />
-                  <text x="150" y="150" textAnchor="middle" dominantBaseline="middle" fontFamily="var(--sans)" fontWeight="700" fontSize="72" fill="#ffffff" letterSpacing="-3">K</text>
-                </svg>
-              </motion.div>
+              {/* Rotating orbit mark */}
+              <CTAOrbitMark />
 
               {/* Text + CTA */}
               <div style={{ flex: 1, minWidth: 280 }}>
