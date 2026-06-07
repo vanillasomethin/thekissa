@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const BUBBLE_PATH =
-  "M 68,0 L 196,0 Q 220,0 220,24 L 220,176 Q 220,200 196,200 L 68,200 Q 40,200 40,176 L 40,135 L 0,115 L 40,78 L 40,24 Q 40,0 68,0 Z";
+  "M 95,0 L 205,0 Q 260,0 260,55 L 260,245 Q 260,300 205,300 L 95,300 Q 40,300 40,245 L 40,210 L 0,188 L 40,165 L 40,55 Q 40,0 95,0 Z";
+const BUBBLE_VB = "0 0 260 300";
 
 interface LoadingScreenProps {
   onComplete?: () => void;
@@ -40,15 +41,15 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
         >
           {/* Animated bubble */}
           <motion.svg
-            viewBox="0 0 220 200"
-            width={110}
+            viewBox={BUBBLE_VB}
+            width={95}
             height={110}
             initial={{ scale: 0.7, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
           >
             <defs>
-              <linearGradient id="ld-grad" x1="0" y1="0" x2="220" y2="200" gradientUnits="userSpaceOnUse">
+              <linearGradient id="ld-grad" x1="0" y1="0" x2="260" y2="300" gradientUnits="userSpaceOnUse">
                 <stop offset="0%"   stopColor="rgba(250,203,14,0.28)" />
                 <stop offset="38%"  stopColor="rgba(240,107,168,0.28)" />
                 <stop offset="72%"  stopColor="rgba(120,186,230,0.2)" />
@@ -79,12 +80,12 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
 
             {/* K appears last */}
             <motion.text
-              x="130" y="106"
+              x="150" y="150"
               textAnchor="middle"
               dominantBaseline="middle"
               fontFamily="var(--sans)"
               fontWeight="700"
-              fontSize="54"
+              fontSize="72"
               fill="#ffffff"
               letterSpacing="-2"
               initial={{ opacity: 0 }}

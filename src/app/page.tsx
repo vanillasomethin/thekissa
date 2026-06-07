@@ -97,34 +97,35 @@ const featuredProjects = [
 
 const testimonials = [
   {
-    quote: "They didn't just make us a video. They found the story we'd been trying to tell for years.",
-    name: "Wanjiku M.",
+    quote: "They did not just make us a video. They found the story we had been trying to tell for years, and they told it with a clarity we could not have imagined.",
+    name: "Priya S.",
     role: "Brand Director",
     company: "TECFIDES",
   },
   {
-    quote: "the Kissa turns complex ideas into something you feel before you understand it. Our launch campaign exceeded every benchmark.",
+    quote: "the Kissa translates complexity into feeling. Before you understand what you have watched, you have already believed it. Our launch campaign surpassed every benchmark we set.",
     name: "Aditya R.",
     role: "Founder",
     company: "NATURA",
   },
   {
-    quote: "11 out of 10. They built an entire world around our identity.",
-    name: "Fatima A.",
+    quote: "They built an entire world around our identity — one that felt true to us in ways we had not yet articulated ourselves. That is a rare and remarkable thing.",
+    name: "Meera K.",
     role: "Creative Director",
     company: "FYTURE",
   },
   {
-    quote: "Professional, fearless, and genuinely fun. They anticipate what the story needs before you can ask.",
-    name: "Samuel K.",
+    quote: "Professional, fearless, and genuinely joyful to work with. They sense what a story needs before you have found the words to ask for it.",
+    name: "Rohan V.",
     role: "Founder",
     company: "LYFSENSE",
   },
 ];
 
-// ─── Kissa bubble SVG ─────────────────────────────────────────────────────────
+// ─── Kissa bubble SVG — brand shape (portrait, large radii, sharp left tail) ──
 const BUBBLE_PATH =
-  "M 68,0 L 196,0 Q 220,0 220,24 L 220,176 Q 220,200 196,200 L 68,200 Q 40,200 40,176 L 40,135 L 0,115 L 40,78 L 40,24 Q 40,0 68,0 Z";
+  "M 95,0 L 205,0 Q 260,0 260,55 L 260,245 Q 260,300 205,300 L 95,300 Q 40,300 40,245 L 40,210 L 0,188 L 40,165 L 40,55 Q 40,0 95,0 Z";
+const BUBBLE_VB = "0 0 260 300";
 
 function KissaBubble({
   size = 200,
@@ -139,11 +140,12 @@ function KissaBubble({
   strokeWidth?: number;
   style?: React.CSSProperties;
 }) {
+  const h = Math.round(size * 300 / 260);
   return (
     <svg
-      viewBox="0 0 220 200"
+      viewBox={BUBBLE_VB}
       width={size}
-      height={size}
+      height={h}
       fill={fill}
       stroke={stroke}
       strokeWidth={strokeWidth}
@@ -644,12 +646,12 @@ export default function HomePage() {
               pointerEvents: "none",
             }}
           >
-            {/* Iridescent gradient fills the Kissa speech bubble shape */}
+            {/* Iridescent brand bubble — exact Kissa shape */}
             <svg
-              viewBox="0 0 220 200"
+              viewBox={BUBBLE_VB}
               width="100%"
               height="100%"
-              style={{ display: "block", filter: "blur(0px)" }}
+              style={{ display: "block" }}
             >
               <defs>
                 <linearGradient id="iridescent-fill" x1="0%" y1="0%" x2="100%" y2="100%" gradientTransform="rotate(25, 0.5, 0.5)">
@@ -663,14 +665,8 @@ export default function HomePage() {
                   <stop offset="100%" stopColor="rgba(0,0,0,0)" />
                 </radialGradient>
               </defs>
-              <path
-                d="M 68,0 L 196,0 Q 220,0 220,24 L 220,176 Q 220,200 196,200 L 68,200 Q 40,200 40,176 L 40,135 L 0,115 L 40,78 L 40,24 Q 40,0 68,0 Z"
-                fill="url(#iridescent-fill)"
-              />
-              <path
-                d="M 68,0 L 196,0 Q 220,0 220,24 L 220,176 Q 220,200 196,200 L 68,200 Q 40,200 40,176 L 40,135 L 0,115 L 40,78 L 40,24 Q 40,0 68,0 Z"
-                fill="url(#iridescent-inner)"
-              />
+              <path d={BUBBLE_PATH} fill="url(#iridescent-fill)" />
+              <path d={BUBBLE_PATH} fill="url(#iridescent-inner)" />
             </svg>
           </motion.div>
 
@@ -710,7 +706,7 @@ export default function HomePage() {
                   textTransform: "uppercase",
                   color: "rgba(255,255,255,0.45)",
                   marginBottom: 28,
-                }}>Media art agency</p>
+                }}>A media art agency</p>
               </motion.div>
 
               <motion.h1
@@ -727,11 +723,11 @@ export default function HomePage() {
                   color: "var(--fg-on-ink)",
                 }}
               >
-                We make stories
+                Every brand
                 <br />
-                impossible to
+                has a story worth
                 <br />
-                <em style={{ fontStyle: "italic" }}>look away.</em>
+                <em style={{ fontStyle: "italic" }}>telling.</em>
               </motion.h1>
 
               <motion.p
@@ -747,9 +743,9 @@ export default function HomePage() {
                   lineHeight: 1.65,
                 }}
               >
-                the Kissa is a media art agency specialising in branded content, film, and
-                immersive experiences. The name <em>kissa</em> means story. Every project
-                is one we make unforgettable.
+                <em>Kissa</em> is the Swahili word for story. We are a media art
+                agency that believes great stories are not just told — they are felt.
+                In film, brand, and the space between.
               </motion.p>
 
               <motion.div
@@ -758,8 +754,8 @@ export default function HomePage() {
                 transition={{ duration: 0.6, delay: 0.9, ease }}
                 style={{ display: "flex", gap: 16, flexWrap: "wrap", marginTop: 40 }}
               >
-                <a href="mailto:hello@thekissa.com" className="btn btn-primary">Start your kissa</a>
-                <a href="#work" className="btn btn-ghost on-ink">See the work</a>
+                <a href="mailto:hello@thekissa.com" className="btn btn-primary">Begin the story</a>
+                <a href="#work" className="btn btn-ghost on-ink">See our work</a>
               </motion.div>
             </div>
           </div>
@@ -824,12 +820,12 @@ export default function HomePage() {
             />
             <ClipReveal delay={0.0}>
               <p style={{ fontFamily: "var(--sans)", fontSize: "clamp(40px, 5.5vw, 72px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1.05, letterSpacing: "-0.012em", margin: 0 }}>
-                We don&apos;t make content.
+                Content fills a feed.
               </p>
             </ClipReveal>
             <ClipReveal delay={0.2}>
               <p style={{ fontFamily: "var(--sans)", fontStyle: "italic", fontSize: "clamp(40px, 5.5vw, 72px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1.05, letterSpacing: "-0.012em", margin: 0 }}>
-                We make kissa.
+                A kissa fills a memory.
               </p>
             </ClipReveal>
             <motion.p
@@ -840,9 +836,10 @@ export default function HomePage() {
               className="k-body-l"
               style={{ color: "var(--fg-on-ink-2)", marginTop: 36, maxWidth: "62ch" }}
             >
-              A campaign isn&apos;t a deliverable. It&apos;s a story told well enough that
-              people can&apos;t scroll past — crafted in frames, light, and the cut between
-              two shots. From startups to standouts, every brand has a kissa worth telling.
+              We craft each campaign as a singular piece of storytelling: in film,
+              identity, and the precise cut between two moments. From first-time
+              founders to established icons, every brand holds a story that deserves
+              to be told with care.
             </motion.p>
           </div>
         </section>
@@ -857,7 +854,7 @@ export default function HomePage() {
               <div>
                 <ClipReveal>
                   <h2 style={{ fontFamily: "var(--sans)", fontSize: "clamp(36px, 5vw, 72px)", fontWeight: 700, color: "var(--fg-on-ink)", letterSpacing: "-0.012em", lineHeight: 1.05, marginBottom: 0 }}>
-                    Our maddest hits.
+                    Selected work.
                   </h2>
                 </ClipReveal>
               </div>
@@ -968,14 +965,14 @@ export default function HomePage() {
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
                 style={{ flexShrink: 0 }}
               >
-                <svg viewBox="0 0 220 200" width={178} height={178} fill="none" style={{ filter: "drop-shadow(0 0 32px rgba(255,255,255,0.12))" }}>
+                <svg viewBox={BUBBLE_VB} width={154} height={178} fill="none" style={{ filter: "drop-shadow(0 0 32px rgba(255,255,255,0.12))" }}>
                   <path
-                    d="M 68,0 L 196,0 Q 220,0 220,24 L 220,176 Q 220,200 196,200 L 68,200 Q 40,200 40,176 L 40,135 L 0,115 L 40,78 L 40,24 Q 40,0 68,0 Z"
+                    d={BUBBLE_PATH}
                     fill="rgba(255,255,255,0.06)"
                     stroke="rgba(255,255,255,0.35)"
-                    strokeWidth={1}
+                    strokeWidth={1.5}
                   />
-                  <text x="130" y="108" textAnchor="middle" dominantBaseline="middle" fontFamily="var(--sans)" fontWeight="700" fontSize="48" fill="#ffffff" letterSpacing="-2">K</text>
+                  <text x="150" y="150" textAnchor="middle" dominantBaseline="middle" fontFamily="var(--sans)" fontWeight="700" fontSize="72" fill="#ffffff" letterSpacing="-3">K</text>
                 </svg>
               </motion.div>
 
@@ -991,10 +988,11 @@ export default function HomePage() {
                   textTransform: "uppercase",
                   marginBottom: 20,
                 }}>
-                  We&apos;re Always Happy<br />to Chat
+                  Every story begins<br />with a conversation.
                 </h2>
                 <p style={{ fontFamily: "var(--sans)", fontSize: 15, color: "rgba(255,255,255,0.55)", marginBottom: 36, lineHeight: 1.6 }}>
-                  Tell us your story. We make sure nobody looks away.
+                  Bring us your brand, your vision, your half-formed idea.
+                  We will find the story inside it and make it impossible to forget.
                 </p>
                 <div style={{ display: "flex", alignItems: "center", gap: 20, flexWrap: "wrap" }}>
                   <a
@@ -1003,7 +1001,7 @@ export default function HomePage() {
                     onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.88)"; (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(-2px)"; }}
                     onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "#ffffff"; (e.currentTarget as HTMLAnchorElement).style.transform = ""; }}
                   >
-                    Start a project <ArrowUpRight size={14} />
+                    Begin the story <ArrowUpRight size={14} />
                   </a>
                   <a
                     href="mailto:hello@thekissa.com"

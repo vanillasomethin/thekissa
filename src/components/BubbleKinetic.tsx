@@ -10,8 +10,10 @@ if (typeof window !== "undefined") {
 }
 
 const ease = [0.22, 1, 0.36, 1] as const;
+// Brand bubble: portrait, large corner radii, sharp left-pointing tail
 const BUBBLE_PATH =
-  "M 68,0 L 196,0 Q 220,0 220,24 L 220,176 Q 220,200 196,200 L 68,200 Q 40,200 40,176 L 40,135 L 0,115 L 40,78 L 40,24 Q 40,0 68,0 Z";
+  "M 95,0 L 205,0 Q 260,0 260,55 L 260,245 Q 260,300 205,300 L 95,300 Q 40,300 40,245 L 40,210 L 0,188 L 40,165 L 40,55 Q 40,0 95,0 Z";
+const BUBBLE_VIEWBOX = "0 0 260 300";
 
 // ─── Perspective-3D card wrapper ──────────────────────────────────────────────
 export function Card3D({
@@ -78,7 +80,7 @@ export function BurstBubbles({ count = 5 }: { count?: number }) {
     <div ref={containerRef} style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
       {configs.map((c, i) => (
         <div key={i} className="burst-bubble" style={{ position: "absolute", left: c.x, top: c.y }}>
-          <svg viewBox="0 0 220 200" width={c.size} height={c.size} fill={c.fill} stroke={c.stroke} strokeWidth={1.5} strokeLinejoin="round">
+          <svg viewBox={BUBBLE_VIEWBOX} width={c.size} height={Math.round(c.size * 300/260)} fill={c.fill} stroke={c.stroke} strokeWidth={1.5} strokeLinejoin="round">
             <path d={BUBBLE_PATH} />
           </svg>
         </div>
