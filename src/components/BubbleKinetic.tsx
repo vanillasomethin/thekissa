@@ -121,12 +121,12 @@ export function KineticWordReel() {
   );
 }
 
-// ─── Stats grid — MAD style clean cards, no bubbles ───────────────────────────
+// ─── Stats grid — MAD 2×2 large cards ────────────────────────────────────────
 const STATS = [
-  { value: "23+",  label: "Brands launched" },
-  { value: "200M+", label: "Views generated" },
-  { value: "55%",  label: "First-impression lift" },
-  { value: "6+",   label: "Markets served" },
+  { value: "23+",   label: "Brands launched",        sub: "across 6 markets" },
+  { value: "200M+", label: "Views generated",         sub: "organic & paid" },
+  { value: "55%",   label: "First-impression lift",   sub: "average across clients" },
+  { value: "6+",    label: "Markets served",          sub: "Nairobi · Dubai · London" },
 ];
 
 export function BubbleGrid() {
@@ -138,10 +138,10 @@ export function BubbleGrid() {
     const cards = containerRef.current.querySelectorAll<HTMLElement>(".stat-card");
     gsap.fromTo(
       cards,
-      { opacity: 0, y: 40 },
+      { opacity: 0, y: 50 },
       {
-        opacity: 1, y: 0, duration: 0.7, ease: "expo.out",
-        stagger: { each: 0.1, from: "start" },
+        opacity: 1, y: 0, duration: 0.8, ease: "expo.out",
+        stagger: { each: 0.12, from: "start" },
         scrollTrigger: { trigger: containerRef.current, start: "top 72%", toggleActions: "play none none none" },
       }
     );
@@ -149,31 +149,14 @@ export function BubbleGrid() {
   }, [reduce]);
 
   return (
-    <section style={{ background: "#000000", padding: "100px 0", borderTop: "1px solid rgba(255,255,255,0.08)" }}>
-      <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
-        {/* Section label */}
-        <p style={{
-          fontFamily: "var(--sans)",
-          fontSize: 12,
-          fontWeight: 700,
-          letterSpacing: "0.12em",
-          textTransform: "uppercase",
-          color: "rgba(255,255,255,0.35)",
-          marginBottom: 50,
-        }}>
-          By the numbers
-        </p>
-
-        {/* 4-column stat grid */}
+    <section style={{ background: "#000000", padding: "100px 0" }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 50px" }}>
         <div
           ref={containerRef}
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: "1px",
-            background: "rgba(255,255,255,0.08)",
-            borderRadius: 20,
-            overflow: "hidden",
+            gridTemplateColumns: "repeat(2, 1fr)",
+            gap: 5,
           }}
         >
           {STATS.map((s, i) => (
@@ -181,41 +164,50 @@ export function BubbleGrid() {
               key={i}
               className="stat-card"
               style={{
-                background: i % 2 === 0 ? "#1c1c1c" : "#000000",
-                padding: "53px 38px",
+                background: "rgb(28,28,28)",
+                borderRadius: 20,
+                padding: "53px 47px",
                 display: "flex",
                 flexDirection: "column",
-                gap: 14,
+                justifyContent: "flex-end",
+                minHeight: 280,
               }}
             >
               <p style={{
                 fontFamily: "var(--sans)",
-                fontSize: "clamp(40px, 4.5vw, 68px)",
+                fontSize: "clamp(52px, 6vw, 80px)",
                 fontWeight: 700,
                 color: "#ffffff",
                 lineHeight: 1,
-                margin: 0,
-                letterSpacing: "-0.02em",
+                margin: "0 0 12px",
+                letterSpacing: "-0.03em",
               }}>
                 {s.value}
               </p>
               <p style={{
                 fontFamily: "var(--sans)",
-                fontSize: 14,
-                fontWeight: 400,
-                color: "rgba(255,255,255,0.45)",
-                margin: 0,
-                lineHeight: 1.4,
+                fontSize: 15,
+                fontWeight: 600,
+                color: "rgba(255,255,255,0.8)",
+                margin: "0 0 6px",
               }}>
                 {s.label}
+              </p>
+              <p style={{
+                fontFamily: "var(--sans)",
+                fontSize: 13,
+                color: "rgba(255,255,255,0.35)",
+                margin: 0,
+              }}>
+                {s.sub}
               </p>
             </div>
           ))}
         </div>
 
         <style>{`
-          @media (max-width: 680px) {
-            .stat-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          @media (max-width: 600px) {
+            .stat-card { min-height: 200px !important; padding: 32px 28px !important; }
           }
         `}</style>
       </div>

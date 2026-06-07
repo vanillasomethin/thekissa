@@ -944,50 +944,77 @@ export default function HomePage() {
         {/* ══ 8. STATS — 3D bubble grid ═════════════════════════════════════════ */}
         <BubbleGrid />
 
-        {/* ══ 9. CTA BANNER ═════════════════════════════════════════════════════ */}
-        <section style={{ background: "var(--ink)", padding: "140px 0", position: "relative", overflow: "hidden" }}>
-          <BurstBubbles count={4} />
-          <div style={{ position: "absolute", right: "-5%", top: "50%", transform: "translateY(-50%)", fontFamily: "var(--sans)", fontSize: "clamp(200px, 30vw, 420px)", fontWeight: 700, color: "rgba(255,255,255,0.05)", lineHeight: 1, letterSpacing: "-0.05em", userSelect: "none", pointerEvents: "none" }}>K</div>
-
-          <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto", position: "relative", zIndex: 1 }}>
-            <ClipReveal>
-              <p style={{ fontFamily: "var(--sans)", fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.7)", marginBottom: 24 }}>
-                Let&apos;s make something unforgettable
-              </p>
-            </ClipReveal>
-            <ClipReveal delay={0.1}>
-              <h2 style={{ fontFamily: "var(--sans)", fontSize: "clamp(52px, 8vw, 100px)", fontWeight: 700, color: "#ffffff", letterSpacing: "-0.022em", lineHeight: 0.95, marginBottom: 12 }}>
-                Tell us your story.
-              </h2>
-            </ClipReveal>
-            <ClipReveal delay={0.2}>
-              <p style={{ fontFamily: "var(--sans)", fontSize: 19, color: "rgba(255,255,255,0.65)", marginBottom: 52 }}>
-                We make sure nobody looks away.
-              </p>
-            </ClipReveal>
+        {/* ══ 9. CTA BANNER — MAD bordered box ════════════════════════════════ */}
+        <section style={{ background: "#000000", padding: "100px 0" }}>
+          <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 50px" }}>
             <motion.div
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.35, ease }}
-              style={{ display: "flex", alignItems: "center", gap: 36, flexWrap: "wrap" }}
+              transition={{ duration: 0.6, ease }}
+              style={{
+                border: "0.666px solid rgba(255,255,255,1)",
+                borderRadius: 20,
+                padding: "67px 60px",
+                display: "flex",
+                alignItems: "center",
+                gap: 60,
+                flexWrap: "wrap",
+              }}
             >
-              <a
-                href="mailto:hello@thekissa.com"
-                style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "15px 30px", background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.2)", color: "#fff", borderRadius: 10, fontFamily: "var(--sans)", fontWeight: 600, fontSize: 15, textDecoration: "none", letterSpacing: "0.01em", transition: "background 0.18s ease-out" }}
-                onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.background = "#333")}
-                onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.background = "#1a1a1a")}
+              {/* Kissa bubble icon */}
+              <motion.div
+                animate={{ rotate: [0, 4, -4, 0] }}
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                style={{ flexShrink: 0 }}
               >
-                Start your kissa <ArrowUpRight size={16} />
-              </a>
-              <a
-                href="mailto:hello@thekissa.com"
-                style={{ fontFamily: "var(--sans)", fontSize: 15, color: "#fff", textDecoration: "none", borderBottom: "1px solid rgba(255,255,255,0.35)", paddingBottom: 2, transition: "border-color 0.18s ease-out" }}
-                onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.borderColor = "#fff")}
-                onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(255,255,255,0.35)")}
-              >
-                hello@thekissa.com
-              </a>
+                <svg viewBox="0 0 220 200" width={178} height={178} fill="none" style={{ filter: "drop-shadow(0 0 32px rgba(255,255,255,0.12))" }}>
+                  <path
+                    d="M 68,0 L 196,0 Q 220,0 220,24 L 220,176 Q 220,200 196,200 L 68,200 Q 40,200 40,176 L 40,135 L 0,115 L 40,78 L 40,24 Q 40,0 68,0 Z"
+                    fill="rgba(255,255,255,0.06)"
+                    stroke="rgba(255,255,255,0.35)"
+                    strokeWidth={1}
+                  />
+                  <text x="130" y="108" textAnchor="middle" dominantBaseline="middle" fontFamily="var(--sans)" fontWeight="700" fontSize="48" fill="#ffffff" letterSpacing="-2">K</text>
+                </svg>
+              </motion.div>
+
+              {/* Text + CTA */}
+              <div style={{ flex: 1, minWidth: 280 }}>
+                <h2 style={{
+                  fontFamily: "var(--sans)",
+                  fontSize: "clamp(28px, 4vw, 36px)",
+                  fontWeight: 700,
+                  color: "#ffffff",
+                  letterSpacing: "-0.01em",
+                  lineHeight: 1.15,
+                  textTransform: "uppercase",
+                  marginBottom: 20,
+                }}>
+                  We&apos;re Always Happy<br />to Chat
+                </h2>
+                <p style={{ fontFamily: "var(--sans)", fontSize: 15, color: "rgba(255,255,255,0.55)", marginBottom: 36, lineHeight: 1.6 }}>
+                  Tell us your story. We make sure nobody looks away.
+                </p>
+                <div style={{ display: "flex", alignItems: "center", gap: 20, flexWrap: "wrap" }}>
+                  <a
+                    href="mailto:hello@thekissa.com"
+                    style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 30px", background: "#ffffff", color: "#000000", borderRadius: 68, fontFamily: "var(--sans)", fontWeight: 700, fontSize: 14, textDecoration: "none", letterSpacing: "0.06em", textTransform: "uppercase", transition: "background 0.2s ease, transform 0.2s ease" }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.88)"; (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(-2px)"; }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = "#ffffff"; (e.currentTarget as HTMLAnchorElement).style.transform = ""; }}
+                  >
+                    Start a project <ArrowUpRight size={14} />
+                  </a>
+                  <a
+                    href="mailto:hello@thekissa.com"
+                    style={{ fontFamily: "var(--sans)", fontSize: 14, color: "rgba(255,255,255,0.55)", textDecoration: "none", letterSpacing: "0.02em", transition: "color 0.2s ease" }}
+                    onMouseEnter={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "#ffffff")}
+                    onMouseLeave={(e) => ((e.currentTarget as HTMLAnchorElement).style.color = "rgba(255,255,255,0.55)")}
+                  >
+                    hello@thekissa.com
+                  </a>
+                </div>
+              </div>
             </motion.div>
           </div>
         </section>
