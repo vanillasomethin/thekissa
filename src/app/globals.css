@@ -1,82 +1,130 @@
 @import "tailwindcss";
 
 /* ============================================================
-   the Kissa — Design System Tokens
-   "Where Art Meets Storytelling."
+   Brockmann — primary sans (MAD Creative Agency system)
+   Loaded from CDN; not available on Google Fonts.
+   ============================================================ */
+@font-face {
+  font-display: swap;
+  font-family: 'Brockmann';
+  font-style: normal;
+  font-weight: 700;
+  src: url('https://storage.googleapis.com/download/storage/v1/b/prd-storytodesign.appspot.com/o/h2d-ext-asset%2F58a775066474319bea4b5cf26ae9ddae5d8caf1d.woff2?generation=1778490122400363&alt=media') format('woff2');
+}
+@font-face {
+  font-display: swap;
+  font-family: 'Brockmann';
+  font-style: normal;
+  font-weight: 600;
+  src: url('https://storage.googleapis.com/download/storage/v1/b/prd-storytodesign.appspot.com/o/h2d-ext-asset%2Fb201aaee506e9023956670c72e67877078b1fea7.woff2?generation=1780734756722830&alt=media') format('woff2');
+}
+@font-face {
+  font-display: swap;
+  font-family: 'Brockmann';
+  font-style: normal;
+  font-weight: 400;
+  src: url('https://storage.googleapis.com/download/storage/v1/b/prd-storytodesign.appspot.com/o/h2d-ext-asset%2F817b4b81ebfcd39a9ef18d2d9a963c3333845571.woff2?generation=1778490122379282&alt=media') format('woff2');
+}
+@font-face {
+  font-display: swap;
+  font-family: 'Brockmann';
+  font-style: italic;
+  font-weight: 400;
+  src: url('https://storage.googleapis.com/download/storage/v1/b/prd-storytodesign.appspot.com/o/h2d-ext-asset%2F0d49fd2034194cb5e2d36423ed08e00ca712b388.woff2?generation=1780734756716354&alt=media') format('woff2');
+}
+
+/* ============================================================
+   the Kissa — Design Tokens
+   Built on the MAD Creative Agency design system.
+   Colours: #000000 · #1c1c1c · #292929 · #ffffff
    ============================================================ */
 
 :root {
-  /* --- Brand Core (monochrome) --- */
-  --crimson:        #0F0F0F;
-  --crimson-deep:   #000000;
-  --crimson-bright: #2A2A2A;
+  /* ── MAD Colour Palette ─────────────────────────────────── */
+  --mad-black:      #000000;
+  --mad-dark:       #1c1c1c;     /* card bg, elevated surfaces  */
+  --mad-mid:        #292929;     /* secondary surface           */
+  --mad-white:      #ffffff;
 
-  /* --- Neutrals --- */
-  --ink:            #111111;
-  --gray-900:       #1A1A1A;
-  --gray-700:       #444444;
-  --gray-500:       #777777;
-  --gray-400:       #A0A0A0;
-  --gray-300:       #C8C8C8;
-  --gray-200:       #E4E4E4;
-  --bone:           #EDECE9;
-  --paper:          #F5F4F1;
+  /* ── Semantic aliases ────────────────────────────────────── */
+  --ink:            var(--mad-black);
+  --bg:             var(--mad-black);
+  --bg-alt:         var(--mad-dark);
+  --surface:        var(--mad-dark);
+  --surface-2:      var(--mad-mid);
+  --paper:          var(--mad-black);   /* legacy alias → dark */
+  --bone:           var(--mad-dark);    /* legacy alias → dark */
+  --fg1:            var(--mad-white);
+  --fg2:            rgba(255,255,255,0.70);
+  --fg3:            rgba(255,255,255,0.40);
+  --fg-on-ink:      var(--mad-white);
+  --fg-on-ink-2:    rgba(255,255,255,0.55);
+  --line:           rgba(255,255,255,0.10);
+  --line-strong:    rgba(255,255,255,0.22);
 
-  /* --- Accents & Iridescent --- */
-  --accent-dark:    #1A1A1A;
-  --accent-cool:    #2A3F5F;
-  --accent-soft:    #E8E8E8;
+  /* ── Iridescent accent (Kissa signature) ─────────────────── */
   --gradient-iridescent: linear-gradient(255deg, rgb(250,203,14), rgb(240,107,168) 30%, rgb(120,186,230) 65%, rgba(255,255,255,0.12));
 
-  /* --- Semantic --- */
-  --bg:             var(--paper);
-  --bg-alt:         var(--bone);
-  --bg-ink:         var(--ink);
-  --surface:        #ffffff;
-  --fg1:            var(--ink);
-  --fg2:            var(--gray-700);
-  --fg3:            var(--gray-500);
-  --fg-on-ink:      #F5F5F5;
-  --fg-on-ink-2:    #AAAAAA;
-  --line:           var(--gray-200);
-  --line-strong:    var(--gray-300);
-  --focus:          var(--crimson);
+  /* ── MAD Typography ──────────────────────────────────────── */
+  --sans:           'Brockmann', 'Helvetica Neue', Arial, sans-serif;
+  --serif-display:  'Times New Roman', Georgia, serif;  /* editorial accent */
+  --mono:           var(--font-mono), ui-monospace, 'SFMono-Regular', monospace;
 
-  /* --- Typography --- */
-  --serif-display: var(--font-serif-display), 'Georgia', serif;
-  --sans:          var(--font-sans), 'Helvetica Neue', system-ui, sans-serif;
-  --mono:          var(--font-mono), ui-monospace, 'SFMono-Regular', monospace;
+  /* ── MAD Spacing Scale ───────────────────────────────────── */
+  /* 2 · 14 · 30 · 38 · 47 · 50 · 53 · 68 · 71 · 75 · 100 · 104 */
+  --sp-2:   2px;
+  --sp-14:  14px;
+  --sp-30:  30px;
+  --sp-38:  38px;
+  --sp-47:  47px;
+  --sp-50:  50px;
+  --sp-53:  53px;
+  --sp-68:  68px;
+  --sp-71:  71px;
+  --sp-75:  75px;
+  --sp-100: 100px;
+  --sp-104: 104px;
+  /* 8pt shorthands kept for internal use */
+  --sp-1: 4px; --sp-4: 16px; --sp-5: 24px; --sp-6: 32px; --sp-7: 48px; --sp-8: 64px;
 
-  /* --- Spacing (8pt) --- */
-  --sp-1: 4px;  --sp-2: 8px;   --sp-3: 12px;  --sp-4: 16px;
-  --sp-5: 24px; --sp-6: 32px;  --sp-7: 48px;  --sp-8: 64px;
-  --sp-9: 96px; --sp-10: 128px;
+  /* ── MAD Radii Scale ─────────────────────────────────────── */
+  /* 10 · 20 · 35 · 40 · 50 · 68 */
+  --r-xs:     10px;
+  --r-sm:     10px;
+  --r-md:     20px;
+  --r-lg:     35px;
+  --r-xl:     40px;
+  --r-2xl:    50px;
+  --r-pill:   68px;
+  --r-bubble: 35px;   /* speech bubble corners */
 
-  /* --- Radii --- */
-  --r-sm: 6px;
-  --r-md: 12px;
-  --r-lg: 20px;
-  --r-bubble: 28px;
-  --r-pill: 999px;
-
-  /* --- Shadows (warm-tinted) --- */
-  --sh-1: 0 1px 2px rgba(22,16,15,0.06), 0 1px 3px rgba(22,16,15,0.05);
-  --sh-2: 0 4px 12px rgba(22,16,15,0.08), 0 1px 3px rgba(22,16,15,0.05);
-  --sh-3: 0 14px 38px rgba(22,16,15,0.13), 0 4px 10px rgba(22,16,15,0.07);
-  --sh-crimson: 0 14px 34px rgba(0,0,0,0.22);
-
-  /* --- Motion --- */
-  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  /* ── MAD Motion ──────────────────────────────────────────── */
+  --dur-fast: 200ms;
+  --dur:      300ms;
+  --dur-slow: 600ms;
+  --ease:     cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
-  --dur-fast: 140ms;
-  --dur: 240ms;
-  --dur-slow: 420ms;
+
+  /* ── Shadows ─────────────────────────────────────────────── */
+  --sh-1: 0 2px 8px rgba(0,0,0,0.45);
+  --sh-2: 0 8px 24px rgba(0,0,0,0.55);
+  --sh-3: 0 20px 48px rgba(0,0,0,0.65);
+  --sh-header: rgba(0,0,0,0.75) 0px 0px 20px 0px;
+
+  /* Legacy compat */
+  --crimson:        var(--mad-black);
+  --crimson-deep:   var(--mad-black);
+  --crimson-bright: var(--mad-dark);
+  --sh-crimson:     0 14px 34px rgba(0,0,0,0.55);
+  --gray-700: rgba(255,255,255,0.70);
+  --gray-500: rgba(255,255,255,0.40);
+  --gray-300: rgba(255,255,255,0.22);
+  --gray-200: rgba(255,255,255,0.10);
 }
 
 @theme inline {
-  --color-background: var(--paper);
-  --color-foreground: var(--ink);
-  --font-sans: var(--font-sans);
+  --color-background: #000000;
+  --color-foreground: #ffffff;
   --font-mono: var(--font-mono);
 }
 
@@ -87,9 +135,10 @@
 html { scroll-behavior: smooth; }
 
 body {
-  background: var(--paper);
-  color: var(--ink);
+  background: var(--mad-black);
+  color: var(--mad-white);
   font-family: var(--sans);
+  font-size: 16px;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: hidden;
@@ -100,36 +149,36 @@ img { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
 
 ::selection {
-  background: var(--crimson);
-  color: #fff;
+  background: var(--mad-white);
+  color: var(--mad-black);
 }
 
 /* ============================================================
-   TYPE CLASSES
+   TYPE CLASSES  (Brockmann primary · Times New Roman editorial)
    ============================================================ */
 .k-display {
-  font-family: var(--serif-display);
+  font-family: var(--sans);
   font-size: clamp(52px, 8vw, 96px);
-  line-height: 0.98;
-  letter-spacing: -0.015em;
+  line-height: 1.0;
+  letter-spacing: -0.01em;
   font-weight: 700;
   color: var(--fg1);
 }
 
 .k-h1 {
-  font-family: var(--serif-display);
+  font-family: var(--sans);
   font-size: clamp(40px, 6vw, 72px);
   line-height: 1.05;
-  letter-spacing: -0.012em;
+  letter-spacing: -0.008em;
   font-weight: 700;
   color: var(--fg1);
 }
 
 .k-h2 {
-  font-family: var(--serif-display);
+  font-family: var(--sans);
   font-size: clamp(32px, 4.5vw, 56px);
   line-height: 1.1;
-  letter-spacing: -0.008em;
+  letter-spacing: -0.005em;
   font-weight: 700;
   color: var(--fg1);
 }
@@ -170,23 +219,25 @@ a { color: inherit; text-decoration: none; }
   font-family: var(--sans);
   font-size: 13px;
   line-height: 1.45;
-  font-weight: 500;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   color: var(--fg3);
 }
 
 .k-eyebrow {
   font-family: var(--sans);
   font-size: 12px;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  font-weight: 600;
-  color: var(--crimson);
+  font-weight: 700;
+  color: var(--fg3);
   display: inline-flex;
   align-items: center;
   gap: 10px;
 }
 
-.k-eyebrow.on-ink { color: var(--fg-on-ink); }
+.k-eyebrow.on-ink { color: var(--fg-on-ink-2); }
 
 .k-credit {
   font-family: var(--mono);
@@ -198,13 +249,11 @@ a { color: inherit; text-decoration: none; }
 .k-quote {
   font-family: var(--serif-display);
   font-style: italic;
-  font-weight: 500;
+  font-weight: 400;
   font-size: 28px;
-  line-height: 1.35;
-  color: var(--fg1);
+  line-height: 1.6;
+  color: rgba(255,255,255,0.85);
 }
-
-.italic-crimson { font-style: italic; color: var(--crimson); }
 
 /* Play arrow glyph */
 .pa {
@@ -218,17 +267,20 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ============================================================
-   BUTTONS
+   BUTTONS — MAD anatomy: pill · uppercase · bold
+   Radii snap to 68px (--r-pill) per MAD scale.
    ============================================================ */
 .btn {
   display: inline-flex;
   align-items: center;
   gap: 10px;
   font-family: var(--sans);
-  font-size: 15px;
-  font-weight: 600;
-  border-radius: var(--r-md);
-  padding: 14px 24px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border-radius: var(--r-pill);
+  padding: 14px 30px;
   border: 1.5px solid transparent;
   cursor: pointer;
   transition: transform var(--dur-fast) var(--ease),
@@ -240,28 +292,28 @@ a { color: inherit; text-decoration: none; }
 }
 
 .btn-primary {
-  background: var(--crimson);
-  color: #fff;
-  box-shadow: var(--sh-crimson);
+  background: var(--mad-white);
+  color: var(--mad-black);
+  box-shadow: var(--sh-1);
 }
-.btn-primary:hover { background: var(--crimson-deep); transform: translateY(-2px); }
+.btn-primary:hover { background: rgba(255,255,255,0.88); transform: translateY(-2px); }
 .btn-primary:active { transform: scale(0.98); }
 
 .btn-ghost {
   background: transparent;
-  color: var(--ink);
-  border-color: var(--line-strong);
+  color: var(--mad-white);
+  border-color: rgba(255,255,255,0.32);
 }
-.btn-ghost:hover  { border-color: var(--ink); transform: translateY(-2px); }
+.btn-ghost:hover { border-color: var(--mad-white); transform: translateY(-2px); background: rgba(255,255,255,0.06); }
 .btn-ghost:active { transform: scale(0.97); }
 
 .btn-ghost.on-ink {
   color: var(--fg-on-ink);
-  border-color: rgba(244,239,233,0.32);
+  border-color: rgba(255,255,255,0.28);
 }
 .btn-ghost.on-ink:hover {
   border-color: var(--fg-on-ink);
-  background: rgba(244,239,233,0.06);
+  background: rgba(255,255,255,0.06);
 }
 
 /* ============================================================
@@ -270,12 +322,9 @@ a { color: inherit; text-decoration: none; }
 .reveal {
   opacity: 0;
   transform: translateY(20px);
-  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+  transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
 }
-.reveal.in {
-  opacity: 1;
-  transform: none;
-}
+.reveal.in { opacity: 1; transform: none; }
 
 /* ============================================================
    MARQUEE
@@ -295,19 +344,19 @@ a { color: inherit; text-decoration: none; }
    SPEECH BUBBLE CARD MOTIF
    ============================================================ */
 .bubble-card {
-  background: var(--surface);
+  background: var(--mad-dark);
   border-radius: var(--r-bubble);
-  border: 2px solid var(--ink);
-  padding: var(--sp-7);
+  border: 1.5px solid rgba(255,255,255,0.14);
+  padding: var(--sp-50);
   box-shadow: var(--sh-2);
 }
 
 /* ============================================================
-   CARDS
+   CARDS — snap to MAD radii (20px)
    ============================================================ */
 .k-card {
-  background: var(--surface);
-  border-radius: var(--r-lg);
+  background: var(--mad-dark);
+  border-radius: var(--r-md);
   border: 1px solid var(--line);
   box-shadow: var(--sh-1);
   transition: box-shadow var(--dur) var(--ease), transform var(--dur) var(--ease);
@@ -323,10 +372,10 @@ a { color: inherit; text-decoration: none; }
 .wrap {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 0 48px;
+  padding: 0 var(--sp-50);
 }
 @media (max-width: 680px) {
-  .wrap { padding: 0 24px; }
+  .wrap { padding: 0 30px; }
 }
 
 /* ============================================================
@@ -335,7 +384,7 @@ a { color: inherit; text-decoration: none; }
 .grid-services {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 32px;
+  gap: 30px;
 }
 @media (max-width: 900px) {
   .grid-services { grid-template-columns: 1fr; }
@@ -344,7 +393,7 @@ a { color: inherit; text-decoration: none; }
 .grid-stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 32px;
+  gap: 30px;
 }
 @media (max-width: 900px) {
   .grid-stats { grid-template-columns: repeat(2, 1fr); }
@@ -353,36 +402,16 @@ a { color: inherit; text-decoration: none; }
   .grid-stats { grid-template-columns: 1fr; }
 }
 
-.grid-testimonials {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
-}
-@media (max-width: 760px) {
-  .grid-testimonials { grid-template-columns: 1fr; }
-}
-
 /* ============================================================
    REDUCED MOTION
-   All movement and position animations collapse;
-   opacity / color transitions remain for comprehension.
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-
-  .marquee-track {
-    animation: none !important;
-  }
-
-  .reveal {
-    opacity: 1;
-    transform: none;
-  }
+  .marquee-track { animation: none !important; }
+  .reveal { opacity: 1; transform: none; }
 }

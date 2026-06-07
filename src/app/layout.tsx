@@ -1,21 +1,10 @@
 import type { Metadata } from "next";
-import { Fraunces, Archivo, Spline_Sans_Mono } from "next/font/google";
+import { Spline_Sans_Mono } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
 
-const fraunces = Fraunces({
-  variable: "--font-serif-display",
-  subsets: ["latin"],
-  weight: "variable",
-  style: ["normal", "italic"],
-});
-
-const archivo = Archivo({
-  variable: "--font-sans",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  style: ["normal", "italic"],
-});
+// Brockmann is loaded via @font-face in globals.css (not available on Google Fonts)
+// Times New Roman is a system font — no import needed
 
 const splineSansMono = Spline_Sans_Mono({
   variable: "--font-mono",
@@ -40,7 +29,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${archivo.variable} ${splineSansMono.variable} h-full`}>
+    <html lang="en" className={`${splineSansMono.variable} h-full`}>
       <body className="min-h-full flex flex-col">
         <SmoothScroll>{children}</SmoothScroll>
       </body>

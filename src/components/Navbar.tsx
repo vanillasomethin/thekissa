@@ -26,130 +26,118 @@ export default function Navbar() {
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
+    return () => { document.body.style.overflow = ""; };
   }, [menuOpen]);
 
   return (
     <>
       <header
-        className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+        className="fixed top-0 left-0 right-0 z-50"
         style={{
-          backdropFilter: scrolled ? "blur(14px)" : "none",
-          WebkitBackdropFilter: scrolled ? "blur(14px)" : "none",
-          backgroundColor: scrolled ? "rgba(250,250,250,0.92)" : "transparent",
-          boxShadow: scrolled ? "0 1px 0 #E4E4E4" : "none",
+          transition: "background 300ms ease, box-shadow 300ms ease",
+          backdropFilter: scrolled ? "blur(12px)" : "none",
+          WebkitBackdropFilter: scrolled ? "blur(12px)" : "none",
+          backgroundColor: scrolled ? "rgba(28,28,28,0.92)" : "transparent",
+          boxShadow: scrolled ? "0 1px 0 rgba(255,255,255,0.08)" : "none",
         }}
       >
         <nav
-          className="max-w-7xl mx-auto px-6 flex items-center justify-between"
-          style={{ height: "68px" }}
+          className="flex items-center justify-between"
+          style={{
+            maxWidth: 1800,
+            margin: "0 auto",
+            padding: "0 50px",
+            height: "80px",
+          }}
         >
-          {/* Logo */}
+          {/* Logo — circular MAD-style container */}
           <Link href="/" aria-label="the Kissa — home">
-            <Image
-              src={scrolled ? "/logo-ink.png" : "/logo-white.png"}
-              alt="the Kissa"
-              height={44}
-              width={132}
-              style={{ height: "44px", width: "auto" }}
-              priority
-            />
+            <div style={{
+              width: 68,
+              height: 68,
+              borderRadius: "50%",
+              background: "rgb(28,28,28)",
+              boxShadow: "rgba(0,0,0,0.75) 0px 0px 20px 0px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              overflow: "hidden",
+            }}>
+              <Image
+                src="/logo-white.png"
+                alt="the Kissa"
+                height={36}
+                width={108}
+                style={{ height: "36px", width: "auto" }}
+                priority
+              />
+            </div>
           </Link>
 
-          {/* Desktop nav links — hidden below 860px */}
-          <ul
-            className="items-center gap-8"
-            style={{ display: "none" }}
-            id="desktop-nav"
-          >
+          {/* Desktop nav links + CTA */}
+          <div className="flex items-center gap-4" id="desktop-nav" style={{ display: "none" }}>
             {navLinks.map((link) => (
-              <li key={link.href}>
-                <NavLink href={link.href} scrolled={scrolled}>
-                  {link.label}
-                </NavLink>
-              </li>
+              <NavLink key={link.href} href={link.href}>{link.label}</NavLink>
             ))}
-          </ul>
 
-          {/* CTA + hamburger */}
-          <div className="flex items-center gap-3">
-            {/* Let's talk — desktop */}
+            {/* Let's Talk — MAD pill button */}
             <Link
               href="/contact"
+              id="desktop-cta"
               style={{
                 display: "none",
-                backgroundColor: "var(--ink)",
-                color: "#ffffff",
-                fontWeight: 600,
-                fontSize: "14px",
-                padding: "10px 20px",
-                borderRadius: "10px",
-                transition: "background-color 0.2s ease",
+                fontFamily: "var(--sans)",
+                fontWeight: 700,
+                fontSize: "16px",
+                letterSpacing: "0.06em",
+                textTransform: "uppercase",
+                color: "#000000",
+                backgroundColor: "#ffffff",
+                padding: "12px 30px",
+                borderRadius: "68px",
                 whiteSpace: "nowrap",
+                transition: "background 200ms ease, transform 200ms ease",
               }}
-              id="desktop-cta"
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.backgroundColor =
-                  "var(--crimson)";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.backgroundColor =
-                  "var(--ink)";
-              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.backgroundColor = "rgba(255,255,255,0.88)"; (e.currentTarget as HTMLAnchorElement).style.transform = "translateY(-2px)"; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.backgroundColor = "#ffffff"; (e.currentTarget as HTMLAnchorElement).style.transform = ""; }}
             >
-              Let&apos;s talk
+              Let&apos;s Talk
             </Link>
-
-            {/* Hamburger button */}
-            <button
-              onClick={() => setMenuOpen((v) => !v)}
-              aria-label={menuOpen ? "Close menu" : "Open menu"}
-              style={{
-                width: "42px",
-                height: "42px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                background: "transparent",
-                border: "none",
-                cursor: "pointer",
-                color: scrolled ? "var(--ink)" : "#ffffff",
-                padding: 0,
-              }}
-            >
-              <AnimatePresence mode="wait" initial={false}>
-                {menuOpen ? (
-                  <motion.span
-                    key="close"
-                    initial={{ rotate: -90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: 90, opacity: 0 }}
-                    transition={{ duration: 0.18 }}
-                    style={{ display: "block", lineHeight: 0 }}
-                  >
-                    <X size={24} />
-                  </motion.span>
-                ) : (
-                  <motion.span
-                    key="open"
-                    initial={{ rotate: 90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: -90, opacity: 0 }}
-                    transition={{ duration: 0.18 }}
-                    style={{ display: "block", lineHeight: 0 }}
-                  >
-                    <Menu size={24} />
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </button>
           </div>
+
+          {/* Hamburger — square MAD style */}
+          <button
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            style={{
+              width: 68,
+              height: 68,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background: "rgb(28,28,28)",
+              borderRadius: "10px",
+              border: "none",
+              cursor: "pointer",
+              color: "#ffffff",
+              flexShrink: 0,
+            }}
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              {menuOpen ? (
+                <motion.span key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.18 }} style={{ display: "block", lineHeight: 0 }}>
+                  <X size={22} />
+                </motion.span>
+              ) : (
+                <motion.span key="open" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.18 }} style={{ display: "block", lineHeight: 0 }}>
+                  <Menu size={22} />
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </button>
         </nav>
       </header>
 
-      {/* Responsive style to show desktop nav above 860px */}
       <style>{`
         @media (min-width: 860px) {
           #desktop-nav { display: flex !important; }
@@ -170,114 +158,48 @@ export default function Navbar() {
               position: "fixed",
               inset: 0,
               zIndex: 40,
-              backgroundColor: "var(--ink)",
+              backgroundColor: "#000000",
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
-              padding: "0 40px",
+              padding: "0 50px",
             }}
           >
-            {/* Nav links */}
             <nav>
-              <ul
-                style={{
-                  listStyle: "none",
-                  margin: 0,
-                  padding: 0,
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "8px",
-                }}
-              >
+              <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: "4px" }}>
                 {navLinks.map((link, i) => (
-                  <motion.li
-                    key={link.href}
-                    initial={{ opacity: 0, y: 24 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.08 + i * 0.07, duration: 0.3 }}
-                  >
+                  <motion.li key={link.href} initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 + i * 0.07, duration: 0.3 }}>
                     <Link
                       href={link.href}
                       onClick={() => setMenuOpen(false)}
-                      style={{
-                        fontFamily: "var(--serif-display)",
-                        fontSize: "44px",
-                        fontWeight: 700,
-                        color: "#ffffff",
-                        textDecoration: "none",
-                        display: "block",
-                        lineHeight: 1.15,
-                        transition: "color 0.2s ease",
-                      }}
-                      onMouseEnter={(e) => {
-                        (e.currentTarget as HTMLAnchorElement).style.color =
-                          "var(--crimson)";
-                      }}
-                      onMouseLeave={(e) => {
-                        (e.currentTarget as HTMLAnchorElement).style.color =
-                          "#ffffff";
-                      }}
+                      style={{ fontFamily: "var(--sans)", fontSize: "clamp(36px,6vw,56px)", fontWeight: 700, color: "#ffffff", textDecoration: "none", display: "block", lineHeight: 1.1, transition: "opacity 0.2s ease" }}
+                      onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.opacity = "0.55"; }}
+                      onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.opacity = "1"; }}
                     >
                       {link.label}
                     </Link>
                   </motion.li>
                 ))}
-
-                {/* Let's talk in mobile menu */}
-                <motion.li
-                  initial={{ opacity: 0, y: 24 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{
-                    delay: 0.08 + navLinks.length * 0.07,
-                    duration: 0.3,
-                  }}
-                  style={{ marginTop: "24px" }}
-                >
+                <motion.li initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 + navLinks.length * 0.07, duration: 0.3 }} style={{ marginTop: "24px" }}>
                   <Link
                     href="/contact"
                     onClick={() => setMenuOpen(false)}
-                    style={{
-                      fontFamily: "var(--serif-display)",
-                      fontSize: "44px",
-                      fontWeight: 700,
-                      color: "var(--crimson)",
-                      textDecoration: "none",
-                      display: "inline-block",
-                      lineHeight: 1.15,
-                    }}
+                    style={{ fontFamily: "var(--sans)", fontSize: "clamp(36px,6vw,56px)", fontWeight: 700, color: "rgba(255,255,255,0.4)", textDecoration: "none", display: "inline-block", lineHeight: 1.1 }}
                   >
-                    Let&apos;s talk
+                    Let&apos;s Talk
                   </Link>
                 </motion.li>
               </ul>
             </nav>
 
-            {/* Bottom meta row */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.42, duration: 0.3 }}
-              style={{
-                position: "absolute",
-                bottom: "40px",
-                left: "40px",
-                right: "40px",
-                display: "flex",
-                alignItems: "center",
-                gap: "32px",
-                fontFamily: "var(--mono)",
-                fontSize: "12px",
-                color: "var(--fg-on-ink-2)",
-                flexWrap: "wrap",
-              }}
+              style={{ position: "absolute", bottom: "40px", left: "50px", right: "50px", display: "flex", gap: "32px", fontFamily: "var(--mono)", fontSize: "12px", color: "rgba(255,255,255,0.35)", flexWrap: "wrap" }}
             >
-              <a
-                href="mailto:hello@thekissa.com"
-                style={{ color: "inherit", textDecoration: "none" }}
-              >
-                hello@thekissa.com
-              </a>
-              <span>hello@thekissa.com</span>
+              <a href="mailto:hello@thekissa.com" style={{ color: "inherit" }}>hello@thekissa.com</a>
+              <span>Nairobi · Dubai · London</span>
             </motion.div>
           </motion.div>
         )}
@@ -286,52 +208,24 @@ export default function Navbar() {
   );
 }
 
-/* Inline hover-underline nav link */
-function NavLink({
-  href,
-  scrolled,
-  children,
-}: {
-  href: string;
-  scrolled: boolean;
-  children: React.ReactNode;
-}) {
+function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
   const [hovered, setHovered] = useState(false);
-
   return (
     <Link
       href={href}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
-        fontSize: "14px",
-        fontWeight: 500,
-        color: hovered
-          ? "var(--crimson)"
-          : scrolled
-          ? "var(--ink)"
-          : "#ffffff",
+        fontFamily: "var(--sans)",
+        fontSize: "16px",
+        fontWeight: 400,
+        color: hovered ? "rgba(255,255,255,0.55)" : "#ffffff",
         textDecoration: "none",
-        position: "relative",
-        paddingBottom: "2px",
-        transition: "color 0.2s ease",
-        display: "inline-block",
+        transition: "color 200ms ease",
+        padding: "8px 0",
       }}
     >
       {children}
-      {/* Underline grows from left on hover */}
-      <span
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          height: "1.5px",
-          backgroundColor: "var(--crimson)",
-          width: hovered ? "100%" : "0%",
-          transition: "width 0.22s ease",
-          borderRadius: "1px",
-        }}
-      />
     </Link>
   );
 }

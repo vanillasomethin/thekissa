@@ -189,7 +189,7 @@ function ServiceVisual({ index }: { index: number }) {
     <div key={0} style={{ position: "relative", width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
       <KissaBubble size={260} fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.35)" strokeWidth={1.5} />
       <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-44%, -46%)", textAlign: "center", pointerEvents: "none" }}>
-        <p style={{ fontFamily: "var(--serif-display)", fontSize: "clamp(48px,6vw,72px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1, margin: 0 }}>01</p>
+        <p style={{ fontFamily: "var(--sans)", fontSize: "clamp(48px,6vw,72px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1, margin: 0 }}>01</p>
         <p style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--fg-on-ink-2)", letterSpacing: "0.14em", textTransform: "uppercase", margin: "6px 0 0" }}>Story</p>
       </div>
       <KissaBubble size={110} fill="rgba(255,255,255,0.08)" stroke="none" style={{ position: "absolute", top: "8%", right: "10%" }} />
@@ -199,7 +199,7 @@ function ServiceVisual({ index }: { index: number }) {
     <div key={1} style={{ position: "relative", width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
       <KissaBubble size={220} fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.4)" strokeWidth={2} />
       <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-44%, -46%)", textAlign: "center", pointerEvents: "none" }}>
-        <p style={{ fontFamily: "var(--serif-display)", fontSize: "clamp(48px,6vw,72px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1, margin: 0 }}>02</p>
+        <p style={{ fontFamily: "var(--sans)", fontSize: "clamp(48px,6vw,72px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1, margin: 0 }}>02</p>
         <p style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--fg-on-ink-2)", letterSpacing: "0.14em", textTransform: "uppercase", margin: "6px 0 0" }}>Motion</p>
       </div>
       <KissaBubble size={140} fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.2)" strokeWidth={1.5} style={{ position: "absolute", bottom: "5%", right: "5%" }} />
@@ -209,7 +209,7 @@ function ServiceVisual({ index }: { index: number }) {
     <div key={2} style={{ position: "relative", width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
       <KissaBubble size={180} fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.5)" strokeWidth={1} />
       <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-44%, -46%)", textAlign: "center", pointerEvents: "none" }}>
-        <p style={{ fontFamily: "var(--serif-display)", fontSize: "clamp(48px,6vw,72px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1, margin: 0 }}>03</p>
+        <p style={{ fontFamily: "var(--sans)", fontSize: "clamp(48px,6vw,72px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1, margin: 0 }}>03</p>
         <p style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--fg-on-ink-2)", letterSpacing: "0.14em", textTransform: "uppercase", margin: "6px 0 0" }}>Digital</p>
       </div>
       <KissaBubble size={90} fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth={2} style={{ position: "absolute", top: "5%", right: "8%" }} />
@@ -236,7 +236,7 @@ function ServicesTabbed() {
             </p>
           </ClipReveal>
           <ClipReveal delay={0.1}>
-            <h2 style={{ fontFamily: "var(--serif-display)", fontSize: "clamp(36px,5vw,68px)", fontWeight: 700, color: "var(--fg-on-ink)", letterSpacing: "-0.014em", lineHeight: 1.0, margin: 0 }}>
+            <h2 style={{ fontFamily: "var(--sans)", fontSize: "clamp(36px,5vw,68px)", fontWeight: 700, color: "var(--fg-on-ink)", letterSpacing: "-0.014em", lineHeight: 1.0, margin: 0 }}>
               Three ways we tell it.
             </h2>
           </ClipReveal>
@@ -294,7 +294,7 @@ function ServicesTabbed() {
               <p style={{ fontFamily: "var(--mono)", fontSize: 12, letterSpacing: "0.1em", color: "rgba(255,255,255,0.4)", textTransform: "uppercase", marginBottom: 20 }}>
                 {services[active].num}
               </p>
-              <h3 style={{ fontFamily: "var(--serif-display)", fontSize: "clamp(28px,3.5vw,46px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1.1, letterSpacing: "-0.01em", marginBottom: 16 }}>
+              <h3 style={{ fontFamily: "var(--sans)", fontSize: "clamp(28px,3.5vw,46px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1.1, letterSpacing: "-0.01em", marginBottom: 16 }}>
                 {services[active].headline}
               </h3>
               <p style={{ fontFamily: "var(--sans)", fontSize: 17, color: "rgba(255,255,255,0.6)", lineHeight: 1.7, marginBottom: 32, maxWidth: "50ch" }}>
@@ -371,7 +371,7 @@ function TestimonialsSlider() {
       <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
         {/* Header */}
         <ClipReveal>
-          <h2 style={{ fontFamily: "var(--serif-display)", fontSize: "clamp(36px,5vw,68px)", fontWeight: 700, color: "var(--fg-on-ink)", letterSpacing: "-0.012em", lineHeight: 1.05, marginTop: 0, marginBottom: 72 }}>
+          <h2 style={{ fontFamily: "var(--sans)", fontSize: "clamp(36px,5vw,68px)", fontWeight: 700, color: "var(--fg-on-ink)", letterSpacing: "-0.012em", lineHeight: 1.05, marginTop: 0, marginBottom: 72 }}>
             What our clients say.
           </h2>
         </ClipReveal>
@@ -718,7 +718,7 @@ export default function HomePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.9, ease, delay: 0.2 }}
                 style={{
-                  fontFamily: "var(--serif-display)",
+                  fontFamily: "var(--sans)",
                   fontSize: "clamp(60px, 7.5vw, 110px)",
                   lineHeight: 0.95,
                   fontWeight: 700,
@@ -823,12 +823,12 @@ export default function HomePage() {
               style={{ height: 1, background: "rgba(255,255,255,0.12)", transformOrigin: "left", marginBottom: 40 }}
             />
             <ClipReveal delay={0.0}>
-              <p style={{ fontFamily: "var(--serif-display)", fontSize: "clamp(40px, 5.5vw, 72px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1.05, letterSpacing: "-0.012em", margin: 0 }}>
+              <p style={{ fontFamily: "var(--sans)", fontSize: "clamp(40px, 5.5vw, 72px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1.05, letterSpacing: "-0.012em", margin: 0 }}>
                 We don&apos;t make content.
               </p>
             </ClipReveal>
             <ClipReveal delay={0.2}>
-              <p style={{ fontFamily: "var(--serif-display)", fontStyle: "italic", fontSize: "clamp(40px, 5.5vw, 72px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1.05, letterSpacing: "-0.012em", margin: 0 }}>
+              <p style={{ fontFamily: "var(--sans)", fontStyle: "italic", fontSize: "clamp(40px, 5.5vw, 72px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1.05, letterSpacing: "-0.012em", margin: 0 }}>
                 We make kissa.
               </p>
             </ClipReveal>
@@ -856,7 +856,7 @@ export default function HomePage() {
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 56 }}>
               <div>
                 <ClipReveal>
-                  <h2 style={{ fontFamily: "var(--serif-display)", fontSize: "clamp(36px, 5vw, 72px)", fontWeight: 700, color: "var(--fg-on-ink)", letterSpacing: "-0.012em", lineHeight: 1.05, marginBottom: 0 }}>
+                  <h2 style={{ fontFamily: "var(--sans)", fontSize: "clamp(36px, 5vw, 72px)", fontWeight: 700, color: "var(--fg-on-ink)", letterSpacing: "-0.012em", lineHeight: 1.05, marginBottom: 0 }}>
                     Our maddest hits.
                   </h2>
                 </ClipReveal>
@@ -915,12 +915,12 @@ export default function HomePage() {
                 onMouseLeave={() => setHoveredCard(null)}
               >
                 <div style={{ position: "absolute", inset: 0, backgroundImage: `radial-gradient(ellipse 80% 50% at 20% 20%, ${p.accent}22 0%, transparent 70%)`, pointerEvents: "none" }} />
-                <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", fontFamily: "var(--serif-display)", fontSize: "clamp(120px, 20vw, 200px)", fontWeight: 700, color: "rgba(0,0,0,0.08)", lineHeight: 1, letterSpacing: "-0.05em", userSelect: "none", whiteSpace: "nowrap", pointerEvents: "none" }}>
+                <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", fontFamily: "var(--sans)", fontSize: "clamp(120px, 20vw, 200px)", fontWeight: 700, color: "rgba(0,0,0,0.08)", lineHeight: 1, letterSpacing: "-0.05em", userSelect: "none", whiteSpace: "nowrap", pointerEvents: "none" }}>
                   {p.name[0]}
                 </div>
                 <div style={{ position: "absolute", inset: 0, background: `linear-gradient(to top, rgba(0,0,0,${hoveredCard === p.name ? 0.82 : 0.65}) 0%, transparent 55%)`, transition: "background 0.25s ease-out" }} />
                 <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "28px 24px" }}>
-                  <p style={{ fontFamily: "var(--serif-display)", fontSize: 28, fontWeight: 700, color: "#fff", marginBottom: 12, lineHeight: 1.1 }}>{p.name}</p>
+                  <p style={{ fontFamily: "var(--sans)", fontSize: 28, fontWeight: 700, color: "#fff", marginBottom: 12, lineHeight: 1.1 }}>{p.name}</p>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                     <span style={{ background: "rgba(0,0,0,0.35)", color: "rgba(255,255,255,0.85)", borderRadius: "4.25rem", fontSize: 10, fontWeight: 600, padding: "6px 14px", fontFamily: "var(--sans)", letterSpacing: "0.08em", textTransform: "uppercase" }}>
                       {p.category}
@@ -947,7 +947,7 @@ export default function HomePage() {
         {/* ══ 9. CTA BANNER ═════════════════════════════════════════════════════ */}
         <section style={{ background: "var(--ink)", padding: "140px 0", position: "relative", overflow: "hidden" }}>
           <BurstBubbles count={4} />
-          <div style={{ position: "absolute", right: "-5%", top: "50%", transform: "translateY(-50%)", fontFamily: "var(--serif-display)", fontSize: "clamp(200px, 30vw, 420px)", fontWeight: 700, color: "rgba(255,255,255,0.05)", lineHeight: 1, letterSpacing: "-0.05em", userSelect: "none", pointerEvents: "none" }}>K</div>
+          <div style={{ position: "absolute", right: "-5%", top: "50%", transform: "translateY(-50%)", fontFamily: "var(--sans)", fontSize: "clamp(200px, 30vw, 420px)", fontWeight: 700, color: "rgba(255,255,255,0.05)", lineHeight: 1, letterSpacing: "-0.05em", userSelect: "none", pointerEvents: "none" }}>K</div>
 
           <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto", position: "relative", zIndex: 1 }}>
             <ClipReveal>
@@ -956,7 +956,7 @@ export default function HomePage() {
               </p>
             </ClipReveal>
             <ClipReveal delay={0.1}>
-              <h2 style={{ fontFamily: "var(--serif-display)", fontSize: "clamp(52px, 8vw, 100px)", fontWeight: 700, color: "#ffffff", letterSpacing: "-0.022em", lineHeight: 0.95, marginBottom: 12 }}>
+              <h2 style={{ fontFamily: "var(--sans)", fontSize: "clamp(52px, 8vw, 100px)", fontWeight: 700, color: "#ffffff", letterSpacing: "-0.022em", lineHeight: 0.95, marginBottom: 12 }}>
                 Tell us your story.
               </h2>
             </ClipReveal>
