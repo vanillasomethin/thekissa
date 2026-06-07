@@ -178,7 +178,7 @@ function TeamCard({
         </p>
         <p
           style={{
-            fontFamily: "var(--serif-display)",
+            fontFamily: "var(--sans)",
             fontStyle: "italic",
             fontSize: "14px",
             color: "var(--crimson)",
@@ -192,7 +192,7 @@ function TeamCard({
       {/* Bio */}
       <p
         style={{
-          fontFamily: "var(--mono)",
+          fontFamily: "var(--sans)",
           fontSize: "13px",
           lineHeight: 1.55,
           color: "var(--fg3)",
@@ -234,7 +234,7 @@ export default function AboutPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.65, delay: 0.1 }}
             style={{
-              fontFamily: "var(--serif-display)",
+              fontFamily: "var(--sans)",
               fontSize: "clamp(48px, 7vw, 84px)",
               fontWeight: 900,
               color: "#fff",
@@ -324,7 +324,7 @@ export default function AboutPage() {
                     </p>
                     <p
                       style={{
-                        fontFamily: "var(--serif-display)",
+                        fontFamily: "var(--sans)",
                         fontSize: "22px",
                         fontWeight: 700,
                         lineHeight: 1.35,
@@ -403,7 +403,7 @@ export default function AboutPage() {
                       borderRadius: "50%",
                       background: "var(--crimson)",
                       color: "#fff",
-                      fontFamily: "var(--mono)",
+                      fontFamily: "var(--sans)",
                       fontWeight: 700,
                       fontSize: "14px",
                       letterSpacing: "0.02em",
@@ -546,7 +546,7 @@ export default function AboutPage() {
                     </div>
                     <p
                       style={{
-                        fontFamily: "var(--mono)",
+                        fontFamily: "var(--sans)",
                         fontSize: "13px",
                         color: "var(--fg3)",
                         flexShrink: 0,
@@ -667,7 +667,7 @@ export default function AboutPage() {
           >
             <h2
               style={{
-                fontFamily: "var(--serif-display)",
+                fontFamily: "var(--sans)",
                 fontSize: "clamp(36px, 5vw, 56px)",
                 fontWeight: 900,
                 color: "#fff",

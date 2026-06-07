@@ -187,7 +187,7 @@ function QuoteForm() {
         </div>
         <h3
           style={{
-            fontFamily: "var(--serif-display)",
+            fontFamily: "var(--sans)",
             fontSize: "28px",
             fontWeight: 700,
             color: "var(--fg1)",
@@ -384,7 +384,7 @@ export default function ServicesPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.65, delay: 0.1 }}
             style={{
-              fontFamily: "var(--serif-display)",
+              fontFamily: "var(--sans)",
               fontSize: "clamp(48px, 7vw, 84px)",
               fontWeight: 900,
               color: "#fff",
@@ -451,7 +451,7 @@ export default function ServicesPage() {
                     <div>
                       <p
                         style={{
-                          fontFamily: "var(--mono)",
+                          fontFamily: "var(--sans)",
                           fontSize: "13px",
                           color: "var(--fg3)",
                           marginBottom: "8px",
@@ -467,7 +467,7 @@ export default function ServicesPage() {
                       <p
                         className="italic-crimson"
                         style={{
-                          fontFamily: "var(--serif-display)",
+                          fontFamily: "var(--sans)",
                           fontStyle: "italic",
                           fontSize: "20px",
                           lineHeight: 1.3,
@@ -568,7 +568,7 @@ export default function ServicesPage() {
                             color: "var(--fg3)",
                             borderRadius: "999px",
                             fontSize: "12px",
-                            fontFamily: "var(--mono)",
+                            fontFamily: "var(--sans)",
                             padding: "3px 10px",
                           }}
                         >
@@ -661,7 +661,7 @@ export default function ServicesPage() {
                       borderRadius: "50%",
                       background: "var(--crimson)",
                       color: "#fff",
-                      fontFamily: "var(--serif-display)",
+                      fontFamily: "var(--sans)",
                       fontWeight: 700,
                       fontSize: "18px",
                     }}

@@ -165,7 +165,7 @@ function ArticleCard({
         </p>
         <h3
           style={{
-            fontFamily: "var(--serif-display)",
+            fontFamily: "var(--sans)",
             fontSize: 20,
             fontWeight: 700,
             color: "var(--fg1)",
@@ -211,7 +211,7 @@ function ArticleCard({
           <span
             style={{
               marginLeft: "auto",
-              fontFamily: "var(--mono)",
+              fontFamily: "var(--sans)",
               fontSize: 12,
               color: "var(--fg3)",
             }}
@@ -359,14 +359,14 @@ export default function BlogPage() {
                     className="k-h3"
                     style={{
                       color: "var(--fg1)",
-                      fontFamily: "var(--serif-display)",
+                      fontFamily: "var(--sans)",
                     }}
                   >
                     {featuredArticle.title}
                   </h3>
                   <span
                     style={{
-                      fontFamily: "var(--mono)",
+                      fontFamily: "var(--sans)",
                       fontSize: 12,
                       color: "var(--fg3)",
                     }}

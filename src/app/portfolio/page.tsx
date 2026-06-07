@@ -118,7 +118,7 @@ export default function PortfolioPage() {
 
             <h1
               style={{
-                fontFamily: "var(--serif-display)",
+                fontFamily: "var(--sans)",
                 fontWeight: 700,
                 fontSize: "clamp(56px, 8vw, 96px)",
                 lineHeight: 0.97,
@@ -173,7 +173,7 @@ export default function PortfolioPage() {
                 <div key={s.val}>
                   <p
                     style={{
-                      fontFamily: "var(--serif-display)",
+                      fontFamily: "var(--sans)",
                       fontSize: 40,
                       fontWeight: 700,
                       color: "#fff",
@@ -185,7 +185,7 @@ export default function PortfolioPage() {
                   </p>
                   <p
                     style={{
-                      fontFamily: "var(--mono)",
+                      fontFamily: "var(--sans)",
                       fontSize: 11,
                       letterSpacing: "0.1em",
                       textTransform: "uppercase",
@@ -326,7 +326,7 @@ export default function PortfolioPage() {
               top: "50%",
               left: "50%",
               transform: "translate(-50%,-50%)",
-              fontFamily: "var(--serif-display)",
+              fontFamily: "var(--sans)",
               fontSize: "clamp(200px,28vw,380px)",
               fontWeight: 700,
               color: "rgba(255,255,255,0.03)",
@@ -341,7 +341,7 @@ export default function PortfolioPage() {
             <ClipReveal>
               <h2
                 style={{
-                  fontFamily: "var(--serif-display)",
+                  fontFamily: "var(--sans)",
                   fontWeight: 700,
                   fontSize: "clamp(36px, 5vw, 60px)",
                   color: "#fff",
@@ -465,7 +465,7 @@ function ProjectCard({
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            fontFamily: "var(--serif-display)",
+            fontFamily: "var(--sans)",
             fontSize: "clamp(80px, 14vw, 160px)",
             fontWeight: 700,
             color: "rgba(255,255,255,0.055)",
@@ -524,7 +524,7 @@ function ProjectCard({
         >
           <div
             style={{
-              fontFamily: "var(--mono)",
+              fontFamily: "var(--sans)",
               fontSize: 10,
               fontWeight: 500,
               color: "rgba(255,255,255,0.55)",
@@ -537,7 +537,7 @@ function ProjectCard({
           </div>
           <div
             style={{
-              fontFamily: "var(--serif-display)",
+              fontFamily: "var(--sans)",
               fontSize: "clamp(20px, 3vw, 26px)",
               fontWeight: 700,
               color: "#fff",

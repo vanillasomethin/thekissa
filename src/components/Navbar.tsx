@@ -196,7 +196,7 @@ export default function Navbar() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.42, duration: 0.3 }}
-              style={{ position: "absolute", bottom: "40px", left: "50px", right: "50px", display: "flex", gap: "32px", fontFamily: "var(--mono)", fontSize: "12px", color: "rgba(255,255,255,0.35)", flexWrap: "wrap" }}
+              style={{ position: "absolute", bottom: "40px", left: "50px", right: "50px", display: "flex", gap: "32px", fontFamily: "var(--sans)", fontSize: "12px", color: "rgba(255,255,255,0.35)", flexWrap: "wrap" }}
             >
               <a href="mailto:hello@thekissa.com" style={{ color: "inherit" }}>hello@thekissa.com</a>
               <span>Nairobi · Dubai · London</span>

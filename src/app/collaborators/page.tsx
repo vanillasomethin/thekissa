@@ -120,7 +120,7 @@ function CollaboratorCard({
             color: accent,
             fontSize: 56,
             fontWeight: 900,
-            fontFamily: "var(--serif-display)",
+            fontFamily: "var(--sans)",
           }}
         >
           {initials}
@@ -327,7 +327,7 @@ export default function CollaboratorsPage() {
                         padding: "4px 12px",
                         borderRadius: 20,
                         fontSize: 12,
-                        fontFamily: "var(--mono)",
+                        fontFamily: "var(--sans)",
                         background:
                           project.chip === "crimson"
                             ? "rgba(0,0,0,0.1)"
@@ -364,7 +364,7 @@ export default function CollaboratorsPage() {
             >
               <blockquote
                 style={{
-                  fontFamily: "var(--serif-display)",
+                  fontFamily: "var(--sans)",
                   fontSize: "clamp(28px, 4vw, 48px)",
                   fontStyle: "italic",
                   color: "var(--fg-on-ink)",

@@ -145,7 +145,7 @@ function JobCard({ job, onApply }: { job: Job; onApply: (job: Job) => void }) {
       >
         <h3
           style={{
-            fontFamily: "var(--serif-display)",
+            fontFamily: "var(--sans)",
             fontSize: 22,
             fontWeight: 700,
             color: "var(--fg1)",
@@ -180,7 +180,7 @@ function JobCard({ job, onApply }: { job: Job; onApply: (job: Job) => void }) {
             display: "flex",
             alignItems: "center",
             gap: 6,
-            fontFamily: "var(--mono)",
+            fontFamily: "var(--sans)",
             fontSize: 12,
             color: "var(--fg3)",
           }}
@@ -192,7 +192,7 @@ function JobCard({ job, onApply }: { job: Job; onApply: (job: Job) => void }) {
             display: "flex",
             alignItems: "center",
             gap: 6,
-            fontFamily: "var(--mono)",
+            fontFamily: "var(--sans)",
             fontSize: 12,
             color: "var(--fg3)",
           }}
@@ -749,7 +749,7 @@ export default function CareersPage() {
             >
               <blockquote
                 style={{
-                  fontFamily: "var(--serif-display)",
+                  fontFamily: "var(--sans)",
                   fontSize: "clamp(24px, 3.5vw, 42px)",
                   fontStyle: "italic",
                   color: "var(--fg-on-ink)",

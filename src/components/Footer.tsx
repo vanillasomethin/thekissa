@@ -51,7 +51,7 @@ export default function Footer() {
             </Link>
             <p
               style={{
-                fontFamily: "var(--serif-display)",
+                fontFamily: "var(--sans)",
                 fontStyle: "italic",
                 fontSize: "17px",
                 color: "var(--fg-on-ink)",
@@ -63,7 +63,7 @@ export default function Footer() {
             </p>
             <span
               style={{
-                fontFamily: "var(--mono)",
+                fontFamily: "var(--sans)",
                 fontSize: "12px",
                 color: "var(--fg-on-ink-2)",
                 letterSpacing: "0.04em",
@@ -139,7 +139,7 @@ export default function Footer() {
           <div>
             <p
               style={{
-                fontFamily: "var(--mono)",
+                fontFamily: "var(--sans)",
                 fontSize: "11px",
                 fontWeight: 600,
                 textTransform: "uppercase",
@@ -169,7 +169,7 @@ export default function Footer() {
               <label
                 htmlFor="footer-email"
                 style={{
-                  fontFamily: "var(--mono)",
+                  fontFamily: "var(--sans)",
                   fontSize: "11px",
                   color: "var(--fg-on-ink-2)",
                   letterSpacing: "0.05em",
@@ -245,7 +245,7 @@ export default function Footer() {
         >
           <p
             style={{
-              fontFamily: "var(--mono)",
+              fontFamily: "var(--sans)",
               fontSize: "12px",
               color: "var(--fg-on-ink-2)",
               margin: 0,

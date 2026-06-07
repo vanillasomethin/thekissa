@@ -489,7 +489,7 @@ export default function ContactPage() {
               />
               <span
                 style={{
-                  fontFamily: "var(--mono)",
+                  fontFamily: "var(--sans)",
                   fontSize: 13,
                   color: "var(--fg-on-ink-2)",
                 }}

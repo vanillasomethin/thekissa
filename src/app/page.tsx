@@ -190,7 +190,7 @@ function ServiceVisual({ index }: { index: number }) {
       <KissaBubble size={260} fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.35)" strokeWidth={1.5} />
       <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-44%, -46%)", textAlign: "center", pointerEvents: "none" }}>
         <p style={{ fontFamily: "var(--sans)", fontSize: "clamp(48px,6vw,72px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1, margin: 0 }}>01</p>
-        <p style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--fg-on-ink-2)", letterSpacing: "0.14em", textTransform: "uppercase", margin: "6px 0 0" }}>Story</p>
+        <p style={{ fontFamily: "var(--sans)", fontSize: 10, color: "var(--fg-on-ink-2)", letterSpacing: "0.14em", textTransform: "uppercase", margin: "6px 0 0" }}>Story</p>
       </div>
       <KissaBubble size={110} fill="rgba(255,255,255,0.08)" stroke="none" style={{ position: "absolute", top: "8%", right: "10%" }} />
       <KissaBubble size={72} fill="none" stroke="rgba(255,255,255,0.18)" strokeWidth={1.5} style={{ position: "absolute", bottom: "12%", left: "8%" }} />
@@ -200,7 +200,7 @@ function ServiceVisual({ index }: { index: number }) {
       <KissaBubble size={220} fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.4)" strokeWidth={2} />
       <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-44%, -46%)", textAlign: "center", pointerEvents: "none" }}>
         <p style={{ fontFamily: "var(--sans)", fontSize: "clamp(48px,6vw,72px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1, margin: 0 }}>02</p>
-        <p style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--fg-on-ink-2)", letterSpacing: "0.14em", textTransform: "uppercase", margin: "6px 0 0" }}>Motion</p>
+        <p style={{ fontFamily: "var(--sans)", fontSize: 10, color: "var(--fg-on-ink-2)", letterSpacing: "0.14em", textTransform: "uppercase", margin: "6px 0 0" }}>Motion</p>
       </div>
       <KissaBubble size={140} fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.2)" strokeWidth={1.5} style={{ position: "absolute", bottom: "5%", right: "5%" }} />
       <KissaBubble size={60} fill="rgba(255,255,255,0.1)" stroke="none" style={{ position: "absolute", top: "10%", left: "12%" }} />
@@ -210,7 +210,7 @@ function ServiceVisual({ index }: { index: number }) {
       <KissaBubble size={180} fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.5)" strokeWidth={1} />
       <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-44%, -46%)", textAlign: "center", pointerEvents: "none" }}>
         <p style={{ fontFamily: "var(--sans)", fontSize: "clamp(48px,6vw,72px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1, margin: 0 }}>03</p>
-        <p style={{ fontFamily: "var(--mono)", fontSize: 10, color: "var(--fg-on-ink-2)", letterSpacing: "0.14em", textTransform: "uppercase", margin: "6px 0 0" }}>Digital</p>
+        <p style={{ fontFamily: "var(--sans)", fontSize: 10, color: "var(--fg-on-ink-2)", letterSpacing: "0.14em", textTransform: "uppercase", margin: "6px 0 0" }}>Digital</p>
       </div>
       <KissaBubble size={90} fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth={2} style={{ position: "absolute", top: "5%", right: "8%" }} />
       <KissaBubble size={50} fill="rgba(255,255,255,0.12)" stroke="none" style={{ position: "absolute", bottom: "15%", left: "5%" }} />
@@ -231,7 +231,7 @@ function ServicesTabbed() {
         {/* Header */}
         <div style={{ marginBottom: 72 }}>
           <ClipReveal>
-            <p style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.16em", textTransform: "uppercase", color: "rgba(255,255,255,0.45)", marginBottom: 16 }}>
+            <p style={{ fontFamily: "var(--sans)", fontSize: 11, letterSpacing: "0.16em", textTransform: "uppercase", color: "rgba(255,255,255,0.45)", marginBottom: 16 }}>
               What we do
             </p>
           </ClipReveal>
@@ -291,7 +291,7 @@ function ServicesTabbed() {
 
             {/* Right: content */}
             <div>
-              <p style={{ fontFamily: "var(--mono)", fontSize: 12, letterSpacing: "0.1em", color: "rgba(255,255,255,0.4)", textTransform: "uppercase", marginBottom: 20 }}>
+              <p style={{ fontFamily: "var(--sans)", fontSize: 12, letterSpacing: "0.1em", color: "rgba(255,255,255,0.4)", textTransform: "uppercase", marginBottom: 20 }}>
                 {services[active].num}
               </p>
               <h3 style={{ fontFamily: "var(--sans)", fontSize: "clamp(28px,3.5vw,46px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1.1, letterSpacing: "-0.01em", marginBottom: 16 }}>
@@ -429,7 +429,7 @@ function TestimonialsSlider() {
                   </div>
                   <div>
                     <p style={{ fontFamily: "var(--sans)", fontWeight: 700, fontSize: 18, color: "#fff", margin: "0 0 8px" }}>{t.name}</p>
-                    <p style={{ fontFamily: "var(--mono)", fontSize: 12, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.45)", margin: 0 }}>
+                    <p style={{ fontFamily: "var(--sans)", fontSize: 12, textTransform: "uppercase", letterSpacing: "0.1em", color: "rgba(255,255,255,0.45)", margin: 0 }}>
                       {t.role} · {t.company}
                     </p>
                   </div>
@@ -518,7 +518,7 @@ function TestimonialsSlider() {
                 />
               ))}
             </div>
-            <span style={{ fontFamily: "var(--mono)", fontSize: 11, color: "rgba(255,255,255,0.35)", letterSpacing: "0.1em", marginLeft: "auto" }}>
+            <span style={{ fontFamily: "var(--sans)", fontSize: 11, color: "rgba(255,255,255,0.35)", letterSpacing: "0.1em", marginLeft: "auto" }}>
               {String(current + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
             </span>
           </div>
@@ -704,7 +704,7 @@ export default function HomePage() {
             <div style={{ maxWidth: "55%" }}>
               <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease, delay: 0.1 }}>
                 <p style={{
-                  fontFamily: "var(--mono)",
+                  fontFamily: "var(--sans)",
                   fontSize: 11,
                   letterSpacing: "0.18em",
                   textTransform: "uppercase",
@@ -773,7 +773,7 @@ export default function HomePage() {
               position: "absolute",
               bottom: 36,
               right: 48,
-              fontFamily: "var(--mono)",
+              fontFamily: "var(--sans)",
               fontSize: 10,
               letterSpacing: "0.18em",
               textTransform: "uppercase",
@@ -862,7 +862,7 @@ export default function HomePage() {
                 </ClipReveal>
               </div>
               <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 12 }}>
-                <span style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.1em", color: "rgba(255,255,255,0.35)", userSelect: "none" }}>
+                <span style={{ fontFamily: "var(--sans)", fontSize: 11, letterSpacing: "0.1em", color: "rgba(255,255,255,0.35)", userSelect: "none" }}>
                   drag to explore →
                 </span>
                 <Link href="/portfolio" style={{ fontFamily: "var(--sans)", fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.7)", textDecoration: "none", display: "flex", alignItems: "center", gap: 4 }}>
@@ -951,7 +951,7 @@ export default function HomePage() {
 
           <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto", position: "relative", zIndex: 1 }}>
             <ClipReveal>
-              <p style={{ fontFamily: "var(--mono)", fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.7)", marginBottom: 24 }}>
+              <p style={{ fontFamily: "var(--sans)", fontSize: 11, letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(255,255,255,0.7)", marginBottom: 24 }}>
                 Let&apos;s make something unforgettable
               </p>
             </ClipReveal>
