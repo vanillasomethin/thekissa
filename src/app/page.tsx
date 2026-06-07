@@ -18,6 +18,68 @@ import { BurstBubbles, KineticWordReel, BubbleGrid, Card3D } from "@/components/
 
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number];
 
+// ─── ScribbleMark — scribble SVG that animates in on scroll ───────────────────
+interface ScribbleMarkProps {
+  src: string;
+  size?: number;
+  style?: React.CSSProperties;
+  rot?: number;
+  delay?: number;
+}
+function ScribbleMark({ src, size = 80, style, rot = 0, delay = 0 }: ScribbleMarkProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const triggered = useRef(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !triggered.current) {
+        triggered.current = true;
+        const { animate: animeAnimate } = require("animejs");
+        animeAnimate(el, {
+          opacity:   [0, 1],
+          scale:     [0, 1],
+          rotate:    [`${rot - 35}deg`, `${rot}deg`],
+          duration:  800,
+          ease:      "outExpo",
+          delay,
+        });
+        // slow drift after entrance
+        animeAnimate(el, {
+          translateY: [0, -8, 0],
+          duration:   4000,
+          ease:       "inOutSine",
+          loop:       true,
+          delay:      delay + 900,
+        });
+      }
+    }, { threshold: 0.2 });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [rot, delay]);
+
+  return (
+    <div
+      ref={ref}
+      style={{
+        opacity: 0,
+        transform: `rotate(${rot - 35}deg) scale(0)`,
+        width: size,
+        height: size,
+        filter: "invert(1)",
+        mixBlendMode: "screen",
+        pointerEvents: "none",
+        flexShrink: 0,
+        ...style,
+      }}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={src} alt="" width={size} height={size} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+    </div>
+  );
+}
+
 const MARQUEE_TEXT =
   "BRANDED CONTENT · VIDEO PRODUCTION · BRAND STRATEGY · SOCIAL CAMPAIGNS · PHOTOGRAPHY · ANIMATION · IMMERSIVE EXPERIENCES · ";
 
@@ -1070,6 +1132,12 @@ export default function HomePage() {
           {/* Hero animated orbit mark — right side */}
           <HeroOrbitMark />
 
+          {/* Hero scribble accents */}
+          <ScribbleMark src="/projects/scribbles/s-04.svg"  size={110} rot={-12} delay={800}
+            style={{ position: "absolute", bottom: "12%", left: "4%", opacity: 0 }} />
+          <ScribbleMark src="/projects/scribbles/s-105.svg" size={80}  rot={18}  delay={1000}
+            style={{ position: "absolute", top: "14%", right: "28%", opacity: 0 }} />
+
           {/* Hero content — text left column */}
           <div
             className="wrap"
@@ -1191,7 +1259,12 @@ export default function HomePage() {
         <KineticWordReel />
 
         {/* ══ 3. STATEMENT ══════════════════════════════════════════════════════ */}
-        <section style={{ background: "var(--ink)", padding: "120px 0 100px", borderTop: "1px solid rgba(255,255,255,0.08)" }}>
+        <section style={{ background: "var(--ink)", padding: "120px 0 100px", borderTop: "1px solid rgba(255,255,255,0.08)", position: "relative", overflow: "hidden" }}>
+          {/* Scribble accents — far edges */}
+          <ScribbleMark src="/projects/scribbles/s-38.svg"  size={130} rot={-20} delay={200}
+            style={{ position: "absolute", top: "8%",  right: "3%", opacity: 0 }} />
+          <ScribbleMark src="/projects/scribbles/s-11.svg"  size={90}  rot={12}  delay={350}
+            style={{ position: "absolute", bottom: "6%", right: "8%", opacity: 0 }} />
           <div className="wrap" style={{ maxWidth: 860, margin: "0 auto" }}>
             <div style={{ display: "flex", alignItems: "flex-start", gap: 40, marginBottom: 40 }}>
               <StatementMark />
@@ -1237,6 +1310,8 @@ export default function HomePage() {
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 56 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
                 <WorkMark />
+                <ScribbleMark src="/projects/scribbles/s-05.svg" size={56} rot={8} delay={200}
+                  style={{ opacity: 0 }} />
                 <ClipReveal>
                   <h2 style={{ fontFamily: "var(--sans)", fontSize: "clamp(36px, 5vw, 72px)", fontWeight: 700, color: "var(--fg-on-ink)", letterSpacing: "-0.012em", lineHeight: 1.05, marginBottom: 0 }}>
                     Selected work.
@@ -1379,8 +1454,14 @@ export default function HomePage() {
                 flexWrap: "wrap",
               }}
             >
-              {/* Rotating orbit mark */}
-              <CTAOrbitMark />
+              {/* Scribble + orbit cluster */}
+              <div style={{ position: "relative", flexShrink: 0 }}>
+                <CTAOrbitMark />
+                <ScribbleMark src="/projects/scribbles/s-104.svg" size={64} rot={-30} delay={0}
+                  style={{ position: "absolute", top: -32, right: -28, opacity: 0 }} />
+                <ScribbleMark src="/projects/scribbles/s-10.svg"  size={50} rot={20}  delay={120}
+                  style={{ position: "absolute", bottom: -24, left: -20, opacity: 0 }} />
+              </div>
 
               {/* Text + CTA */}
               <div style={{ flex: 1, minWidth: 280 }}>
