@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
+import { gsap } from "gsap";
 import {
   motion,
   useScroll,
@@ -184,42 +185,130 @@ function ClipReveal({
   );
 }
 
-// ─── ServiceVisual — animated bubble illustration per service tab ──────────────
-function ServiceVisual({ index }: { index: number }) {
-  const visuals = [
-    // Story & Brand
-    <div key={0} style={{ position: "relative", width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <KissaBubble size={260} fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.35)" strokeWidth={1.5} />
-      <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-44%, -46%)", textAlign: "center", pointerEvents: "none" }}>
-        <p style={{ fontFamily: "var(--sans)", fontSize: "clamp(48px,6vw,72px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1, margin: 0 }}>01</p>
-        <p style={{ fontFamily: "var(--sans)", fontSize: 10, color: "var(--fg-on-ink-2)", letterSpacing: "0.14em", textTransform: "uppercase", margin: "6px 0 0" }}>Story</p>
+// ─── Animated ring + illustration ─────────────────────────────────────────────
+const SERVICE_ICONS = [
+  // 01 Story & Brand — letterforms + speech bubble composition
+  (
+    <svg viewBox="0 0 320 320" width="100%" height="100%" fill="none">
+      {/* Main bubble */}
+      <g transform="translate(72,52)">
+        <path d="M 68,0 L 152,0 Q 176,0 176,37 L 176,163 Q 176,200 152,200 L 68,200 Q 27,200 27,163 L 27,141 L 0,125 L 27,110 L 27,37 Q 27,0 68,0 Z"
+          fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.55)" strokeWidth="2" strokeLinejoin="round" />
+        <text x="101" y="108" textAnchor="middle" dominantBaseline="middle" fontFamily="var(--sans)" fontSize="64" fontWeight="700" fill="white" letterSpacing="-2">K</text>
+      </g>
+      {/* Small bubble */}
+      <g transform="translate(206,40) scale(0.38)">
+        <path d="M 68,0 L 152,0 Q 176,0 176,37 L 176,163 Q 176,200 152,200 L 68,200 Q 27,200 27,163 L 27,141 L 0,125 L 27,110 L 27,37 Q 27,0 68,0 Z"
+          fill="none" stroke="rgba(255,255,255,0.28)" strokeWidth="3.5" strokeLinejoin="round" />
+      </g>
+      {/* Dot accent */}
+      <circle cx="228" cy="240" r="8" fill="rgba(255,255,255,0.18)" />
+      <circle cx="76" cy="292" r="5" fill="rgba(255,255,255,0.12)" />
+      <circle cx="256" cy="180" r="4" fill="rgba(255,255,255,0.22)" />
+    </svg>
+  ),
+  // 02 Motion & Film — camera aperture + frame
+  (
+    <svg viewBox="0 0 320 320" width="100%" height="100%" fill="none">
+      {/* Film frame rect */}
+      <rect x="72" y="88" width="176" height="144" rx="10" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.5)" strokeWidth="2" />
+      {/* Sprockets top */}
+      <rect x="88" y="75" width="16" height="10" rx="3" fill="rgba(255,255,255,0.3)" />
+      <rect x="116" y="75" width="16" height="10" rx="3" fill="rgba(255,255,255,0.3)" />
+      <rect x="144" y="75" width="16" height="10" rx="3" fill="rgba(255,255,255,0.3)" />
+      <rect x="172" y="75" width="16" height="10" rx="3" fill="rgba(255,255,255,0.3)" />
+      <rect x="200" y="75" width="16" height="10" rx="3" fill="rgba(255,255,255,0.3)" />
+      {/* Sprockets bottom */}
+      <rect x="88" y="235" width="16" height="10" rx="3" fill="rgba(255,255,255,0.3)" />
+      <rect x="116" y="235" width="16" height="10" rx="3" fill="rgba(255,255,255,0.3)" />
+      <rect x="144" y="235" width="16" height="10" rx="3" fill="rgba(255,255,255,0.3)" />
+      <rect x="172" y="235" width="16" height="10" rx="3" fill="rgba(255,255,255,0.3)" />
+      <rect x="200" y="235" width="16" height="10" rx="3" fill="rgba(255,255,255,0.3)" />
+      {/* Play triangle */}
+      <polygon points="146,142 146,178 178,160" fill="white" opacity="0.9" />
+      {/* Corner marks */}
+      <path d="M72,110 L72,88 L94,88" stroke="rgba(255,255,255,0.7)" strokeWidth="3" fill="none" strokeLinecap="round" />
+      <path d="M248,110 L248,88 L226,88" stroke="rgba(255,255,255,0.7)" strokeWidth="3" fill="none" strokeLinecap="round" />
+      <path d="M72,210 L72,232 L94,232" stroke="rgba(255,255,255,0.7)" strokeWidth="3" fill="none" strokeLinecap="round" />
+      <path d="M248,210 L248,232 L226,232" stroke="rgba(255,255,255,0.7)" strokeWidth="3" fill="none" strokeLinecap="round" />
+    </svg>
+  ),
+  // 03 Digital & Immersive — grid + glow nodes
+  (
+    <svg viewBox="0 0 320 320" width="100%" height="100%" fill="none">
+      {/* Grid lines */}
+      <line x1="100" y1="80" x2="100" y2="240" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
+      <line x1="160" y1="80" x2="160" y2="240" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
+      <line x1="220" y1="80" x2="220" y2="240" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
+      <line x1="80" y1="100" x2="240" y2="100" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
+      <line x1="80" y1="160" x2="240" y2="160" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
+      <line x1="80" y1="220" x2="240" y2="220" stroke="rgba(255,255,255,0.1)" strokeWidth="1" />
+      {/* Connector lines */}
+      <line x1="100" y1="100" x2="160" y2="160" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" />
+      <line x1="160" y1="160" x2="220" y2="100" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" />
+      <line x1="100" y1="220" x2="220" y2="100" stroke="rgba(255,255,255,0.15)" strokeWidth="1" strokeDasharray="4 4" />
+      {/* Nodes */}
+      <circle cx="100" cy="100" r="8" fill="white" opacity="0.9" />
+      <circle cx="220" cy="100" r="6" fill="white" opacity="0.65" />
+      <circle cx="160" cy="160" r="14" fill="rgba(255,255,255,0.12)" stroke="white" strokeWidth="2" />
+      <circle cx="160" cy="160" r="5" fill="white" opacity="0.95" />
+      <circle cx="100" cy="220" r="5" fill="rgba(255,255,255,0.4)" />
+      <circle cx="220" cy="220" r="7" fill="rgba(255,255,255,0.18)" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" />
+    </svg>
+  ),
+];
+
+function ServiceIllustration({ index, active }: { index: number; active: boolean }) {
+  const ringRef = useRef<SVGCircleElement>(null);
+  const reduce = useReducedMotion();
+
+  useEffect(() => {
+    if (reduce || !ringRef.current || !active) return;
+    const circ = 2 * Math.PI * 145;
+    gsap.fromTo(
+      ringRef.current,
+      { strokeDashoffset: circ, strokeDasharray: circ },
+      { strokeDashoffset: 0, duration: 1.2, ease: "power2.out", delay: 0.1 }
+    );
+  }, [active, reduce]);
+
+  return (
+    <div style={{ position: "relative", width: 340, height: 340, flexShrink: 0 }}>
+      {/* Animated ring */}
+      <svg viewBox="0 0 320 320" width={340} height={340} fill="none" style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
+        <circle
+          ref={ringRef}
+          cx="160" cy="160" r="145"
+          stroke="rgba(255,255,255,0.22)"
+          strokeWidth="1.5"
+          strokeDasharray={`${2 * Math.PI * 145}`}
+          strokeDashoffset={active ? 0 : `${2 * Math.PI * 145}`}
+          style={{ transition: reduce ? "none" : undefined }}
+        />
+        {/* Tick marks on ring */}
+        {[0, 90, 180, 270].map((deg) => {
+          const rad = (deg * Math.PI) / 180;
+          const r = 145;
+          const x1 = 160 + (r - 8) * Math.cos(rad);
+          const y1 = 160 + (r - 8) * Math.sin(rad);
+          const x2 = 160 + (r + 8) * Math.cos(rad);
+          const y2 = 160 + (r + 8) * Math.sin(rad);
+          return <line key={deg} x1={x1} y1={y1} x2={x2} y2={y2} stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" />;
+        })}
+        {/* Service number at top of ring */}
+        <text x="160" y="7" textAnchor="middle" dominantBaseline="middle" fontFamily="var(--sans)" fontSize="10" fontWeight="700" fill="rgba(255,255,255,0.4)" letterSpacing="0.12em">
+          {`0${index + 1}`}
+        </text>
+      </svg>
+
+      {/* Inner content */}
+      <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ width: 240, height: 240 }}>
+          {SERVICE_ICONS[index]}
+        </div>
       </div>
-      <KissaBubble size={110} fill="rgba(255,255,255,0.08)" stroke="none" style={{ position: "absolute", top: "8%", right: "10%" }} />
-      <KissaBubble size={72} fill="none" stroke="rgba(255,255,255,0.18)" strokeWidth={1.5} style={{ position: "absolute", bottom: "12%", left: "8%" }} />
-    </div>,
-    // Motion & Film
-    <div key={1} style={{ position: "relative", width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <KissaBubble size={220} fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.4)" strokeWidth={2} />
-      <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-44%, -46%)", textAlign: "center", pointerEvents: "none" }}>
-        <p style={{ fontFamily: "var(--sans)", fontSize: "clamp(48px,6vw,72px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1, margin: 0 }}>02</p>
-        <p style={{ fontFamily: "var(--sans)", fontSize: 10, color: "var(--fg-on-ink-2)", letterSpacing: "0.14em", textTransform: "uppercase", margin: "6px 0 0" }}>Motion</p>
-      </div>
-      <KissaBubble size={140} fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.2)" strokeWidth={1.5} style={{ position: "absolute", bottom: "5%", right: "5%" }} />
-      <KissaBubble size={60} fill="rgba(255,255,255,0.1)" stroke="none" style={{ position: "absolute", top: "10%", left: "12%" }} />
-    </div>,
-    // Digital & Immersive
-    <div key={2} style={{ position: "relative", width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <KissaBubble size={180} fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.5)" strokeWidth={1} />
-      <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-44%, -46%)", textAlign: "center", pointerEvents: "none" }}>
-        <p style={{ fontFamily: "var(--sans)", fontSize: "clamp(48px,6vw,72px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1, margin: 0 }}>03</p>
-        <p style={{ fontFamily: "var(--sans)", fontSize: 10, color: "var(--fg-on-ink-2)", letterSpacing: "0.14em", textTransform: "uppercase", margin: "6px 0 0" }}>Digital</p>
-      </div>
-      <KissaBubble size={90} fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth={2} style={{ position: "absolute", top: "5%", right: "8%" }} />
-      <KissaBubble size={50} fill="rgba(255,255,255,0.12)" stroke="none" style={{ position: "absolute", bottom: "15%", left: "5%" }} />
-      <KissaBubble size={50} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth={1.5} style={{ position: "absolute", top: "20%", left: "0%" }} />
-    </div>,
-  ];
-  return visuals[index] ?? visuals[0];
+    </div>
+  );
 }
 
 // ─── ServicesTabbed ───────────────────────────────────────────────────────────
@@ -227,119 +316,90 @@ function ServicesTabbed() {
   const [active, setActive] = useState(0);
   const reduce = useReducedMotion();
 
+  const s = services[active];
+
   return (
-    <section style={{ background: "var(--ink)", padding: "120px 0 140px" }}>
-      <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
-        {/* Header */}
-        <div style={{ marginBottom: 72 }}>
-          <ClipReveal>
-            <p style={{ fontFamily: "var(--sans)", fontSize: 11, letterSpacing: "0.16em", textTransform: "uppercase", color: "rgba(255,255,255,0.45)", marginBottom: 16 }}>
-              What we do
-            </p>
-          </ClipReveal>
-          <ClipReveal delay={0.1}>
-            <h2 style={{ fontFamily: "var(--sans)", fontSize: "clamp(36px,5vw,68px)", fontWeight: 700, color: "var(--fg-on-ink)", letterSpacing: "-0.014em", lineHeight: 1.0, margin: 0 }}>
-              Three ways we tell it.
-            </h2>
-          </ClipReveal>
-        </div>
-
-        {/* Tab bar */}
-        <div style={{ display: "flex", gap: 2, marginBottom: 56, borderBottom: "1px solid rgba(255,255,255,0.08)", paddingBottom: 0 }}>
-          {services.map((s, i) => (
-            <button
-              key={s.num}
-              onClick={() => setActive(i)}
-              style={{
-                fontFamily: "var(--sans)",
-                fontWeight: 600,
-                fontSize: 15,
-                color: active === i ? "#fff" : "rgba(255,255,255,0.38)",
-                background: "none",
-                border: "none",
-                borderBottom: active === i ? "2px solid #fff" : "2px solid transparent",
-                cursor: "pointer",
-                padding: "0 0 20px",
-                marginRight: 40,
-                letterSpacing: "0.01em",
-                transition: "color 0.2s ease, border-color 0.2s ease",
-              }}
-            >
-              {s.title}
-            </button>
-          ))}
-        </div>
-
-        {/* Tab content */}
+    <section style={{ background: "var(--ink)", padding: "140px 0", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 50px" }}>
         <AnimatePresence mode="wait">
           <motion.div
             key={active}
-            initial={reduce ? false : { opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.4, ease }}
+            initial={reduce ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.35, ease }}
             style={{
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
-              gap: 64,
+              gap: "80px",
               alignItems: "center",
+              minHeight: 480,
             }}
             className="services-grid"
           >
-            {/* Left: visual */}
-            <div style={{ position: "relative", height: 420, background: "rgba(255,255,255,0.03)", borderRadius: 20, border: "1px solid rgba(255,255,255,0.06)", overflow: "hidden" }}>
-              <ServiceVisual index={active} />
+            {/* Left: illustration with ring */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <ServiceIllustration index={active} active={true} />
             </div>
 
             {/* Right: content */}
-            <div>
-              <p style={{ fontFamily: "var(--sans)", fontSize: 12, letterSpacing: "0.1em", color: "rgba(255,255,255,0.4)", textTransform: "uppercase", marginBottom: 20 }}>
-                {services[active].num}
-              </p>
-              <h3 style={{ fontFamily: "var(--sans)", fontSize: "clamp(28px,3.5vw,46px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1.1, letterSpacing: "-0.01em", marginBottom: 16 }}>
-                {services[active].headline}
-              </h3>
-              <p style={{ fontFamily: "var(--sans)", fontSize: 17, color: "rgba(255,255,255,0.6)", lineHeight: 1.7, marginBottom: 32, maxWidth: "50ch" }}>
-                {services[active].body}
-              </p>
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
-                {services[active].tags.map((tag) => (
-                  <span
-                    key={tag}
-                    style={{
-                      background: "rgb(28,28,28)",
-                      color: "rgba(255,255,255,0.75)",
-                      borderRadius: "4.25rem",
-                      fontSize: 11,
-                      fontWeight: 600,
-                      letterSpacing: "0.08em",
-                      textTransform: "uppercase",
-                      padding: "8px 16px",
-                      fontFamily: "var(--sans)",
-                    }}
-                  >
+            <div style={{ paddingLeft: 16 }}>
+              <motion.p
+                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, ease }}
+                style={{ fontFamily: "var(--sans)", fontSize: 11, letterSpacing: "0.16em", textTransform: "uppercase", color: "rgba(255,255,255,0.35)", marginBottom: 12 }}
+              >
+                {s.num}
+              </motion.p>
+              <motion.h2
+                initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: 0.05, ease }}
+                style={{ fontFamily: "var(--sans)", fontSize: "clamp(32px,4vw,52px)", fontWeight: 700, color: "#ffffff", lineHeight: 1.05, letterSpacing: "-0.015em", marginBottom: 24 }}
+              >
+                {s.headline}
+              </motion.h2>
+              <motion.p
+                initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.45, delay: 0.1, ease }}
+                style={{ fontFamily: "var(--sans)", fontSize: 17, color: "rgba(255,255,255,0.58)", lineHeight: 1.75, marginBottom: 36, maxWidth: "46ch" }}
+              >
+                {s.body}
+              </motion.p>
+              <motion.div
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4, delay: 0.18, ease }}
+                style={{ display: "flex", flexWrap: "wrap", gap: 10, marginBottom: 52 }}
+              >
+                {s.tags.map((tag) => (
+                  <span key={tag} style={{
+                    background: "rgb(28,28,28)",
+                    color: "rgba(255,255,255,0.72)",
+                    borderRadius: 68,
+                    fontSize: 11,
+                    fontWeight: 600,
+                    letterSpacing: "0.08em",
+                    textTransform: "uppercase",
+                    padding: "8px 18px",
+                    fontFamily: "var(--sans)",
+                  }}>
                     {tag}
                   </span>
                 ))}
-              </div>
+              </motion.div>
 
-              {/* Progress indicators */}
-              <div style={{ display: "flex", gap: 8, marginTop: 48 }}>
+              {/* Dot navigation */}
+              <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
                 {services.map((_, i) => (
                   <button
                     key={i}
                     onClick={() => setActive(i)}
                     style={{
-                      height: 14,
-                      width: active === i ? 40 : 14,
-                      borderRadius: "0.625rem",
-                      background: active === i ? "#fff" : "rgba(255,255,255,0)",
+                      height: 13,
+                      width: active === i ? 38 : 13,
+                      borderRadius: 13,
+                      background: active === i ? "#ffffff" : "transparent",
                       border: "1px solid rgba(255,255,255,0.35)",
                       cursor: "pointer",
                       transition: "width 0.3s ease, background 0.3s ease",
                       padding: 0,
                     }}
-                    aria-label={`Tab ${i + 1}`}
+                    aria-label={`Service ${i + 1}: ${services[i].title}`}
                   />
                 ))}
               </div>
@@ -349,8 +409,8 @@ function ServicesTabbed() {
       </div>
 
       <style>{`
-        @media (max-width: 760px) {
-          .services-grid { grid-template-columns: 1fr !important; }
+        @media (max-width: 820px) {
+          .services-grid { grid-template-columns: 1fr !important; gap: 48px !important; }
         }
       `}</style>
     </section>
