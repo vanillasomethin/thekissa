@@ -134,6 +134,11 @@
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 
+/* Custom cursor — hide native on non-touch devices */
+@media (pointer: fine) {
+  *, *::before, *::after { cursor: none !important; }
+}
+
 body {
   background: var(--mad-black);
   color: var(--mad-white);

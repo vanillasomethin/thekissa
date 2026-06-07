@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Spline_Sans_Mono } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
+import LoadingScreen from "@/components/LoadingScreen";
+import CursorSpotlight from "@/components/CursorSpotlight";
 
 // Brockmann is loaded via @font-face in globals.css (not available on Google Fonts)
 // Times New Roman is a system font — no import needed
@@ -30,7 +32,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${splineSansMono.variable} h-full`}>
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col" style={{ cursor: "none" }}>
+        <LoadingScreen />
+        <CursorSpotlight />
         <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>
