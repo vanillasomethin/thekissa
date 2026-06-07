@@ -290,76 +290,100 @@ function HeroOrbitMark() {
   );
 }
 
-// ─── Statement orbit mark — slower, more deliberate ───────────────────────────
+// ─── Statement draw mark — stroke-dashoffset reveal on scroll ─────────────────
 function StatementMark() {
-  const outerRef = useRef<SVGGElement>(null);
-  const innerRef = useRef<SVGGElement>(null);
-  const dotRef   = useRef<SVGGElement>(null);
+  const c1Ref = useRef<SVGCircleElement>(null);
+  const c2Ref = useRef<SVGCircleElement>(null);
+  const lRef  = useRef<SVGLineElement>(null);
+  const inView = useRef(false);
 
   useEffect(() => {
-    if (!outerRef.current || !innerRef.current || !dotRef.current) return;
-    const { animate: animeAnimate } = require("animejs");
-    animeAnimate(outerRef.current, { rotate: "360deg", duration: 22000, ease: "linear", loop: true });
-    animeAnimate(innerRef.current, { rotate: "-360deg", duration: 14000, ease: "linear", loop: true });
-    animeAnimate(dotRef.current, { rotate: "360deg", duration: 8000, ease: "linear", loop: true });
+    const c1 = c1Ref.current, c2 = c2Ref.current, l = lRef.current;
+    if (!c1 || !c2 || !l) return;
+    const circ1 = 2 * Math.PI * 50;
+    const circ2 = 2 * Math.PI * 30;
+    const lineLen = 80;
+    c1.style.strokeDasharray = String(circ1);
+    c1.style.strokeDashoffset = String(circ1);
+    c2.style.strokeDasharray = String(circ2);
+    c2.style.strokeDashoffset = String(circ2);
+    l.style.strokeDasharray = String(lineLen);
+    l.style.strokeDashoffset = String(lineLen);
+
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !inView.current) {
+        inView.current = true;
+        const { animate: animeAnimate } = require("animejs");
+        animeAnimate([c1, c2], { strokeDashoffset: [null, 0], duration: 1200, ease: "outQuart", delay: (_el: Element, i: number) => i * 180 });
+        animeAnimate(l, { strokeDashoffset: [null, 0], duration: 900, ease: "outQuart", delay: 300 });
+      }
+    }, { threshold: 0.4 });
+    obs.observe(c1.closest("div")!);
+    return () => obs.disconnect();
   }, []);
 
-  const size = 120, cx = 60, cy = 60;
   return (
-    <div style={{ width: size, height: size, flexShrink: 0 }}>
-      <svg viewBox={`0 0 ${size} ${size}`} width={size} height={size} fill="none">
-        <circle cx={cx} cy={cy} r={52} stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-        <g ref={outerRef} style={{ transformOrigin: `${cx}px ${cy}px` }}>
-          <circle cx={cx} cy={cy} r={52} stroke="rgba(255,255,255,0.35)" strokeWidth="1"
-            strokeDasharray="22 10" strokeLinecap="round" />
-        </g>
-        <g ref={innerRef} style={{ transformOrigin: `${cx}px ${cy}px` }}>
-          <circle cx={cx} cy={cy} r={32} stroke="rgba(255,255,255,0.2)" strokeWidth="1"
-            strokeDasharray="8 14" strokeLinecap="round" />
-        </g>
-        <g ref={dotRef} style={{ transformOrigin: `${cx}px ${cy}px` }}>
-          <circle cx={cx} cy={cy - 52} r={4} fill="#ffffff" />
-          <circle cx={cx} cy={cy + 32} r={2.5} fill="rgba(255,255,255,0.45)" />
-        </g>
-        <line x1={cx - 8} y1={cy} x2={cx + 8} y2={cy} stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" strokeLinecap="round" />
-        <line x1={cx} y1={cy - 8} x2={cx} y2={cy + 8} stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" strokeLinecap="round" />
-        <circle cx={cx} cy={cy} r={2.5} fill="rgba(255,255,255,0.9)" />
+    <div style={{ width: 120, height: 120, flexShrink: 0 }}>
+      <svg viewBox="0 0 120 120" width={120} height={120} fill="none">
+        {/* Ghost */}
+        <circle cx={60} cy={60} r={50} stroke="rgba(255,255,255,0.07)" strokeWidth="1" />
+        <circle cx={60} cy={60} r={30} stroke="rgba(255,255,255,0.07)" strokeWidth="1" />
+        {/* Draw-on circles */}
+        <circle ref={c1Ref} cx={60} cy={60} r={50} stroke="rgba(255,255,255,0.45)" strokeWidth="1.5" strokeLinecap="round" />
+        <circle ref={c2Ref} cx={60} cy={60} r={30} stroke="rgba(255,255,255,0.28)" strokeWidth="1"   strokeLinecap="round" />
+        {/* Diagonal draw-on line */}
+        <line ref={lRef} x1={28} y1={28} x2={92} y2={92} stroke="rgba(255,255,255,0.55)" strokeWidth="1.5" strokeLinecap="round" />
+        {/* Centre dot */}
+        <circle cx={60} cy={60} r={3} fill="rgba(255,255,255,0.85)" />
       </svg>
     </div>
   );
 }
 
-// ─── Work section mark — horizontal, rectangular ──────────────────────────────
+// ─── Work draw mark — bracket + arc draw-on ───────────────────────────────────
 function WorkMark() {
-  const r1Ref = useRef<SVGGElement>(null);
-  const r2Ref = useRef<SVGGElement>(null);
-  const dotRef = useRef<SVGGElement>(null);
+  const arcRef = useRef<SVGPathElement>(null);
+  const b1Ref  = useRef<SVGPathElement>(null);
+  const b2Ref  = useRef<SVGPathElement>(null);
+  const inView = useRef(false);
 
   useEffect(() => {
-    if (!r1Ref.current || !r2Ref.current || !dotRef.current) return;
-    const { animate: animeAnimate } = require("animejs");
-    animeAnimate(r1Ref.current, { rotate: "360deg", duration: 16000, ease: "linear", loop: true });
-    animeAnimate(r2Ref.current, { rotate: "-360deg", duration: 10000, ease: "linear", loop: true });
-    animeAnimate(dotRef.current, { rotate: "360deg", duration: 5500, ease: "linear", loop: true });
+    const arc = arcRef.current, b1 = b1Ref.current, b2 = b2Ref.current;
+    if (!arc || !b1 || !b2) return;
+    const arcLen = arc.getTotalLength();
+    const b1Len  = b1.getTotalLength();
+    const b2Len  = b2.getTotalLength();
+    arc.style.strokeDasharray = String(arcLen);
+    arc.style.strokeDashoffset = String(arcLen);
+    b1.style.strokeDasharray = String(b1Len);
+    b1.style.strokeDashoffset = String(b1Len);
+    b2.style.strokeDasharray = String(b2Len);
+    b2.style.strokeDashoffset = String(b2Len);
+
+    const obs = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !inView.current) {
+        inView.current = true;
+        const { animate: animeAnimate } = require("animejs");
+        animeAnimate(arc, { strokeDashoffset: [null, 0], duration: 1000, ease: "outQuart" });
+        animeAnimate([b1, b2], { strokeDashoffset: [null, 0], duration: 700, ease: "outQuart", delay: (_el: Element, i: number) => 250 + i * 100 });
+      }
+    }, { threshold: 0.4 });
+    obs.observe(arc.closest("div")!);
+    return () => obs.disconnect();
   }, []);
 
-  const size = 72, cx = 36, cy = 36;
   return (
-    <div style={{ width: size, height: size, flexShrink: 0 }}>
-      <svg viewBox={`0 0 ${size} ${size}`} width={size} height={size} fill="none">
-        <circle cx={cx} cy={cy} r={32} stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
-        <g ref={r1Ref} style={{ transformOrigin: `${cx}px ${cy}px` }}>
-          <circle cx={cx} cy={cy} r={32} stroke="rgba(255,255,255,0.4)" strokeWidth="1"
-            strokeDasharray="10 7" strokeLinecap="round" />
-        </g>
-        <g ref={r2Ref} style={{ transformOrigin: `${cx}px ${cy}px` }}>
-          <circle cx={cx} cy={cy} r={20} stroke="rgba(255,255,255,0.22)" strokeWidth="1"
-            strokeDasharray="5 9" strokeLinecap="round" />
-        </g>
-        <g ref={dotRef} style={{ transformOrigin: `${cx}px ${cy}px` }}>
-          <circle cx={cx} cy={cy - 32} r={3.5} fill="#ffffff" />
-        </g>
-        <circle cx={cx} cy={cy} r={3} fill="rgba(255,255,255,0.8)" />
+    <div style={{ width: 72, height: 72, flexShrink: 0 }}>
+      <svg viewBox="0 0 72 72" width={72} height={72} fill="none">
+        {/* Ghost arc */}
+        <path d="M 36,8 A 28,28 0 1,1 35.99,8" stroke="rgba(255,255,255,0.07)" strokeWidth="1" />
+        {/* Draw-on arc */}
+        <path ref={arcRef} d="M 36,8 A 28,28 0 1,1 35.99,8" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" strokeLinecap="round" />
+        {/* Left bracket */}
+        <path ref={b1Ref} d="M 22,22 L 14,36 L 22,50" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        {/* Right bracket */}
+        <path ref={b2Ref} d="M 50,22 L 58,36 L 50,50" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        <circle cx={36} cy={36} r={3} fill="rgba(255,255,255,0.8)" />
       </svg>
     </div>
   );
@@ -1087,9 +1111,7 @@ export default function HomePage() {
               >
                 We make the work
                 <br />
-                people cannot stop
-                <br />
-                thinking about.
+                people cannot stop thinking about.
               </motion.h1>
 
               <motion.p

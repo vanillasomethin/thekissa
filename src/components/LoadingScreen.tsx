@@ -2,45 +2,72 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { animate, stagger } from "animejs";
+import { animate } from "animejs";
+import Image from "next/image";
 
 interface LoadingScreenProps {
   onComplete?: () => void;
 }
 
-const WORD = "KISSA";
+// Design elements drawn in after the logo appears: drawn via stroke-dashoffset
+const ELEMENTS = [
+  { d: "M 200,110 A 96,96 0 1,1 199.99,110",   color: "rgba(255,255,255,0.45)", sw: 1.5, delay: 380 },
+  { d: "M 100,22 L 300,22 L 300,198 L 100,198 Z", color: "rgba(255,255,255,0.22)", sw: 1,   delay: 560 },
+  { d: "M 80,198 L 320,22",                       color: "rgba(250,203,14,0.55)",  sw: 1.5, delay: 720 },
+  { d: "M 200,150 A 40,40 0 1,1 199.99,150",    color: "rgba(240,107,168,0.45)", sw: 1,   delay: 860 },
+];
 
 export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
   const [visible, setVisible] = useState(true);
-  const lettersRef = useRef<HTMLDivElement>(null);
-  const lineRef = useRef<HTMLDivElement>(null);
+  const logoRef  = useRef<HTMLDivElement>(null);
+  const lineRef  = useRef<HTMLDivElement>(null);
+  const svgRef   = useRef<SVGSVGElement>(null);
+  const pathRefs = useRef<(SVGPathElement | null)[]>([]);
 
   useEffect(() => {
-    if (!lettersRef.current) return;
-
-    const letters = lettersRef.current.querySelectorAll<HTMLElement>(".loader-letter");
-
-    // Letters rise up + opacity
-    animate(letters, {
-      opacity: [0, 1],
-      translateY: ["40px", "0px"],
-      duration: 700,
-      ease: "outExpo",
-      delay: stagger(90, { start: 120 }),
-    });
-
-    // Iridescent line sweeps in
-    if (lineRef.current) {
-      animate(lineRef.current, {
-        scaleX: [0, 1],
-        duration: 1800,
-        ease: "linear",
-        delay: 200,
+    // Logo rises in
+    if (logoRef.current) {
+      animate(logoRef.current, {
+        opacity: [0, 1],
+        translateY: ["20px", "0px"],
+        duration: 650,
+        ease: "outExpo",
       });
     }
 
-    const t = setTimeout(() => setVisible(false), 2600);
-    return () => clearTimeout(t);
+    // Design elements draw in via stroke-dashoffset
+    pathRefs.current.forEach((el, i) => {
+      if (!el) return;
+      const len = el.getTotalLength();
+      el.style.strokeDasharray = String(len);
+      el.style.strokeDashoffset = String(len);
+      animate(el, {
+        strokeDashoffset: [len, 0],
+        duration: 850,
+        ease: "outQuart",
+        delay: ELEMENTS[i].delay,
+      });
+    });
+
+    // Progress bar
+    if (lineRef.current) {
+      animate(lineRef.current, {
+        scaleX: [0, 1],
+        duration: 1900,
+        ease: "linear",
+        delay: 160,
+      });
+    }
+
+    // Elements fade before exit
+    const fadeOut = setTimeout(() => {
+      if (svgRef.current) {
+        animate(svgRef.current, { opacity: [1, 0], duration: 380, ease: "outQuart" });
+      }
+    }, 2050);
+
+    const exit = setTimeout(() => setVisible(false), 2500);
+    return () => { clearTimeout(fadeOut); clearTimeout(exit); };
   }, []);
 
   return (
@@ -50,60 +77,52 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
           key="loader"
           initial={{ opacity: 1 }}
           exit={{ y: "-100%" }}
-          transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
+          transition={{ duration: 0.65, ease: [0.76, 0, 0.24, 1] }}
           style={{
             position: "fixed",
             inset: 0,
             zIndex: 9999,
             background: "#000000",
             display: "flex",
-            flexDirection: "column",
             alignItems: "center",
             justifyContent: "center",
-            gap: 20,
           }}
         >
-          {/* Letter-stagger wordmark */}
-          <div ref={lettersRef} style={{ display: "flex", alignItems: "baseline", gap: 2, overflow: "hidden" }}>
-            {WORD.split("").map((ch, i) => (
-              <span
+          {/* Morphing design elements */}
+          <svg
+            ref={svgRef}
+            viewBox="0 0 400 220"
+            width={400}
+            height={220}
+            fill="none"
+            style={{ position: "absolute", pointerEvents: "none" }}
+          >
+            {ELEMENTS.map((el, i) => (
+              <path
                 key={i}
-                className="loader-letter"
-                style={{
-                  display: "inline-block",
-                  fontFamily: "var(--sans)",
-                  fontSize: "clamp(64px, 12vw, 112px)",
-                  fontWeight: 700,
-                  letterSpacing: "-0.04em",
-                  color: "#ffffff",
-                  opacity: 0,
-                  lineHeight: 1,
-                }}
-              >
-                {ch}
-              </span>
+                ref={(n) => { pathRefs.current[i] = n; }}
+                d={el.d}
+                stroke={el.color}
+                strokeWidth={el.sw}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             ))}
+          </svg>
+
+          {/* Logo — centred, above SVG */}
+          <div ref={logoRef} style={{ opacity: 0, position: "relative", zIndex: 2 }}>
+            <Image
+              src="/logo-white.png"
+              alt="Kissa"
+              width={200}
+              height={66}
+              style={{ objectFit: "contain", display: "block" }}
+              priority
+            />
           </div>
 
-          {/* Subtitle fades after letters */}
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.38 }}
-            transition={{ delay: 0.75, duration: 0.5 }}
-            style={{
-              fontFamily: "var(--sans)",
-              fontSize: 11,
-              fontWeight: 600,
-              letterSpacing: "0.28em",
-              textTransform: "uppercase",
-              color: "#ffffff",
-              margin: 0,
-            }}
-          >
-            A media art agency
-          </motion.p>
-
-          {/* Iridescent progress bar — bottom edge */}
+          {/* Iridescent progress bar */}
           <div
             ref={lineRef}
             style={{
