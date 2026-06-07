@@ -238,6 +238,133 @@ function CTAOrbitMark() {
   );
 }
 
+// ─── Hero orbit mark — large, right-column background ornament ────────────────
+function HeroOrbitMark() {
+  const r1Ref = useRef<SVGGElement>(null);
+  const r2Ref = useRef<SVGGElement>(null);
+  const r3Ref = useRef<SVGGElement>(null);
+  const dotRef = useRef<SVGGElement>(null);
+
+  useEffect(() => {
+    if (!r1Ref.current) return;
+    const { animate: animeAnimate } = require("animejs");
+    animeAnimate(r1Ref.current, { rotate: "360deg",  duration: 28000, ease: "linear", loop: true });
+    animeAnimate(r2Ref.current, { rotate: "-360deg", duration: 18000, ease: "linear", loop: true });
+    animeAnimate(r3Ref.current, { rotate: "360deg",  duration: 10000, ease: "linear", loop: true });
+    animeAnimate(dotRef.current, { rotate: "360deg", duration: 6000,  ease: "linear", loop: true });
+  }, []);
+
+  const size = 560, cx = 280, cy = 280;
+  return (
+    <div style={{ position: "absolute", right: "2%", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", zIndex: 0, opacity: 0.65 }}>
+      <svg viewBox={`0 0 ${size} ${size}`} width={size} height={size} fill="none">
+        {/* Static ghost rings */}
+        <circle cx={cx} cy={cy} r={240} stroke="rgba(255,255,255,0.04)" strokeWidth="1" />
+        <circle cx={cx} cy={cy} r={170} stroke="rgba(255,255,255,0.04)" strokeWidth="1" />
+        <circle cx={cx} cy={cy} r={100} stroke="rgba(255,255,255,0.04)" strokeWidth="1" />
+        {/* Animated rings */}
+        <g ref={r1Ref} style={{ transformOrigin: `${cx}px ${cy}px` }}>
+          <circle cx={cx} cy={cy} r={240} stroke="rgba(255,255,255,0.18)" strokeWidth="1"
+            strokeDasharray="36 18" strokeLinecap="round" />
+        </g>
+        <g ref={r2Ref} style={{ transformOrigin: `${cx}px ${cy}px` }}>
+          <circle cx={cx} cy={cy} r={170} stroke="rgba(255,255,255,0.12)" strokeWidth="1"
+            strokeDasharray="20 16" strokeLinecap="round" />
+        </g>
+        <g ref={r3Ref} style={{ transformOrigin: `${cx}px ${cy}px` }}>
+          <circle cx={cx} cy={cy} r={100} stroke="rgba(255,255,255,0.1)" strokeWidth="1"
+            strokeDasharray="10 18" strokeLinecap="round" />
+        </g>
+        {/* Orbiting dots */}
+        <g ref={dotRef} style={{ transformOrigin: `${cx}px ${cy}px` }}>
+          <circle cx={cx} cy={cy - 240} r={6} fill="rgba(255,255,255,0.7)" />
+          <circle cx={cx} cy={cy + 170} r={4} fill="rgba(255,255,255,0.4)" />
+          <circle cx={cx + 100} cy={cy} r={3} fill="rgba(255,255,255,0.3)" />
+        </g>
+        {/* Centre */}
+        <line x1={cx - 12} y1={cy} x2={cx + 12} y2={cy} stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1={cx} y1={cy - 12} x2={cx} y2={cy + 12} stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" strokeLinecap="round" />
+        <circle cx={cx} cy={cy} r={4} fill="rgba(255,255,255,0.5)" />
+      </svg>
+    </div>
+  );
+}
+
+// ─── Statement orbit mark — slower, more deliberate ───────────────────────────
+function StatementMark() {
+  const outerRef = useRef<SVGGElement>(null);
+  const innerRef = useRef<SVGGElement>(null);
+  const dotRef   = useRef<SVGGElement>(null);
+
+  useEffect(() => {
+    if (!outerRef.current || !innerRef.current || !dotRef.current) return;
+    const { animate: animeAnimate } = require("animejs");
+    animeAnimate(outerRef.current, { rotate: "360deg", duration: 22000, ease: "linear", loop: true });
+    animeAnimate(innerRef.current, { rotate: "-360deg", duration: 14000, ease: "linear", loop: true });
+    animeAnimate(dotRef.current, { rotate: "360deg", duration: 8000, ease: "linear", loop: true });
+  }, []);
+
+  const size = 120, cx = 60, cy = 60;
+  return (
+    <div style={{ width: size, height: size, flexShrink: 0 }}>
+      <svg viewBox={`0 0 ${size} ${size}`} width={size} height={size} fill="none">
+        <circle cx={cx} cy={cy} r={52} stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+        <g ref={outerRef} style={{ transformOrigin: `${cx}px ${cy}px` }}>
+          <circle cx={cx} cy={cy} r={52} stroke="rgba(255,255,255,0.35)" strokeWidth="1"
+            strokeDasharray="22 10" strokeLinecap="round" />
+        </g>
+        <g ref={innerRef} style={{ transformOrigin: `${cx}px ${cy}px` }}>
+          <circle cx={cx} cy={cy} r={32} stroke="rgba(255,255,255,0.2)" strokeWidth="1"
+            strokeDasharray="8 14" strokeLinecap="round" />
+        </g>
+        <g ref={dotRef} style={{ transformOrigin: `${cx}px ${cy}px` }}>
+          <circle cx={cx} cy={cy - 52} r={4} fill="#ffffff" />
+          <circle cx={cx} cy={cy + 32} r={2.5} fill="rgba(255,255,255,0.45)" />
+        </g>
+        <line x1={cx - 8} y1={cy} x2={cx + 8} y2={cy} stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" strokeLinecap="round" />
+        <line x1={cx} y1={cy - 8} x2={cx} y2={cy + 8} stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" strokeLinecap="round" />
+        <circle cx={cx} cy={cy} r={2.5} fill="rgba(255,255,255,0.9)" />
+      </svg>
+    </div>
+  );
+}
+
+// ─── Work section mark — horizontal, rectangular ──────────────────────────────
+function WorkMark() {
+  const r1Ref = useRef<SVGGElement>(null);
+  const r2Ref = useRef<SVGGElement>(null);
+  const dotRef = useRef<SVGGElement>(null);
+
+  useEffect(() => {
+    if (!r1Ref.current || !r2Ref.current || !dotRef.current) return;
+    const { animate: animeAnimate } = require("animejs");
+    animeAnimate(r1Ref.current, { rotate: "360deg", duration: 16000, ease: "linear", loop: true });
+    animeAnimate(r2Ref.current, { rotate: "-360deg", duration: 10000, ease: "linear", loop: true });
+    animeAnimate(dotRef.current, { rotate: "360deg", duration: 5500, ease: "linear", loop: true });
+  }, []);
+
+  const size = 72, cx = 36, cy = 36;
+  return (
+    <div style={{ width: size, height: size, flexShrink: 0 }}>
+      <svg viewBox={`0 0 ${size} ${size}`} width={size} height={size} fill="none">
+        <circle cx={cx} cy={cy} r={32} stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+        <g ref={r1Ref} style={{ transformOrigin: `${cx}px ${cy}px` }}>
+          <circle cx={cx} cy={cy} r={32} stroke="rgba(255,255,255,0.4)" strokeWidth="1"
+            strokeDasharray="10 7" strokeLinecap="round" />
+        </g>
+        <g ref={r2Ref} style={{ transformOrigin: `${cx}px ${cy}px` }}>
+          <circle cx={cx} cy={cy} r={20} stroke="rgba(255,255,255,0.22)" strokeWidth="1"
+            strokeDasharray="5 9" strokeLinecap="round" />
+        </g>
+        <g ref={dotRef} style={{ transformOrigin: `${cx}px ${cy}px` }}>
+          <circle cx={cx} cy={cy - 32} r={3.5} fill="#ffffff" />
+        </g>
+        <circle cx={cx} cy={cy} r={3} fill="rgba(255,255,255,0.8)" />
+      </svg>
+    </div>
+  );
+}
+
 // ─── Service illustrations ─────────────────────────────────────────────────────
 
 // 01 Story & Brand — open book with a speech bubble emerging from the pages
@@ -916,19 +1043,8 @@ export default function HomePage() {
             </svg>
           </motion.div>
 
-          {/* Concentric circle ornament — structural depth */}
-          <div style={{ position: "absolute", right: "6%", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", zIndex: 0 }}>
-            {[600, 480, 360].map((r, i) => (
-              <div key={r} style={{
-                position: "absolute",
-                width: r, height: r,
-                top: "50%", left: "50%",
-                transform: "translate(-50%, -50%)",
-                borderRadius: "50%",
-                border: `1px solid rgba(255,255,255,${0.04 - i * 0.01})`,
-              }} />
-            ))}
-          </div>
+          {/* Hero animated orbit mark — right side */}
+          <HeroOrbitMark />
 
           {/* Hero content — text left column */}
           <div
@@ -973,7 +1089,7 @@ export default function HomePage() {
                 <br />
                 people cannot stop
                 <br />
-                <em style={{ fontStyle: "italic" }}>thinking about.</em>
+                thinking about.
               </motion.h1>
 
               <motion.p
@@ -982,16 +1098,14 @@ export default function HomePage() {
                 transition={{ duration: 0.65, delay: 0.7, ease }}
                 style={{
                   fontFamily: "var(--sans)",
-                  fontSize: 18,
+                  fontSize: 17,
                   color: "var(--fg-on-ink-2)",
-                  maxWidth: "44ch",
-                  marginTop: 32,
-                  lineHeight: 1.65,
+                  maxWidth: "36ch",
+                  marginTop: 28,
+                  lineHeight: 1.6,
                 }}
               >
-                A media art agency based in Nairobi.
-                We make the work that people reference years later — in brand, film, and space.
-                Precise where it counts. Surprising where it matters.
+                Brand, film, and space — built to last in memory.
               </motion.p>
 
               <motion.div
@@ -1057,20 +1171,23 @@ export default function HomePage() {
         {/* ══ 3. STATEMENT ══════════════════════════════════════════════════════ */}
         <section style={{ background: "var(--ink)", padding: "120px 0 100px", borderTop: "1px solid rgba(255,255,255,0.08)" }}>
           <div className="wrap" style={{ maxWidth: 860, margin: "0 auto" }}>
-            <motion.div
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, ease }}
-              style={{ height: 1, background: "rgba(255,255,255,0.12)", transformOrigin: "left", marginBottom: 40 }}
-            />
+            <div style={{ display: "flex", alignItems: "flex-start", gap: 40, marginBottom: 40 }}>
+              <StatementMark />
+              <motion.div
+                initial={{ scaleX: 0 }}
+                whileInView={{ scaleX: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, ease }}
+                style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.12)", transformOrigin: "left", alignSelf: "center" }}
+              />
+            </div>
             <ClipReveal delay={0.0}>
               <p style={{ fontFamily: "var(--sans)", fontSize: "clamp(40px, 5.5vw, 72px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1.05, letterSpacing: "-0.012em", margin: 0 }}>
                 Most work is forgettable.
               </p>
             </ClipReveal>
             <ClipReveal delay={0.2}>
-              <p style={{ fontFamily: "var(--sans)", fontStyle: "italic", fontSize: "clamp(40px, 5.5vw, 72px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1.05, letterSpacing: "-0.012em", margin: 0 }}>
+              <p style={{ fontFamily: "var(--sans)", fontSize: "clamp(40px, 5.5vw, 72px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1.05, letterSpacing: "-0.012em", margin: 0 }}>
                 Ours is not.
               </p>
             </ClipReveal>
@@ -1096,7 +1213,8 @@ export default function HomePage() {
         <section id="work" style={{ background: "rgb(18,18,18)", padding: "120px 0 140px" }}>
           <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 56 }}>
-              <div>
+              <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+                <WorkMark />
                 <ClipReveal>
                   <h2 style={{ fontFamily: "var(--sans)", fontSize: "clamp(36px, 5vw, 72px)", fontWeight: 700, color: "var(--fg-on-ink)", letterSpacing: "-0.012em", lineHeight: 1.05, marginBottom: 0 }}>
                     Selected work.
