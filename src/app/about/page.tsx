@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 import { Target, Eye, Trophy, Star, Flame, Shield, Gem } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";

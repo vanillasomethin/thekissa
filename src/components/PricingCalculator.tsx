@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 
 const SERVICES = [
   { id: "graphic-design", label: "Graphic Design", base: 500, hasTier: true },

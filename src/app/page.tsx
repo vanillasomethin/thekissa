@@ -7,7 +7,7 @@ import {
   useTransform,
   useReducedMotion,
   AnimatePresence,
-} from "framer-motion";
+} from "motion/react";
 import { ArrowUpRight, ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
@@ -30,22 +30,22 @@ const services = [
   {
     num: "01",
     title: "Story & Brand",
-    headline: "Strategic, fearless, and built to last.",
-    body: "We dig into who you are and why it matters, then build the language and visuals to say it clearly. Every touchpoint becomes part of a coherent, compelling narrative.",
+    headline: "Identity sharp enough to hold its own.",
+    body: "We build from the inside out: the naming, the voice, the visual logic, the reason someone picks you over everyone else. Not style applied to a business — a business made legible through style.",
     tags: ["Brand strategy", "Visual identity", "Branded content", "Campaigns", "Copywriting"],
   },
   {
     num: "02",
     title: "Motion & Film",
-    headline: "Frames that move people.",
-    body: "From concept to cut, we make films that earn attention rather than demand it. Craft-led production, purposeful direction, and post that never forgets the story.",
+    headline: "A minute that changes how they feel.",
+    body: "We treat every frame as an argument. Our films don't explain the brand — they make you feel what the brand believes. Concept, direction, production, cut: all one continuous decision.",
     tags: ["Video production", "Film & direction", "Animation", "Motion design", "Creative direction"],
   },
   {
     num: "03",
     title: "Digital & Immersive",
-    headline: "Experiences you step inside.",
-    body: "Beyond the screen, into the room. We design environments, installations, and interactive worlds that blur the boundary between audience and story.",
+    headline: "The room becomes the message.",
+    body: "Screens are just the start. We build installations, activations, and environments where people stop being passive and become part of the work itself.",
     tags: ["Immersive", "Installations", "Web", "AR/social", "Brand activation"],
   },
 ];
@@ -83,8 +83,16 @@ const featuredProjects = [
     name: "Scribbles",
     category: "Branding",
     href: "https://www.canva.com/d/y4ZGuierNsuJMza",
-    bg: "linear-gradient(160deg,#3A2010 0%,#18100F 60%,#16100F)",
-    accent: "#B0703A",
+    bg: "linear-gradient(160deg,#1a1a1a 0%,#0d0d0d 100%)",
+    accent: "#ffffff",
+    svgAssets: [
+      "/projects/scribbles/s-04.svg",
+      "/projects/scribbles/s-05.svg",
+      "/projects/scribbles/s-10.svg",
+      "/projects/scribbles/s-11.svg",
+      "/projects/scribbles/s-38.svg",
+      "/projects/scribbles/s-104.svg",
+    ],
   },
   {
     name: "Lyfsense",
@@ -961,11 +969,11 @@ export default function HomePage() {
                   color: "var(--fg-on-ink)",
                 }}
               >
-                Every brand
+                We make the work
                 <br />
-                has a story worth
+                people cannot stop
                 <br />
-                <em style={{ fontStyle: "italic" }}>telling.</em>
+                <em style={{ fontStyle: "italic" }}>thinking about.</em>
               </motion.h1>
 
               <motion.p
@@ -981,9 +989,9 @@ export default function HomePage() {
                   lineHeight: 1.65,
                 }}
               >
-                <em>Kissa</em> is the Swahili word for story. We are a media art
-                agency that believes great stories are not just told — they are felt.
-                In film, brand, and the space between.
+                A media art agency based in Nairobi.
+                We make the work that people reference years later — in brand, film, and space.
+                Precise where it counts. Surprising where it matters.
               </motion.p>
 
               <motion.div
@@ -1058,12 +1066,12 @@ export default function HomePage() {
             />
             <ClipReveal delay={0.0}>
               <p style={{ fontFamily: "var(--sans)", fontSize: "clamp(40px, 5.5vw, 72px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1.05, letterSpacing: "-0.012em", margin: 0 }}>
-                Content fills a feed.
+                Most work is forgettable.
               </p>
             </ClipReveal>
             <ClipReveal delay={0.2}>
               <p style={{ fontFamily: "var(--sans)", fontStyle: "italic", fontSize: "clamp(40px, 5.5vw, 72px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1.05, letterSpacing: "-0.012em", margin: 0 }}>
-                A kissa fills a memory.
+                Ours is not.
               </p>
             </ClipReveal>
             <motion.p
@@ -1074,10 +1082,9 @@ export default function HomePage() {
               className="k-body-l"
               style={{ color: "var(--fg-on-ink-2)", marginTop: 36, maxWidth: "62ch" }}
             >
-              We craft each campaign as a singular piece of storytelling: in film,
-              identity, and the precise cut between two moments. From first-time
-              founders to established icons, every brand holds a story that deserves
-              to be told with care.
+              We work with brands that have something genuine to say and help them
+              say it in a way no one expected. In film, identity, space, and the
+              moments between — we make work that earns its place in memory.
             </motion.p>
           </div>
         </section>
@@ -1149,11 +1156,46 @@ export default function HomePage() {
                 onMouseEnter={() => setHoveredCard(p.name)}
                 onMouseLeave={() => setHoveredCard(null)}
               >
-                <div style={{ position: "absolute", inset: 0, backgroundImage: `radial-gradient(ellipse 80% 50% at 20% 20%, ${p.accent}22 0%, transparent 70%)`, pointerEvents: "none" }} />
-                <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", fontFamily: "var(--sans)", fontSize: "clamp(120px, 20vw, 200px)", fontWeight: 700, color: "rgba(0,0,0,0.08)", lineHeight: 1, letterSpacing: "-0.05em", userSelect: "none", whiteSpace: "nowrap", pointerEvents: "none" }}>
-                  {p.name[0]}
-                </div>
-                <div style={{ position: "absolute", inset: 0, background: `linear-gradient(to top, rgba(0,0,0,${hoveredCard === p.name ? 0.82 : 0.65}) 0%, transparent 55%)`, transition: "background 0.25s ease-out" }} />
+                {/* Scribbles card: real SVG assets scattered across the card */}
+                {"svgAssets" in p && (p as typeof p & { svgAssets: string[] }).svgAssets ? (
+                  <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
+                    {(p as typeof p & { svgAssets: string[] }).svgAssets.map((src, si) => {
+                      const positions = [
+                        { top: "8%",  left: "10%",  rotate: "-12deg", scale: 1.1 },
+                        { top: "12%", right: "8%",  rotate: "8deg",   scale: 0.9 },
+                        { top: "40%", left: "5%",   rotate: "18deg",  scale: 0.75 },
+                        { top: "38%", right: "5%",  rotate: "-6deg",  scale: 1.0 },
+                        { top: "64%", left: "22%",  rotate: "4deg",   scale: 0.85 },
+                        { top: "62%", right: "15%", rotate: "-15deg", scale: 0.95 },
+                      ];
+                      const pos = positions[si] || positions[0];
+                      return (
+                        <img
+                          key={si}
+                          src={src}
+                          alt=""
+                          style={{
+                            position: "absolute",
+                            width: 80, height: 80,
+                            opacity: 0.9,
+                            filter: "invert(1)",
+                            ...pos,
+                            transform: `rotate(${pos.rotate}) scale(${pos.scale})`,
+                          }}
+                        />
+                      );
+                    })}
+                    <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.1) 60%)" }} />
+                  </div>
+                ) : (
+                  <>
+                    <div style={{ position: "absolute", inset: 0, backgroundImage: `radial-gradient(ellipse 80% 50% at 20% 20%, ${p.accent}22 0%, transparent 70%)`, pointerEvents: "none" }} />
+                    <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", fontFamily: "var(--sans)", fontSize: "clamp(120px, 20vw, 200px)", fontWeight: 700, color: "rgba(0,0,0,0.08)", lineHeight: 1, letterSpacing: "-0.05em", userSelect: "none", whiteSpace: "nowrap", pointerEvents: "none" }}>
+                      {p.name[0]}
+                    </div>
+                    <div style={{ position: "absolute", inset: 0, background: `linear-gradient(to top, rgba(0,0,0,${hoveredCard === p.name ? 0.82 : 0.65}) 0%, transparent 55%)`, transition: "background 0.25s ease-out" }} />
+                  </>
+                )}
                 <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "28px 24px" }}>
                   <p style={{ fontFamily: "var(--sans)", fontSize: 28, fontWeight: 700, color: "#fff", marginBottom: 12, lineHeight: 1.1 }}>{p.name}</p>
                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -1212,11 +1254,11 @@ export default function HomePage() {
                   textTransform: "uppercase",
                   marginBottom: 20,
                 }}>
-                  Every story begins<br />with a conversation.
+                  Something worth<br />making starts here.
                 </h2>
                 <p style={{ fontFamily: "var(--sans)", fontSize: 15, color: "rgba(255,255,255,0.55)", marginBottom: 36, lineHeight: 1.6 }}>
-                  Bring us your brand, your vision, your half-formed idea.
-                  We will find the story inside it and make it impossible to forget.
+                  We take on work we believe in. If you have a project that deserves
+                  real craft behind it, write to us.
                 </p>
                 <div style={{ display: "flex", alignItems: "center", gap: 20, flexWrap: "wrap" }}>
                   <a

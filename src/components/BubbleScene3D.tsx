@@ -4,7 +4,7 @@ import { useRef, useMemo, Suspense } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { MeshTransmissionMaterial, Environment } from "@react-three/drei";
 import * as THREE from "three";
-import { motion } from "framer-motion";
+import { motion } from "motion/react";
 
 // ─── Kissa bubble shape as 2D points (left-pointing tail at ~55% height) ──────
 function buildBubbleShape(): THREE.Shape {
