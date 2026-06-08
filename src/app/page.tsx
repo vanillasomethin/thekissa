@@ -7,6 +7,8 @@ import {
   useTransform,
   useReducedMotion,
   AnimatePresence,
+  useMotionValue,
+  useSpring,
 } from "motion/react";
 import { ArrowUpRight, ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
@@ -720,6 +722,215 @@ function TestimonialsSlider() {
   );
 }
 
+// ─── WorkListSection — pixel.melbourne-style list + floating cursor preview ───
+interface Project {
+  name: string;
+  category: string;
+  href: string;
+  bg: string;
+  accent: string;
+  svgAssets?: string[];
+}
+
+function ProjectPreviewCard({ project }: { project: Project }) {
+  if (project.svgAssets && project.svgAssets.length > 0) {
+    const positions = [
+      { top: "8%",  left: "10%",  rotate: "-12deg" },
+      { top: "12%", right: "8%",  rotate: "8deg"   },
+      { top: "40%", left: "5%",   rotate: "18deg"  },
+      { top: "38%", right: "5%",  rotate: "-6deg"  },
+    ];
+    return (
+      <>
+        {project.svgAssets.slice(0, 4).map((src, si) => {
+          const pos = positions[si] || positions[0];
+          return (
+            <img key={si} src={src} alt=""
+              style={{ position: "absolute", width: 60, height: 60, filter: "invert(1)", opacity: 0.9, transform: `rotate(${pos.rotate})`, ...pos }} />
+          );
+        })}
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 65%)" }} />
+      </>
+    );
+  }
+  return (
+    <>
+      <div style={{ position: "absolute", inset: 0, backgroundImage: `radial-gradient(ellipse 80% 50% at 25% 25%, ${project.accent}40 0%, transparent 70%)` }} />
+      <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%,-50%)", fontFamily: "var(--sans)", fontSize: 110, fontWeight: 700, color: "rgba(0,0,0,0.1)", lineHeight: 1, userSelect: "none" }}>
+        {project.name[0]}
+      </div>
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 65%)" }} />
+    </>
+  );
+}
+
+function WorkListSection() {
+  const [hovered, setHovered] = useState<number | null>(null);
+  const reduce = useReducedMotion();
+  const mouseX = useMotionValue(-999);
+  const mouseY = useMotionValue(-999);
+  const smoothX = useSpring(mouseX, { damping: 22, stiffness: 200, mass: 0.5 });
+  const smoothY = useSpring(mouseY, { damping: 22, stiffness: 200, mass: 0.5 });
+
+  function onMouseMove(e: React.MouseEvent) {
+    mouseX.set(e.clientX + 28);
+    mouseY.set(e.clientY - 110);
+  }
+
+  return (
+    <section
+      id="work"
+      onMouseMove={onMouseMove}
+      style={{ background: "rgb(18,18,18)", padding: "120px 0 140px", position: "relative" }}
+    >
+      {/* Floating cursor preview */}
+      {!reduce && (
+        <motion.div
+          style={{
+            position: "fixed",
+            left: smoothX,
+            top: smoothY,
+            width: 260,
+            height: 320,
+            borderRadius: 16,
+            overflow: "hidden",
+            pointerEvents: "none",
+            zIndex: 9998,
+          }}
+        >
+          <AnimatePresence mode="wait">
+            {hovered !== null && (
+              <motion.div
+                key={hovered}
+                initial={{ opacity: 0, scale: 0.88, rotate: -3 }}
+                animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                exit={{ opacity: 0, scale: 0.88, rotate: 3 }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                style={{ position: "absolute", inset: 0, background: featuredProjects[hovered].bg, borderRadius: 16 }}
+              >
+                <ProjectPreviewCard project={featuredProjects[hovered] as Project} />
+                <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "18px 20px" }}>
+                  <p style={{ fontFamily: "var(--sans)", fontSize: 20, fontWeight: 700, color: "#fff", margin: "0 0 4px" }}>{featuredProjects[hovered].name}</p>
+                  <p style={{ fontFamily: "var(--sans)", fontSize: 11, color: "rgba(255,255,255,0.5)", letterSpacing: "0.1em", textTransform: "uppercase", margin: 0 }}>{featuredProjects[hovered].category}</p>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      )}
+
+      <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
+        {/* Header */}
+        <div className="work-heading-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 72 }}>
+          <ClipReveal>
+            <h2 style={{ fontFamily: "var(--sans)", fontSize: "clamp(36px, 5vw, 72px)", fontWeight: 700, color: "var(--fg-on-ink)", letterSpacing: "-0.012em", lineHeight: 1.05, marginBottom: 0 }}>
+              Selected work.
+            </h2>
+          </ClipReveal>
+          <Link href="/portfolio" style={{ fontFamily: "var(--sans)", fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.7)", textDecoration: "none", display: "flex", alignItems: "center", gap: 4 }}>
+            View all work <ArrowUpRight size={14} />
+          </Link>
+        </div>
+
+        {/* Project rows */}
+        <div>
+          {(featuredProjects as Project[]).map((p, i) => (
+            <motion.a
+              key={p.name}
+              href={p.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={reduce ? false : { opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.06, ease }}
+              onHoverStart={() => !reduce && setHovered(i)}
+              onHoverEnd={() => setHovered(null)}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 24,
+                padding: "32px 0",
+                borderTop: "1px solid rgba(255,255,255,0.08)",
+                textDecoration: "none",
+                cursor: reduce ? "pointer" : "none",
+                position: "relative",
+                overflow: "hidden",
+              }}
+            >
+              {/* Hover fill bar */}
+              <motion.div
+                style={{
+                  position: "absolute",
+                  inset: "0 -8px",
+                  background: "rgba(255,255,255,0.03)",
+                  scaleX: 0,
+                  transformOrigin: "left",
+                  borderRadius: 4,
+                }}
+                animate={{ scaleX: hovered === i ? 1 : 0 }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              />
+
+              {/* Number */}
+              <span style={{ fontFamily: "var(--sans)", fontSize: 11, color: "rgba(255,255,255,0.28)", letterSpacing: "0.1em", flexShrink: 0, width: 28, position: "relative" }}>
+                {String(i + 1).padStart(2, "0")}
+              </span>
+
+              {/* Name */}
+              <motion.span
+                animate={{ x: hovered === i && !reduce ? 8 : 0, color: hovered === i ? "#ffffff" : "rgba(255,255,255,0.72)" }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                style={{
+                  fontFamily: "var(--sans)",
+                  fontSize: "clamp(26px, 3.5vw, 52px)",
+                  fontWeight: 700,
+                  flex: 1,
+                  lineHeight: 1,
+                  letterSpacing: "-0.02em",
+                  position: "relative",
+                  display: "block",
+                }}
+              >
+                {p.name}
+              </motion.span>
+
+              {/* Category */}
+              <span style={{
+                fontFamily: "var(--sans)",
+                fontSize: 11,
+                color: "rgba(255,255,255,0.35)",
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                flexShrink: 0,
+                position: "relative",
+              }}>
+                {p.category}
+              </span>
+
+              {/* Arrow */}
+              <motion.div
+                animate={{ x: hovered === i ? 0 : -6, opacity: hovered === i ? 1 : 0.3 }}
+                transition={{ duration: 0.25, ease }}
+                style={{ flexShrink: 0, position: "relative" }}
+              >
+                <ArrowUpRight size={18} color="#ffffff" />
+              </motion.div>
+            </motion.a>
+          ))}
+          <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }} />
+        </div>
+      </div>
+
+      <style>{`
+        @media (max-width: 600px) {
+          .work-heading-row { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; }
+        }
+      `}</style>
+    </section>
+  );
+}
+
 // ─── ClientLogosStrip ─────────────────────────────────────────────────────────
 function ClientLogosStrip() {
   return (
@@ -761,28 +972,12 @@ function ClientLogosStrip() {
 
 export default function HomePage() {
   const heroRef = useRef<HTMLElement>(null);
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const [dragging, setDragging] = useState(false);
-  const [dragStart, setDragStart] = useState({ x: 0, scrollLeft: 0 });
-  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
   const { scrollYProgress: heroScroll } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
   });
   const bgY = useTransform(heroScroll, [0, 1], ["0%", "20%"]);
-
-  function onPointerDown(e: React.PointerEvent) {
-    if (!carouselRef.current) return;
-    setDragging(true);
-    setDragStart({ x: e.pageX, scrollLeft: carouselRef.current.scrollLeft });
-    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-  }
-  function onPointerMove(e: React.PointerEvent) {
-    if (!dragging || !carouselRef.current) return;
-    carouselRef.current.scrollLeft = dragStart.scrollLeft - (e.pageX - dragStart.x);
-  }
-  function onPointerUp() { setDragging(false); }
 
   return (
     <>
@@ -965,123 +1160,7 @@ export default function HomePage() {
         <ServicesTabbed />
 
         {/* ══ 5. SELECTED WORK ══════════════════════════════════════════════════ */}
-        <section id="work" className="section-pad-xl" style={{ background: "rgb(18,18,18)", padding: "120px 0 140px" }}>
-          <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
-            <div className="work-heading-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 56 }}>
-              <ClipReveal>
-                <h2 style={{ fontFamily: "var(--sans)", fontSize: "clamp(36px, 5vw, 72px)", fontWeight: 700, color: "var(--fg-on-ink)", letterSpacing: "-0.012em", lineHeight: 1.05, marginBottom: 0 }}>
-                  Selected work.
-                </h2>
-              </ClipReveal>
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 12 }}>
-                <span style={{ fontFamily: "var(--sans)", fontSize: 11, letterSpacing: "0.1em", color: "rgba(255,255,255,0.35)", userSelect: "none" }}>
-                  drag to explore →
-                </span>
-                <Link href="/portfolio" style={{ fontFamily: "var(--sans)", fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.7)", textDecoration: "none", display: "flex", alignItems: "center", gap: 4 }}>
-                  View all work <ArrowUpRight size={14} />
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* Draggable carousel */}
-          <div
-            ref={carouselRef}
-            onPointerDown={onPointerDown}
-            onPointerMove={onPointerMove}
-            onPointerUp={onPointerUp}
-            onPointerLeave={onPointerUp}
-            style={{
-              display: "flex",
-              gap: 18,
-              overflowX: "auto",
-              scrollSnapType: "x mandatory",
-              paddingLeft: "max(24px, calc((100vw - 1100px) / 2))",
-              paddingRight: 24,
-              paddingBottom: 20,
-              cursor: dragging ? "grabbing" : "grab",
-              scrollbarWidth: "none",
-            }}
-          >
-            {featuredProjects.map((p, i) => (
-              <motion.div
-                key={p.name}
-                initial={{ opacity: 0, y: 32 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "0px -20%" }}
-                transition={{ duration: 0.5, delay: Math.min(i * 0.08, 0.3), ease }}
-                className="carousel-card"
-                style={{
-                  flex: "0 0 360px",
-                  scrollSnapAlign: "start",
-                  borderRadius: 20,
-                  overflow: "hidden",
-                  aspectRatio: "9/12",
-                  position: "relative",
-                  background: p.bg,
-                  cursor: dragging ? "grabbing" : "grab",
-                  transition: "transform 0.25s ease-out, box-shadow 0.25s ease-out",
-                  transform: hoveredCard === p.name ? "translateY(-8px)" : "translateY(0)",
-                  boxShadow: hoveredCard === p.name ? "0 32px 64px rgba(0,0,0,0.28)" : "0 4px 20px rgba(0,0,0,0.1)",
-                }}
-                onMouseEnter={() => setHoveredCard(p.name)}
-                onMouseLeave={() => setHoveredCard(null)}
-              >
-                {/* Scribbles card: real SVG assets scattered across the card */}
-                {"svgAssets" in p && (p as typeof p & { svgAssets: string[] }).svgAssets ? (
-                  <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
-                    {(p as typeof p & { svgAssets: string[] }).svgAssets.map((src, si) => {
-                      const positions = [
-                        { top: "8%",  left: "10%",  rotate: "-12deg", scale: 1.1 },
-                        { top: "12%", right: "8%",  rotate: "8deg",   scale: 0.9 },
-                        { top: "40%", left: "5%",   rotate: "18deg",  scale: 0.75 },
-                        { top: "38%", right: "5%",  rotate: "-6deg",  scale: 1.0 },
-                        { top: "64%", left: "22%",  rotate: "4deg",   scale: 0.85 },
-                        { top: "62%", right: "15%", rotate: "-15deg", scale: 0.95 },
-                      ];
-                      const pos = positions[si] || positions[0];
-                      return (
-                        <img
-                          key={si}
-                          src={src}
-                          alt=""
-                          style={{
-                            position: "absolute",
-                            width: 80, height: 80,
-                            opacity: 0.9,
-                            filter: "invert(1)",
-                            ...pos,
-                            transform: `rotate(${pos.rotate}) scale(${pos.scale})`,
-                          }}
-                        />
-                      );
-                    })}
-                    <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.1) 60%)" }} />
-                  </div>
-                ) : (
-                  <>
-                    <div style={{ position: "absolute", inset: 0, backgroundImage: `radial-gradient(ellipse 80% 50% at 20% 20%, ${p.accent}22 0%, transparent 70%)`, pointerEvents: "none" }} />
-                    <div style={{ position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", fontFamily: "var(--sans)", fontSize: "clamp(120px, 20vw, 200px)", fontWeight: 700, color: "rgba(0,0,0,0.08)", lineHeight: 1, letterSpacing: "-0.05em", userSelect: "none", whiteSpace: "nowrap", pointerEvents: "none" }}>
-                      {p.name[0]}
-                    </div>
-                    <div style={{ position: "absolute", inset: 0, background: `linear-gradient(to top, rgba(0,0,0,${hoveredCard === p.name ? 0.82 : 0.65}) 0%, transparent 55%)`, transition: "background 0.25s ease-out" }} />
-                  </>
-                )}
-                <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "28px 24px" }}>
-                  <p style={{ fontFamily: "var(--sans)", fontSize: 28, fontWeight: 700, color: "#fff", marginBottom: 12, lineHeight: 1.1 }}>{p.name}</p>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <span style={{ background: "rgba(0,0,0,0.35)", color: "rgba(255,255,255,0.85)", borderRadius: "4.25rem", fontSize: 10, fontWeight: 600, padding: "6px 14px", fontFamily: "var(--sans)", letterSpacing: "0.08em", textTransform: "uppercase" }}>
-                      {p.category}
-                    </span>
-                    <a href={p.href} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} style={{ color: hoveredCard === p.name ? "#ffffff" : "rgba(255,255,255,0.5)", transition: "color 0.2s", display: "flex", alignItems: "center", textDecoration: "none" }}>
-                      <ArrowUpRight size={18} />
-                    </a>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </section>
+        <WorkListSection />
 
         {/* ══ 6. CLIENT LOGOS STRIP (MAD pattern) ══════════════════════════════ */}
         <ClientLogosStrip />
