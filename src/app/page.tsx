@@ -271,9 +271,9 @@ function ClipReveal({
 
 // ─── Hero cycling headlines ───────────────────────────────────────────────────
 const HERO_LINES = [
-  { l1: "We make the work",          l2: "people cannot stop thinking about." },
-  { l1: "Brand. Film. Space.",        l2: "Built to last in memory." },
-  { l1: "Every frame is an argument.", l2: "Every mark is intentional." },
+  { l1: "We make the work",      l2: "people can't stop thinking about." },
+  { l1: "Brand. Film. Space.",   l2: "Built to last in memory." },
+  { l1: "A frame. A mark.",      l2: "A story that doesn't leave." },
 ];
 
 // Three distinct transition styles — each phrase gets its own motion character
@@ -313,7 +313,8 @@ function HeroText() {
   const lines = HERO_LINES[idx];
 
   return (
-    <div style={{ overflow: "hidden", position: "relative" }}>
+    // Fixed height = exactly 2 lines — prevents layout shift on swap
+    <div style={{ position: "relative", height: "calc(2 * clamp(44px, 6vw, 92px) * 1.06)" }}>
       <AnimatePresence mode="wait">
         <motion.h1
           key={idx}
@@ -326,9 +327,12 @@ function HeroText() {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           transition={v.transition as any}
           style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
             fontFamily: "var(--sans)",
-            fontSize: "clamp(56px, 7vw, 104px)",
-            lineHeight: 0.97,
+            fontSize: "clamp(44px, 6vw, 92px)",
+            lineHeight: 1.06,
             fontWeight: 700,
             letterSpacing: "-0.022em",
             margin: 0,
