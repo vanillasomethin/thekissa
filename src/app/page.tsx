@@ -28,56 +28,69 @@ interface ScribbleMarkProps {
   delay?: number;
 }
 function ScribbleMark({ src, size = 80, style, className, rot = 0, delay = 0 }: ScribbleMarkProps) {
-  const ref = useRef<HTMLDivElement>(null);
+  const driftRef = useRef<HTMLDivElement>(null);
+  const enterRef = useRef<HTMLDivElement>(null);
   const triggered = useRef(false);
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
+    const outer = driftRef.current;
+    const inner = enterRef.current;
+    if (!outer || !inner) return;
     const obs = new IntersectionObserver(([entry]) => {
       if (entry.isIntersecting && !triggered.current) {
         triggered.current = true;
         const { animate: animeAnimate } = require("animejs");
-        animeAnimate(el, {
-          opacity:   [0, 1],
-          scale:     [0, 1],
-          rotate:    [`${rot - 35}deg`, `${rot}deg`],
-          duration:  800,
-          ease:      "outExpo",
+        // entrance on inner
+        animeAnimate(inner, {
+          opacity: [0, 1],
+          scale: [0, 1],
+          rotate: [`${rot - 35}deg`, `${rot}deg`],
+          duration: 800,
+          ease: "outExpo",
           delay,
         });
-        // slow drift after entrance
-        animeAnimate(el, {
-          translateY: [0, -8, 0],
-          duration:   4000,
-          ease:       "inOutSine",
-          loop:       true,
-          delay:      delay + 900,
+        // drift loop on outer — starts after entrance
+        animeAnimate(outer, {
+          translateY: [0, -10, 0],
+          duration: 4200,
+          ease: "inOutSine",
+          loop: true,
+          delay: delay + 1000,
         });
       }
-    }, { threshold: 0.2 });
-    obs.observe(el);
+    }, { threshold: 0.15 });
+    obs.observe(outer);
     return () => obs.disconnect();
   }, [rot, delay]);
 
   return (
     <div
-      ref={ref}
+      ref={driftRef}
       className={className}
       style={{
-        opacity: 0,
-        transform: `rotate(${rot - 35}deg) scale(0)`,
         width: size,
         height: size,
-        filter: "invert(1)",
-        mixBlendMode: "screen",
         pointerEvents: "none",
         flexShrink: 0,
+        willChange: "transform",
         ...style,
       }}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src} alt="" width={size} height={size} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+      <div
+        ref={enterRef}
+        style={{
+          width: "100%",
+          height: "100%",
+          opacity: 0,
+          transform: `rotate(${rot - 35}deg) scale(0)`,
+          filter: "invert(1)",
+          mixBlendMode: "screen",
+          willChange: "transform, opacity",
+        }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={src} alt="" width={size} height={size} style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }} />
+      </div>
     </div>
   );
 }
@@ -256,52 +269,6 @@ function ClipReveal({
   );
 }
 
-// ─── CTA orbit mark — anime.js driven spinning rings ──────────────────────────
-function CTAOrbitMark() {
-  const outerRef = useRef<SVGGElement>(null);
-  const innerRef = useRef<SVGGElement>(null);
-  const dotRef   = useRef<SVGGElement>(null);
-
-  useEffect(() => {
-    if (!outerRef.current || !innerRef.current || !dotRef.current) return;
-    const { animate: animeAnimate } = require("animejs");
-    animeAnimate(outerRef.current, { rotate: "360deg", duration: 12000, ease: "linear", loop: true });
-    animeAnimate(innerRef.current, { rotate: "-360deg", duration: 7000, ease: "linear", loop: true });
-    animeAnimate(dotRef.current, { rotate: "360deg", duration: 4500, ease: "linear", loop: true });
-  }, []);
-
-  const size = 160;
-  const cx = size / 2, cy = size / 2;
-
-  return (
-    <div style={{ flexShrink: 0, width: size, height: size }}>
-      <svg viewBox={`0 0 ${size} ${size}`} width={size} height={size} fill="none">
-        {/* Outer static ring */}
-        <circle cx={cx} cy={cy} r={70} stroke="rgba(255,255,255,0.12)" strokeWidth="1" />
-        {/* Outer spinning ring with dash */}
-        <g ref={outerRef} style={{ transformOrigin: `${cx}px ${cy}px` }}>
-          <circle cx={cx} cy={cy} r={70} stroke="rgba(255,255,255,0.5)" strokeWidth="1.5"
-            strokeDasharray="14 8" strokeLinecap="round" />
-        </g>
-        {/* Inner ring counter-spin */}
-        <g ref={innerRef} style={{ transformOrigin: `${cx}px ${cy}px` }}>
-          <circle cx={cx} cy={cy} r={46} stroke="rgba(255,255,255,0.3)" strokeWidth="1.5"
-            strokeDasharray="6 10" strokeLinecap="round" />
-        </g>
-        {/* Orbiting dot */}
-        <g ref={dotRef} style={{ transformOrigin: `${cx}px ${cy}px` }}>
-          <circle cx={cx} cy={cy - 70} r={5} fill="#ffffff" />
-          <circle cx={cx} cy={cy + 46} r={3} fill="rgba(255,255,255,0.5)" />
-        </g>
-        {/* Centre cross */}
-        <line x1={cx - 10} y1={cy} x2={cx + 10} y2={cy} stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" strokeLinecap="round" />
-        <line x1={cx} y1={cy - 10} x2={cx} y2={cy + 10} stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" strokeLinecap="round" />
-        <circle cx={cx} cy={cy} r={3} fill="rgba(255,255,255,0.9)" />
-      </svg>
-    </div>
-  );
-}
-
 // ─── Hero cycling headlines ───────────────────────────────────────────────────
 const HERO_LINES = [
   { l1: "We make the work",          l2: "people cannot stop thinking about." },
@@ -373,157 +340,6 @@ function HeroText() {
           {lines.l2}
         </motion.h1>
       </AnimatePresence>
-    </div>
-  );
-}
-
-// ─── Hero orbit mark — large, right-column background ornament ────────────────
-function HeroOrbitMark() {
-  const r1Ref = useRef<SVGGElement>(null);
-  const r2Ref = useRef<SVGGElement>(null);
-  const r3Ref = useRef<SVGGElement>(null);
-  const dotRef = useRef<SVGGElement>(null);
-
-  useEffect(() => {
-    if (!r1Ref.current) return;
-    const { animate: animeAnimate } = require("animejs");
-    animeAnimate(r1Ref.current, { rotate: "360deg",  duration: 28000, ease: "linear", loop: true });
-    animeAnimate(r2Ref.current, { rotate: "-360deg", duration: 18000, ease: "linear", loop: true });
-    animeAnimate(r3Ref.current, { rotate: "360deg",  duration: 10000, ease: "linear", loop: true });
-    animeAnimate(dotRef.current, { rotate: "360deg", duration: 6000,  ease: "linear", loop: true });
-  }, []);
-
-  const size = 560, cx = 280, cy = 280;
-  return (
-    <div className="hero-orbit-mark" style={{ position: "absolute", right: "2%", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", zIndex: 0, opacity: 0.65 }}>
-      <svg viewBox={`0 0 ${size} ${size}`} width={size} height={size} fill="none">
-        {/* Static ghost rings */}
-        <circle cx={cx} cy={cy} r={240} stroke="rgba(255,255,255,0.04)" strokeWidth="1" />
-        <circle cx={cx} cy={cy} r={170} stroke="rgba(255,255,255,0.04)" strokeWidth="1" />
-        <circle cx={cx} cy={cy} r={100} stroke="rgba(255,255,255,0.04)" strokeWidth="1" />
-        {/* Animated rings */}
-        <g ref={r1Ref} style={{ transformOrigin: `${cx}px ${cy}px` }}>
-          <circle cx={cx} cy={cy} r={240} stroke="rgba(255,255,255,0.18)" strokeWidth="1"
-            strokeDasharray="36 18" strokeLinecap="round" />
-        </g>
-        <g ref={r2Ref} style={{ transformOrigin: `${cx}px ${cy}px` }}>
-          <circle cx={cx} cy={cy} r={170} stroke="rgba(255,255,255,0.12)" strokeWidth="1"
-            strokeDasharray="20 16" strokeLinecap="round" />
-        </g>
-        <g ref={r3Ref} style={{ transformOrigin: `${cx}px ${cy}px` }}>
-          <circle cx={cx} cy={cy} r={100} stroke="rgba(255,255,255,0.1)" strokeWidth="1"
-            strokeDasharray="10 18" strokeLinecap="round" />
-        </g>
-        {/* Orbiting dots */}
-        <g ref={dotRef} style={{ transformOrigin: `${cx}px ${cy}px` }}>
-          <circle cx={cx} cy={cy - 240} r={6} fill="rgba(255,255,255,0.7)" />
-          <circle cx={cx} cy={cy + 170} r={4} fill="rgba(255,255,255,0.4)" />
-          <circle cx={cx + 100} cy={cy} r={3} fill="rgba(255,255,255,0.3)" />
-        </g>
-        {/* Centre */}
-        <line x1={cx - 12} y1={cy} x2={cx + 12} y2={cy} stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" strokeLinecap="round" />
-        <line x1={cx} y1={cy - 12} x2={cx} y2={cy + 12} stroke="rgba(255,255,255,0.3)" strokeWidth="1.5" strokeLinecap="round" />
-        <circle cx={cx} cy={cy} r={4} fill="rgba(255,255,255,0.5)" />
-      </svg>
-    </div>
-  );
-}
-
-// ─── Statement draw mark — stroke-dashoffset reveal on scroll ─────────────────
-function StatementMark() {
-  const c1Ref = useRef<SVGCircleElement>(null);
-  const c2Ref = useRef<SVGCircleElement>(null);
-  const lRef  = useRef<SVGLineElement>(null);
-  const inView = useRef(false);
-
-  useEffect(() => {
-    const c1 = c1Ref.current, c2 = c2Ref.current, l = lRef.current;
-    if (!c1 || !c2 || !l) return;
-    const circ1 = 2 * Math.PI * 50;
-    const circ2 = 2 * Math.PI * 30;
-    const lineLen = 80;
-    c1.style.strokeDasharray = String(circ1);
-    c1.style.strokeDashoffset = String(circ1);
-    c2.style.strokeDasharray = String(circ2);
-    c2.style.strokeDashoffset = String(circ2);
-    l.style.strokeDasharray = String(lineLen);
-    l.style.strokeDashoffset = String(lineLen);
-
-    const obs = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && !inView.current) {
-        inView.current = true;
-        const { animate: animeAnimate } = require("animejs");
-        animeAnimate([c1, c2], { strokeDashoffset: [null, 0], duration: 1200, ease: "outQuart", delay: (_el: Element, i: number) => i * 180 });
-        animeAnimate(l, { strokeDashoffset: [null, 0], duration: 900, ease: "outQuart", delay: 300 });
-      }
-    }, { threshold: 0.4 });
-    obs.observe(c1.closest("div")!);
-    return () => obs.disconnect();
-  }, []);
-
-  return (
-    <div style={{ width: 120, height: 120, flexShrink: 0 }}>
-      <svg viewBox="0 0 120 120" width={120} height={120} fill="none">
-        {/* Ghost */}
-        <circle cx={60} cy={60} r={50} stroke="rgba(255,255,255,0.07)" strokeWidth="1" />
-        <circle cx={60} cy={60} r={30} stroke="rgba(255,255,255,0.07)" strokeWidth="1" />
-        {/* Draw-on circles */}
-        <circle ref={c1Ref} cx={60} cy={60} r={50} stroke="rgba(255,255,255,0.45)" strokeWidth="1.5" strokeLinecap="round" />
-        <circle ref={c2Ref} cx={60} cy={60} r={30} stroke="rgba(255,255,255,0.28)" strokeWidth="1"   strokeLinecap="round" />
-        {/* Diagonal draw-on line */}
-        <line ref={lRef} x1={28} y1={28} x2={92} y2={92} stroke="rgba(255,255,255,0.55)" strokeWidth="1.5" strokeLinecap="round" />
-        {/* Centre dot */}
-        <circle cx={60} cy={60} r={3} fill="rgba(255,255,255,0.85)" />
-      </svg>
-    </div>
-  );
-}
-
-// ─── Work draw mark — bracket + arc draw-on ───────────────────────────────────
-function WorkMark() {
-  const arcRef = useRef<SVGPathElement>(null);
-  const b1Ref  = useRef<SVGPathElement>(null);
-  const b2Ref  = useRef<SVGPathElement>(null);
-  const inView = useRef(false);
-
-  useEffect(() => {
-    const arc = arcRef.current, b1 = b1Ref.current, b2 = b2Ref.current;
-    if (!arc || !b1 || !b2) return;
-    const arcLen = arc.getTotalLength();
-    const b1Len  = b1.getTotalLength();
-    const b2Len  = b2.getTotalLength();
-    arc.style.strokeDasharray = String(arcLen);
-    arc.style.strokeDashoffset = String(arcLen);
-    b1.style.strokeDasharray = String(b1Len);
-    b1.style.strokeDashoffset = String(b1Len);
-    b2.style.strokeDasharray = String(b2Len);
-    b2.style.strokeDashoffset = String(b2Len);
-
-    const obs = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && !inView.current) {
-        inView.current = true;
-        const { animate: animeAnimate } = require("animejs");
-        animeAnimate(arc, { strokeDashoffset: [null, 0], duration: 1000, ease: "outQuart" });
-        animeAnimate([b1, b2], { strokeDashoffset: [null, 0], duration: 700, ease: "outQuart", delay: (_el: Element, i: number) => 250 + i * 100 });
-      }
-    }, { threshold: 0.4 });
-    obs.observe(arc.closest("div")!);
-    return () => obs.disconnect();
-  }, []);
-
-  return (
-    <div style={{ width: 72, height: 72, flexShrink: 0 }}>
-      <svg viewBox="0 0 72 72" width={72} height={72} fill="none">
-        {/* Ghost arc */}
-        <path d="M 36,8 A 28,28 0 1,1 35.99,8" stroke="rgba(255,255,255,0.07)" strokeWidth="1" />
-        {/* Draw-on arc */}
-        <path ref={arcRef} d="M 36,8 A 28,28 0 1,1 35.99,8" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" strokeLinecap="round" />
-        {/* Left bracket */}
-        <path ref={b1Ref} d="M 22,22 L 14,36 L 22,50" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-        {/* Right bracket */}
-        <path ref={b2Ref} d="M 50,22 L 58,36 L 50,50" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-        <circle cx={36} cy={36} r={3} fill="rgba(255,255,255,0.8)" />
-      </svg>
     </div>
   );
 }
@@ -787,6 +603,86 @@ function ServiceIllustration({ index, active }: { index: number; active: boolean
   );
 }
 
+// ─── ScribbleServicePanel — scribble composition per service tab ──────────────
+const SERVICE_COMPOSITIONS = [
+  // 01 Story & Brand
+  [
+    { src: "/projects/scribbles/s-105.svg", size: 200, top: "8%",  left: "10%", rot: -8  },
+    { src: "/projects/scribbles/s-11.svg",  size: 130, top: "44%", left: "50%", rot: 15  },
+    { src: "/projects/scribbles/s-10.svg",  size: 56,  top: "12%", left: "64%", rot: -20 },
+  ],
+  // 02 Motion & Film
+  [
+    { src: "/projects/scribbles/s-04.svg",  size: 210, top: "6%",  left: "8%",  rot: 5   },
+    { src: "/projects/scribbles/s-38.svg",  size: 140, top: "44%", left: "46%", rot: -12 },
+  ],
+  // 03 Digital & Immersive
+  [
+    { src: "/projects/scribbles/s-138.svg", size: 185, top: "10%", left: "10%", rot: 10  },
+    { src: "/projects/scribbles/s-05.svg",  size: 120, top: "46%", left: "48%", rot: -18 },
+    { src: "/projects/scribbles/s-104.svg", size: 64,  top: "8%",  left: "62%", rot: 25  },
+  ],
+];
+
+function ScribbleServicePanel({ index, active }: { index: number; active: boolean }) {
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const triggered = useRef(false);
+  const reduce = useReducedMotion();
+  const comp = SERVICE_COMPOSITIONS[index] ?? SERVICE_COMPOSITIONS[0];
+
+  useEffect(() => {
+    if (!active || reduce) return;
+    triggered.current = false;
+  }, [index, active, reduce]);
+
+  useEffect(() => {
+    if (!active || triggered.current || reduce) return;
+    triggered.current = true;
+    const { animate: animeAnimate } = require("animejs");
+    comp.forEach((item, i) => {
+      const el = itemRefs.current[i];
+      if (!el) return;
+      el.style.opacity = "0";
+      el.style.transform = `rotate(${item.rot - 30}deg) scale(0)`;
+      animeAnimate(el, {
+        opacity:  [0, 0.9],
+        scale:    [0, 1],
+        rotate:   [`${item.rot - 30}deg`, `${item.rot}deg`],
+        duration: 700,
+        ease:     "outExpo",
+        delay:    60 + i * 110,
+      });
+    });
+  }, [active, reduce, comp]);
+
+  return (
+    <div style={{ position: "relative", width: 320, height: 320, flexShrink: 0 }}>
+      {comp.map((item, i) => (
+        <div
+          key={`${index}-${i}`}
+          ref={el => { itemRefs.current[i] = el; }}
+          style={{
+            position:    "absolute",
+            top:         item.top,
+            left:        item.left,
+            width:       item.size,
+            height:      item.size,
+            opacity:     0,
+            transform:   `rotate(${item.rot - 30}deg) scale(0)`,
+            filter:      "invert(1)",
+            mixBlendMode:"screen",
+            willChange:  "transform, opacity",
+          }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={item.src} alt="" width={item.size} height={item.size}
+            style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // ─── ServicesTabbed ───────────────────────────────────────────────────────────
 function ServicesTabbed() {
   const [active, setActive] = useState(0);
@@ -815,7 +711,7 @@ function ServicesTabbed() {
           >
             {/* Left: illustration with ring */}
             <div className="service-illustration-wrap" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <ServiceIllustration index={active} active={true} />
+              <ScribbleServicePanel index={active} active={true} />
             </div>
 
             {/* Right: content */}
@@ -1166,9 +1062,6 @@ export default function HomePage() {
             }}
           />
 
-          {/* Hero animated orbit mark — right side */}
-          <HeroOrbitMark />
-
           {/* Hero scribble accents */}
           <ScribbleMark src="/projects/scribbles/s-04.svg"  size={110} rot={-12} delay={800}
             style={{ position: "absolute", bottom: "12%", left: "4%", opacity: 0 }} className="hero-scribble" />
@@ -1286,16 +1179,13 @@ export default function HomePage() {
           <ScribbleMark src="/projects/scribbles/s-11.svg"  size={90}  rot={12}  delay={350}
             style={{ position: "absolute", bottom: "6%", right: "8%", opacity: 0 }} className="statement-scribble" />
           <div className="wrap" style={{ maxWidth: 860, margin: "0 auto" }}>
-            <div className="statement-header-row" style={{ display: "flex", alignItems: "flex-start", gap: 40, marginBottom: 40 }}>
-              <StatementMark />
-              <motion.div
-                initial={{ scaleX: 0 }}
-                whileInView={{ scaleX: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, ease }}
-                style={{ flex: 1, height: 1, background: "rgba(255,255,255,0.12)", transformOrigin: "left", alignSelf: "center" }}
-              />
-            </div>
+            <motion.div
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, ease }}
+              style={{ height: 1, background: "rgba(255,255,255,0.12)", transformOrigin: "left", marginBottom: 40 }}
+            />
             <ClipReveal delay={0.0}>
               <p style={{ fontFamily: "var(--sans)", fontSize: "clamp(40px, 5.5vw, 72px)", fontWeight: 700, color: "var(--fg-on-ink)", lineHeight: 1.05, letterSpacing: "-0.012em", margin: 0 }}>
                 Most work is forgettable.
@@ -1328,16 +1218,11 @@ export default function HomePage() {
         <section id="work" className="section-pad-xl" style={{ background: "rgb(18,18,18)", padding: "120px 0 140px" }}>
           <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
             <div className="work-heading-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 56 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-                <WorkMark />
-                <ScribbleMark src="/projects/scribbles/s-05.svg" size={56} rot={8} delay={200}
-                  style={{ opacity: 0 }} />
-                <ClipReveal>
-                  <h2 style={{ fontFamily: "var(--sans)", fontSize: "clamp(36px, 5vw, 72px)", fontWeight: 700, color: "var(--fg-on-ink)", letterSpacing: "-0.012em", lineHeight: 1.05, marginBottom: 0 }}>
-                    Selected work.
-                  </h2>
-                </ClipReveal>
-              </div>
+              <ClipReveal>
+                <h2 style={{ fontFamily: "var(--sans)", fontSize: "clamp(36px, 5vw, 72px)", fontWeight: 700, color: "var(--fg-on-ink)", letterSpacing: "-0.012em", lineHeight: 1.05, marginBottom: 0 }}>
+                  Selected work.
+                </h2>
+              </ClipReveal>
               <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 12 }}>
                 <span style={{ fontFamily: "var(--sans)", fontSize: 11, letterSpacing: "0.1em", color: "rgba(255,255,255,0.35)", userSelect: "none" }}>
                   drag to explore →
@@ -1477,14 +1362,6 @@ export default function HomePage() {
               }}
             >
               {/* Scribble + orbit cluster */}
-              <div style={{ position: "relative", flexShrink: 0 }}>
-                <CTAOrbitMark />
-                <ScribbleMark src="/projects/scribbles/s-104.svg" size={64} rot={-30} delay={0}
-                  style={{ position: "absolute", top: -32, right: -28, opacity: 0 }} />
-                <ScribbleMark src="/projects/scribbles/s-10.svg"  size={50} rot={20}  delay={120}
-                  style={{ position: "absolute", bottom: -24, left: -20, opacity: 0 }} />
-              </div>
-
               {/* Text + CTA */}
               <div style={{ flex: 1, minWidth: 280 }}>
                 <h2 style={{
