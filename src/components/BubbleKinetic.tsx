@@ -151,10 +151,11 @@ export function BubbleGrid() {
   }, [reduce]);
 
   return (
-    <section style={{ background: "#000000", padding: "100px 0" }}>
+    <section className="section-pad-lg" style={{ background: "#000000", padding: "100px 0" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 50px" }}>
         <div
           ref={containerRef}
+          className="grid-stats"
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(2, 1fr)",

@@ -23,10 +23,11 @@ interface ScribbleMarkProps {
   src: string;
   size?: number;
   style?: React.CSSProperties;
+  className?: string;
   rot?: number;
   delay?: number;
 }
-function ScribbleMark({ src, size = 80, style, rot = 0, delay = 0 }: ScribbleMarkProps) {
+function ScribbleMark({ src, size = 80, style, className, rot = 0, delay = 0 }: ScribbleMarkProps) {
   const ref = useRef<HTMLDivElement>(null);
   const triggered = useRef(false);
 
@@ -62,6 +63,7 @@ function ScribbleMark({ src, size = 80, style, rot = 0, delay = 0 }: ScribbleMar
   return (
     <div
       ref={ref}
+      className={className}
       style={{
         opacity: 0,
         transform: `rotate(${rot - 35}deg) scale(0)`,
@@ -348,10 +350,14 @@ function HeroText() {
       <AnimatePresence mode="wait">
         <motion.h1
           key={idx}
-          initial={v.initial as object}
-          animate={v.animate as object}
-          exit={v.exit as object}
-          transition={v.transition}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          initial={v.initial as any}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          animate={v.animate as any}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          exit={v.exit as any}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          transition={v.transition as any}
           style={{
             fontFamily: "var(--sans)",
             fontSize: "clamp(56px, 7vw, 104px)",
@@ -389,7 +395,7 @@ function HeroOrbitMark() {
 
   const size = 560, cx = 280, cy = 280;
   return (
-    <div style={{ position: "absolute", right: "2%", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", zIndex: 0, opacity: 0.65 }}>
+    <div className="hero-orbit-mark" style={{ position: "absolute", right: "2%", top: "50%", transform: "translateY(-50%)", pointerEvents: "none", zIndex: 0, opacity: 0.65 }}>
       <svg viewBox={`0 0 ${size} ${size}`} width={size} height={size} fill="none">
         {/* Static ghost rings */}
         <circle cx={cx} cy={cy} r={240} stroke="rgba(255,255,255,0.04)" strokeWidth="1" />
@@ -789,8 +795,8 @@ function ServicesTabbed() {
   const s = services[active];
 
   return (
-    <section style={{ background: "var(--ink)", padding: "140px 0", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 50px" }}>
+    <section className="section-pad-xl" style={{ background: "var(--ink)", padding: "140px 0", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+      <div className="services-wrap" style={{ maxWidth: 1200, margin: "0 auto", padding: "0 50px" }}>
         <AnimatePresence mode="wait">
           <motion.div
             key={active}
@@ -808,7 +814,7 @@ function ServicesTabbed() {
             className="services-grid"
           >
             {/* Left: illustration with ring */}
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div className="service-illustration-wrap" style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
               <ServiceIllustration index={active} active={true} />
             </div>
 
@@ -899,7 +905,7 @@ function TestimonialsSlider() {
   const t = testimonials[current];
 
   return (
-    <section style={{ background: "rgb(28,28,28)", padding: "140px 0" }}>
+    <section className="section-pad-xl" style={{ background: "rgb(28,28,28)", padding: "140px 0" }}>
       <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
         {/* Header */}
         <ClipReveal>
@@ -988,7 +994,7 @@ function TestimonialsSlider() {
           </AnimatePresence>
 
           {/* Controls */}
-          <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: 40 }}>
+          <div className="testimonial-nav" style={{ display: "flex", alignItems: "center", gap: 16, marginTop: 40 }}>
             <button
               onClick={prev}
               style={{
@@ -1165,9 +1171,9 @@ export default function HomePage() {
 
           {/* Hero scribble accents */}
           <ScribbleMark src="/projects/scribbles/s-04.svg"  size={110} rot={-12} delay={800}
-            style={{ position: "absolute", bottom: "12%", left: "4%", opacity: 0 }} />
+            style={{ position: "absolute", bottom: "12%", left: "4%", opacity: 0 }} className="hero-scribble" />
           <ScribbleMark src="/projects/scribbles/s-105.svg" size={80}  rot={18}  delay={1000}
-            style={{ position: "absolute", top: "14%", right: "28%", opacity: 0 }} />
+            style={{ position: "absolute", top: "14%", right: "28%", opacity: 0 }} className="hero-scribble" />
 
           {/* Hero content — text left column */}
           <div
@@ -1182,7 +1188,7 @@ export default function HomePage() {
               paddingBottom: 80,
             }}
           >
-            <div style={{ maxWidth: "55%" }}>
+            <div className="hero-content-col" style={{ maxWidth: "55%" }}>
               <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease, delay: 0.1 }}>
                 <p style={{
                   fontFamily: "var(--sans)",
@@ -1273,14 +1279,14 @@ export default function HomePage() {
         <KineticWordReel />
 
         {/* ══ 3. STATEMENT ══════════════════════════════════════════════════════ */}
-        <section style={{ background: "var(--ink)", padding: "120px 0 100px", borderTop: "1px solid rgba(255,255,255,0.08)", position: "relative", overflow: "hidden" }}>
+        <section className="section-pad-xl" style={{ background: "var(--ink)", padding: "120px 0 100px", borderTop: "1px solid rgba(255,255,255,0.08)", position: "relative", overflow: "hidden" }}>
           {/* Scribble accents — far edges */}
           <ScribbleMark src="/projects/scribbles/s-38.svg"  size={130} rot={-20} delay={200}
-            style={{ position: "absolute", top: "8%",  right: "3%", opacity: 0 }} />
+            style={{ position: "absolute", top: "8%",  right: "3%", opacity: 0 }} className="statement-scribble" />
           <ScribbleMark src="/projects/scribbles/s-11.svg"  size={90}  rot={12}  delay={350}
-            style={{ position: "absolute", bottom: "6%", right: "8%", opacity: 0 }} />
+            style={{ position: "absolute", bottom: "6%", right: "8%", opacity: 0 }} className="statement-scribble" />
           <div className="wrap" style={{ maxWidth: 860, margin: "0 auto" }}>
-            <div style={{ display: "flex", alignItems: "flex-start", gap: 40, marginBottom: 40 }}>
+            <div className="statement-header-row" style={{ display: "flex", alignItems: "flex-start", gap: 40, marginBottom: 40 }}>
               <StatementMark />
               <motion.div
                 initial={{ scaleX: 0 }}
@@ -1319,9 +1325,9 @@ export default function HomePage() {
         <ServicesTabbed />
 
         {/* ══ 5. SELECTED WORK ══════════════════════════════════════════════════ */}
-        <section id="work" style={{ background: "rgb(18,18,18)", padding: "120px 0 140px" }}>
+        <section id="work" className="section-pad-xl" style={{ background: "rgb(18,18,18)", padding: "120px 0 140px" }}>
           <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 56 }}>
+            <div className="work-heading-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 56 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
                 <WorkMark />
                 <ScribbleMark src="/projects/scribbles/s-05.svg" size={56} rot={8} delay={200}
@@ -1369,6 +1375,7 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "0px -20%" }}
                 transition={{ duration: 0.5, delay: Math.min(i * 0.08, 0.3), ease }}
+                className="carousel-card"
                 style={{
                   flex: "0 0 360px",
                   scrollSnapAlign: "start",
@@ -1451,13 +1458,14 @@ export default function HomePage() {
         <BubbleGrid />
 
         {/* ══ 9. CTA BANNER — MAD bordered box ════════════════════════════════ */}
-        <section style={{ background: "#000000", padding: "100px 0" }}>
-          <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 50px" }}>
+        <section className="section-pad-lg" style={{ background: "#000000", padding: "100px 0" }}>
+          <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto", padding: "0 50px" }}>
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, ease }}
+              className="cta-inner"
               style={{
                 border: "0.666px solid rgba(255,255,255,1)",
                 borderRadius: 20,
@@ -1495,7 +1503,7 @@ export default function HomePage() {
                   We take on work we believe in. If you have a project that deserves
                   real craft behind it, write to us.
                 </p>
-                <div style={{ display: "flex", alignItems: "center", gap: 20, flexWrap: "wrap" }}>
+                <div className="cta-buttons" style={{ display: "flex", alignItems: "center", gap: 20, flexWrap: "wrap" }}>
                   <a
                     href="mailto:hello@thekissa.com"
                     style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "14px 30px", background: "#ffffff", color: "#000000", borderRadius: 68, fontFamily: "var(--sans)", fontWeight: 700, fontSize: 14, textDecoration: "none", letterSpacing: "0.06em", textTransform: "uppercase", transition: "background 0.2s ease, transform 0.2s ease" }}

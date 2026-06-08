@@ -2,89 +2,135 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { animate, stagger } from "animejs";
+import { animate } from "animejs";
 import Image from "next/image";
 
 interface LoadingScreenProps {
   onComplete?: () => void;
 }
 
-// Scribbles positioned around the logo centre — offset from centre in px
-const SCRIBBLES = [
-  { src: "/projects/scribbles/s-04.svg",  size: 100, x: -220, y: -100, rot: -15, delay: 0   },
-  { src: "/projects/scribbles/s-38.svg",  size: 80,  x:  200, y: -110, rot:  20, delay: 80  },
-  { src: "/projects/scribbles/s-11.svg",  size: 90,  x:  240, y:   60, rot: -8,  delay: 140 },
-  { src: "/projects/scribbles/s-105.svg", size: 85,  x:  140, y:  130, rot:  35, delay: 200 },
-  { src: "/projects/scribbles/s-10.svg",  size: 70,  x: -170, y:  130, rot: -25, delay: 260 },
-  { src: "/projects/scribbles/s-138.svg", size: 110, x: -250, y:   40, rot:  10, delay: 320 },
+type Frame =
+  | { kind: "logo" }
+  | { kind: "scribble"; src: string; size: number };
+
+const SEQUENCE: Frame[] = [
+  { kind: "logo" },
+  { kind: "scribble", src: "/projects/scribbles/s-04.svg",  size: 180 },
+  { kind: "scribble", src: "/projects/scribbles/s-38.svg",  size: 160 },
+  { kind: "logo" },
 ];
 
+// Wrap anime animate in a Promise resolved via onComplete
+function morphAnim(
+  el: HTMLElement,
+  props: Record<string, unknown>,
+  duration: number,
+  ease: string
+): Promise<void> {
+  return new Promise((resolve) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    animate(el, { ...props, duration, ease, onComplete: resolve as any });
+  });
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((r) => setTimeout(r, ms));
+}
+
+// Wait one rAF so React can flush a state update before we animate
+function tick(): Promise<void> {
+  return new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(() => r())));
+}
+
 export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
-  const [visible, setVisible] = useState(true);
-  const logoRef     = useRef<HTMLDivElement>(null);
-  const lineRef     = useRef<HTMLDivElement>(null);
-  const scribbleRef = useRef<HTMLDivElement>(null);
+  const [visible,  setVisible]  = useState(true);
+  const [frameIdx, setFrameIdx] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const lineRef      = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Logo rises in first
-    if (logoRef.current) {
-      animate(logoRef.current, {
+    const el    = containerRef.current;
+    const lineEl = lineRef.current;
+    if (!el) return;
+
+    // Progress bar runs in parallel, covers the whole sequence
+    if (lineEl) {
+      animate(lineEl, { scaleX: [0, 1], duration: 3100, ease: "linear" });
+    }
+
+    async function run() {
+      // ── frame 0: logo blurs in ───────────────────────────────────────────
+      await morphAnim(el!, {
         opacity: [0, 1],
-        translateY: ["18px", "0px"],
-        duration: 600,
-        ease: "outExpo",
-      });
+        scale:   [1.06, 1],
+        filter:  ["blur(14px)", "blur(0px)"],
+      }, 560, "outQuart");
+
+      await sleep(680);
+
+      // ── logo → scribble 1 ───────────────────────────────────────────────
+      await morphAnim(el!, {
+        opacity: [1, 0],
+        scale:   [1, 0.9],
+        filter:  ["blur(0px)", "blur(20px)"],
+      }, 300, "inQuart");
+
+      setFrameIdx(1);
+      await tick();
+
+      await morphAnim(el!, {
+        opacity: [0, 1],
+        scale:   [1.1, 1],
+        filter:  ["blur(20px)", "blur(0px)"],
+      }, 520, "outQuart");
+
+      await sleep(680);
+
+      // ── scribble 1 → scribble 2 ─────────────────────────────────────────
+      await morphAnim(el!, {
+        opacity: [1, 0],
+        scale:   [1, 0.9],
+        filter:  ["blur(0px)", "blur(20px)"],
+      }, 300, "inQuart");
+
+      setFrameIdx(2);
+      await tick();
+
+      await morphAnim(el!, {
+        opacity: [0, 1],
+        scale:   [1.1, 1],
+        filter:  ["blur(20px)", "blur(0px)"],
+      }, 520, "outQuart");
+
+      await sleep(620);
+
+      // ── scribble 2 → logo ───────────────────────────────────────────────
+      await morphAnim(el!, {
+        opacity: [1, 0],
+        scale:   [1, 0.9],
+        filter:  ["blur(0px)", "blur(20px)"],
+      }, 300, "inQuart");
+
+      setFrameIdx(3);
+      await tick();
+
+      await morphAnim(el!, {
+        opacity: [0, 1],
+        scale:   [1.06, 1],
+        filter:  ["blur(14px)", "blur(0px)"],
+      }, 480, "outQuart");
+
+      await sleep(280);
+
+      // ── exit ─────────────────────────────────────────────────────────────
+      setVisible(false);
     }
 
-    // Scribbles burst in around the logo with stagger
-    if (scribbleRef.current) {
-      const items = scribbleRef.current.querySelectorAll<HTMLElement>(".s-item");
-      animate(items, {
-        opacity:    [0, 1],
-        scale:      [0, 1],
-        rotate:     (_el: Element, i: number) => [`${SCRIBBLES[i].rot - 40}deg`, `${SCRIBBLES[i].rot}deg`],
-        duration:   700,
-        ease:       "outExpo",
-        delay:      stagger(70, { start: 220 }),
-      });
-
-      // Subtle breathe loop on each scribble
-      animate(items, {
-        scale:      [1, 1.04, 1],
-        duration:   2800,
-        ease:       "inOutSine",
-        loop:       true,
-        delay:      stagger(180, { start: 900 }),
-      });
-    }
-
-    // Progress bar sweeps full width
-    if (lineRef.current) {
-      animate(lineRef.current, {
-        scaleX:   [0, 1],
-        duration: 2000,
-        ease:     "linear",
-        delay:    120,
-      });
-    }
-
-    // Scribbles fade out before screen exits
-    const fadeScribbles = setTimeout(() => {
-      if (scribbleRef.current) {
-        const items = scribbleRef.current.querySelectorAll<HTMLElement>(".s-item");
-        animate(items, {
-          opacity:  [1, 0],
-          scale:    [1, 0.8],
-          duration: 380,
-          ease:     "outQuart",
-          delay:    stagger(40),
-        });
-      }
-    }, 2000);
-
-    const exit = setTimeout(() => setVisible(false), 2550);
-    return () => { clearTimeout(fadeScribbles); clearTimeout(exit); };
+    run();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const frame = SEQUENCE[frameIdx];
 
   return (
     <AnimatePresence onExitComplete={onComplete}>
@@ -104,45 +150,47 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
             justifyContent: "center",
           }}
         >
-          {/* Scribble constellation */}
-          <div ref={scribbleRef} style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
-            {SCRIBBLES.map((s, i) => (
-              <div
-                key={i}
-                className="s-item"
+          {/* Morphing frame */}
+          <div
+            ref={containerRef}
+            style={{
+              opacity: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              // keep a stable bounding box so the blur doesn't cause layout shifts
+              minWidth: 200,
+              minHeight: 180,
+            }}
+          >
+            {frame.kind === "logo" ? (
+              <Image
+                src="/logo-white.png"
+                alt="Kissa"
+                width={200}
+                height={66}
+                style={{ objectFit: "contain", display: "block" }}
+                priority
+              />
+            ) : (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={frame.src}
+                alt=""
+                width={frame.size}
+                height={frame.size}
                 style={{
-                  position: "absolute",
-                  top:    "50%",
-                  left:   "50%",
-                  width:  s.size,
-                  height: s.size,
-                  marginTop:  -s.size / 2 + s.y,
-                  marginLeft: -s.size / 2 + s.x,
-                  opacity: 0,
-                  transform: `rotate(${s.rot}deg) scale(0)`,
-                  filter: "invert(1)",
-                  mixBlendMode: "screen",
+                  width:       frame.size,
+                  height:      frame.size,
+                  objectFit:   "contain",
+                  display:     "block",
+                  filter:      "invert(1)",
                 }}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={s.src} alt="" width={s.size} height={s.size} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
-              </div>
-            ))}
+              />
+            )}
           </div>
 
-          {/* Logo */}
-          <div ref={logoRef} style={{ opacity: 0, position: "relative", zIndex: 2 }}>
-            <Image
-              src="/logo-white.png"
-              alt="Kissa"
-              width={200}
-              height={66}
-              style={{ objectFit: "contain", display: "block" }}
-              priority
-            />
-          </div>
-
-          {/* Progress bar */}
+          {/* Iridescent progress bar */}
           <div
             ref={lineRef}
             style={{
