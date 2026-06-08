@@ -15,6 +15,7 @@ import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { BurstBubbles, KineticWordReel, BubbleGrid, Card3D } from "@/components/BubbleKinetic";
+import PhysicsScribbles from "@/components/PhysicsScribbles";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -1115,6 +1116,9 @@ export default function HomePage() {
 
         {/* ══ 2b. KINETIC WORD REEL ═════════════════════════════════════════════ */}
         <KineticWordReel />
+
+        {/* ══ 2c. PHYSICS SCRIBBLES — Matter.js drop ═══════════════════════════ */}
+        <PhysicsScribbles height={380} />
 
         {/* ══ 3. STATEMENT ══════════════════════════════════════════════════════ */}
         <section className="section-pad-xl" style={{ background: "var(--ink)", padding: "120px 0 100px", borderTop: "1px solid rgba(255,255,255,0.08)", position: "relative", overflow: "hidden" }}>
