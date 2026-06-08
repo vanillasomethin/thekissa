@@ -270,42 +270,56 @@ function ClipReveal({
 }
 
 // ─── Hero cycling headlines ───────────────────────────────────────────────────
+// Each line: max ~16 chars so it never wraps at any viewport at this font size
 const HERO_LINES = [
-  { l1: "We make the work",      l2: "people can't stop thinking about." },
-  { l1: "Brand. Film. Space.",   l2: "Built to last in memory." },
-  { l1: "A frame. A mark.",      l2: "A story that doesn't leave." },
+  { l1: "We make work",       l2: "people remember." },
+  { l1: "Brand. Film.",       l2: "Space. Story." },
+  { l1: "A frame. A mark.",   l2: "A story that stays." },
 ];
 
-// Three distinct transition styles — each phrase gets its own motion character
+// The longest/tallest phrase — used as invisible spacer to lock container height
+const HERO_SPACER = { l1: "We make work", l2: "people remember." };
+
+// Three distinct transition styles
 const HERO_VARIANTS = [
   // 0 → clip-path wipe up
   {
-    initial: { clipPath: "inset(100% 0% 0% 0%)", y: 20  },
-    animate: { clipPath: "inset(0% 0% 0% 0%)",   y: 0   },
-    exit:    { clipPath: "inset(0% 0% 100% 0%)",  y: -20 },
-    transition: { duration: 0.7, ease: [0.76, 0, 0.24, 1] },
+    initial: { clipPath: "inset(100% 0% 0% 0%)" },
+    animate: { clipPath: "inset(0% 0% 0% 0%)" },
+    exit:    { clipPath: "inset(0% 0% 100% 0%)" },
+    transition: { duration: 0.55, ease: [0.76, 0, 0.24, 1] },
   },
-  // 1 → blur + scale
+  // 1 → blur fade
   {
-    initial: { opacity: 0, scale: 1.08, filter: "blur(12px)" },
-    animate: { opacity: 1, scale: 1,    filter: "blur(0px)"  },
-    exit:    { opacity: 0, scale: 0.94, filter: "blur(8px)"  },
-    transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] },
+    initial: { opacity: 0, filter: "blur(10px)" },
+    animate: { opacity: 1, filter: "blur(0px)"  },
+    exit:    { opacity: 0, filter: "blur(10px)"  },
+    transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
   },
-  // 2 → horizontal slide
+  // 2 → slide up
   {
-    initial: { opacity: 0, x: 60  },
-    animate: { opacity: 1, x: 0   },
-    exit:    { opacity: 0, x: -60 },
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+    initial: { opacity: 0, y: 28  },
+    animate: { opacity: 1, y: 0   },
+    exit:    { opacity: 0, y: -28 },
+    transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] },
   },
 ];
+
+const H1_STYLE: React.CSSProperties = {
+  fontFamily: "var(--sans)",
+  fontSize: "clamp(40px, 5vw, 80px)",
+  lineHeight: 1.08,
+  fontWeight: 700,
+  letterSpacing: "-0.02em",
+  margin: 0,
+  color: "var(--fg-on-ink)",
+};
 
 function HeroText() {
   const [idx, setIdx] = useState(0);
 
   useEffect(() => {
-    const t = setInterval(() => setIdx(i => (i + 1) % HERO_LINES.length), 4000);
+    const t = setInterval(() => setIdx(i => (i + 1) % HERO_LINES.length), 4200);
     return () => clearInterval(t);
   }, []);
 
@@ -313,8 +327,12 @@ function HeroText() {
   const lines = HERO_LINES[idx];
 
   return (
-    // Fixed height = exactly 2 lines — prevents layout shift on swap
-    <div style={{ position: "relative", height: "calc(2 * clamp(44px, 6vw, 92px) * 1.06)" }}>
+    <div style={{ position: "relative" }}>
+      {/* Invisible spacer — always in DOM, locks container to 2-line height */}
+      <h1 aria-hidden style={{ ...H1_STYLE, visibility: "hidden", pointerEvents: "none", userSelect: "none" }}>
+        {HERO_SPACER.l1}<br />{HERO_SPACER.l2}
+      </h1>
+      {/* Animated headline — sits over the spacer */}
       <AnimatePresence mode="wait">
         <motion.h1
           key={idx}
@@ -326,22 +344,9 @@ function HeroText() {
           exit={v.exit as any}
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           transition={v.transition as any}
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            fontFamily: "var(--sans)",
-            fontSize: "clamp(44px, 6vw, 92px)",
-            lineHeight: 1.06,
-            fontWeight: 700,
-            letterSpacing: "-0.022em",
-            margin: 0,
-            color: "var(--fg-on-ink)",
-          }}
+          style={{ ...H1_STYLE, position: "absolute", top: 0, left: 0, right: 0 }}
         >
-          {lines.l1}
-          <br />
-          {lines.l2}
+          {lines.l1}<br />{lines.l2}
         </motion.h1>
       </AnimatePresence>
     </div>
