@@ -3,8 +3,6 @@
 import { useRef, useState, useEffect } from "react";
 import {
   motion,
-  useScroll,
-  useTransform,
   useReducedMotion,
   AnimatePresence,
   useMotionValue,
@@ -16,7 +14,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { BurstBubbles, KineticWordReel, BubbleGrid, Card3D } from "@/components/BubbleKinetic";
 import PhysicsScribbles from "@/components/PhysicsScribbles";
-import BubbleVideo from "@/components/BubbleVideo";
+import BubbleMorphVideo from "@/components/BubbleMorphVideo";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -975,135 +973,139 @@ function ClientLogosStrip() {
 export default function HomePage() {
   const heroRef = useRef<HTMLElement>(null);
 
-  const { scrollYProgress: heroScroll } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  });
-  const bgY = useTransform(heroScroll, [0, 1], ["0%", "20%"]);
-
   return (
     <>
       <Navbar />
       <main style={{ overflowX: "hidden" }}>
 
-        {/* ══ 1. HERO ═══════════════════════════════════════════════════════════ */}
+        {/* ══ 1. HERO — 300vh scroll driver with sticky stage ══════════════════ */}
         <section
           ref={heroRef}
           style={{
+            height: "300vh",
             position: "relative",
-            minHeight: "100vh",
-            overflow: "hidden",
             background: "var(--ink)",
-            display: "flex",
-            alignItems: "center",
           }}
         >
-          {/* Hero grid — text left, video right */}
           <div
-            className="wrap hero-grid"
             style={{
-              maxWidth: 1200,
-              margin: "0 auto",
-              width: "100%",
-              position: "relative",
-              zIndex: 1,
-              paddingTop: 100,
-              paddingBottom: 56,
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: 48,
-              alignItems: "center",
-            }}
-          >
-            {/* Left: text */}
-            <div className="hero-content-col">
-              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease, delay: 0.1 }}>
-                <p style={{
-                  fontFamily: "var(--sans)",
-                  fontSize: 11,
-                  letterSpacing: "0.18em",
-                  textTransform: "uppercase",
-                  color: "rgba(255,255,255,0.45)",
-                  marginBottom: 28,
-                }}>A media art agency</p>
-              </motion.div>
-
-              <HeroText />
-
-              <motion.p
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.65, delay: 0.7, ease }}
-                style={{
-                  fontFamily: "var(--sans)",
-                  fontSize: 17,
-                  color: "var(--fg-on-ink-2)",
-                  maxWidth: "36ch",
-                  marginTop: 28,
-                  lineHeight: 1.6,
-                }}
-              >
-                Brand, film, and space — built to last in memory.
-              </motion.p>
-
-              <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.9, ease }}
-                style={{ display: "flex", gap: 16, flexWrap: "wrap", marginTop: 40 }}
-              >
-                <a href="mailto:hello@thekissa.com" className="btn btn-primary">Begin the story</a>
-                <a href="#work" className="btn btn-ghost on-ink">See our work</a>
-              </motion.div>
-            </div>
-
-            {/* Right: bubble video */}
-            <div
-              className="hero-video-col"
-              style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
-            >
-              <BubbleVideo src="/hero.mp4" width={420} />
-            </div>
-          </div>
-
-          {/* Scroll indicator — bottom right */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.5, duration: 0.6 }}
-            style={{
-              position: "absolute",
-              bottom: 36,
-              right: 48,
-              fontFamily: "var(--sans)",
-              fontSize: 10,
-              letterSpacing: "0.18em",
-              textTransform: "uppercase",
-              color: "rgba(255,255,255,0.35)",
+              position: "sticky",
+              top: 0,
+              height: "100vh",
+              overflow: "hidden",
               display: "flex",
-              flexDirection: "column",
               alignItems: "center",
-              gap: 8,
-              zIndex: 1,
             }}
           >
-            <span>Scroll</span>
-            <motion.div
-              animate={{ y: [0, 6, 0] }}
-              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-              style={{ width: 1, height: 28, background: "rgba(255,255,255,0.25)" }}
-            />
-          </motion.div>
+            <BurstBubbles />
 
-          <style>{`
-            @media (max-width: 860px) {
-              .hero-grid { grid-template-columns: 1fr !important; }
-              .hero-video-col { justify-content: flex-start !important; }
-            }
-            @media (max-width: 480px) {
-              .hero-video-col { display: none !important; }
-            }
-          `}</style>
+            {/* Hero grid — text left, morphing video right */}
+            <div
+              className="wrap hero-grid"
+              style={{
+                maxWidth: 1200,
+                margin: "0 auto",
+                width: "100%",
+                position: "relative",
+                zIndex: 1,
+                paddingTop: 100,
+                paddingBottom: 56,
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: 48,
+                alignItems: "center",
+              }}
+            >
+              {/* Left: text */}
+              <div className="hero-content-col">
+                <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease, delay: 0.1 }}>
+                  <p style={{
+                    fontFamily: "var(--sans)",
+                    fontSize: 11,
+                    letterSpacing: "0.18em",
+                    textTransform: "uppercase",
+                    color: "rgba(255,255,255,0.45)",
+                    marginBottom: 28,
+                  }}>A media art agency</p>
+                </motion.div>
+
+                <HeroText />
+
+                <motion.p
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.65, delay: 0.7, ease }}
+                  style={{
+                    fontFamily: "var(--sans)",
+                    fontSize: 17,
+                    color: "var(--fg-on-ink-2)",
+                    maxWidth: "36ch",
+                    marginTop: 28,
+                    lineHeight: 1.6,
+                  }}
+                >
+                  Brand, film, and space — built to last in memory.
+                </motion.p>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.9, ease }}
+                  style={{ display: "flex", gap: 16, flexWrap: "wrap", marginTop: 40 }}
+                >
+                  <a href="mailto:hello@thekissa.com" className="btn btn-primary">Begin the story</a>
+                  <a href="#work" className="btn btn-ghost on-ink">See our work</a>
+                </motion.div>
+              </div>
+
+              {/* Right: bubble → landscape → portrait morph */}
+              <div
+                className="hero-video-col"
+                style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+              >
+                <BubbleMorphVideo src="/kissa-post1.mp4" scrollRef={heroRef} />
+              </div>
+            </div>
+
+            {/* Scroll indicator */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.5, duration: 0.6 }}
+              style={{
+                position: "absolute",
+                bottom: 36,
+                right: 48,
+                fontFamily: "var(--sans)",
+                fontSize: 10,
+                letterSpacing: "0.18em",
+                textTransform: "uppercase",
+                color: "rgba(255,255,255,0.35)",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 8,
+                zIndex: 1,
+              }}
+            >
+              <span>Scroll</span>
+              <motion.div
+                animate={{ y: [0, 6, 0] }}
+                transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+                style={{ width: 1, height: 28, background: "rgba(255,255,255,0.25)" }}
+              />
+            </motion.div>
+
+            <style>{`
+              @media (max-width: 860px) {
+                .hero-grid { grid-template-columns: 1fr !important; }
+                .hero-video-col { justify-content: flex-start !important; }
+              }
+              @media (max-width: 480px) {
+                .hero-video-col { display: none !important; }
+              }
+            `}</style>
+          </div>
         </section>
 
         {/* ══ 2. MARQUEE STRIP ══════════════════════════════════════════════════ */}
