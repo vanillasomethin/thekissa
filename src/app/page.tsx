@@ -5,8 +5,6 @@ import {
   motion,
   useReducedMotion,
   AnimatePresence,
-  useMotionValue,
-  useSpring,
 } from "motion/react";
 import { ArrowUpRight, ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
@@ -722,7 +720,7 @@ function TestimonialsSlider() {
   );
 }
 
-// ─── WorkListSection — pixel.melbourne-style list + floating cursor preview ───
+// ─── Project type ─────────────────────────────────────────────────────────────
 interface Project {
   name: string;
   category: string;
@@ -764,169 +762,246 @@ function ProjectPreviewCard({ project }: { project: Project }) {
   );
 }
 
-function WorkListSection() {
-  const [hovered, setHovered] = useState<number | null>(null);
+function WorkCarousel3D() {
+  const [active, setActive] = useState(0);
   const reduce = useReducedMotion();
-  const mouseX = useMotionValue(-999);
-  const mouseY = useMotionValue(-999);
-  const smoothX = useSpring(mouseX, { damping: 22, stiffness: 200, mass: 0.5 });
-  const smoothY = useSpring(mouseY, { damping: 22, stiffness: 200, mass: 0.5 });
+  const n = featuredProjects.length;
+  const go = (dir: number) => setActive(i => (i + dir + n) % n);
 
-  function onMouseMove(e: React.MouseEvent) {
-    mouseX.set(e.clientX + 28);
-    mouseY.set(e.clientY - 110);
-  }
+  // 3 visible slots: prev, current, next
+  const slots = ([-1, 0, 1] as const).map(d => (active + d + n) % n);
 
   return (
-    <section
-      id="work"
-      onMouseMove={onMouseMove}
-      style={{ background: "rgb(18,18,18)", padding: "72px 0 80px", position: "relative" }}
-    >
-      {/* Floating cursor preview */}
-      {!reduce && (
-        <motion.div
-          style={{
-            position: "fixed",
-            left: smoothX,
-            top: smoothY,
-            width: 260,
-            height: 320,
-            borderRadius: 16,
-            overflow: "hidden",
-            pointerEvents: "none",
-            zIndex: 9998,
-          }}
-        >
-          <AnimatePresence mode="wait">
-            {hovered !== null && (
-              <motion.div
-                key={hovered}
-                initial={{ opacity: 0, scale: 0.88, rotate: -3 }}
-                animate={{ opacity: 1, scale: 1, rotate: 0 }}
-                exit={{ opacity: 0, scale: 0.88, rotate: 3 }}
-                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                style={{ position: "absolute", inset: 0, background: featuredProjects[hovered].bg, borderRadius: 16 }}
-              >
-                <ProjectPreviewCard project={featuredProjects[hovered] as Project} />
-                <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "18px 20px" }}>
-                  <p style={{ fontFamily: "var(--sans)", fontSize: 20, fontWeight: 700, color: "#fff", margin: "0 0 4px" }}>{featuredProjects[hovered].name}</p>
-                  <p style={{ fontFamily: "var(--sans)", fontSize: 11, color: "rgba(255,255,255,0.5)", letterSpacing: "0.1em", textTransform: "uppercase", margin: 0 }}>{featuredProjects[hovered].category}</p>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.div>
-      )}
+    <section id="work" style={{ background: "rgb(10,10,10)", padding: "80px 0 100px", overflow: "hidden" }}>
+      <div className="wrap" style={{ maxWidth: 1200, margin: "0 auto", padding: "0 50px" }}>
 
-      <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
-        {/* Header */}
-        <div className="work-heading-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 48 }}>
+        {/* Header row */}
+        <div className="work-heading-row" style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end", marginBottom: 64 }}>
           <ClipReveal>
-            <h2 style={{ fontFamily: "var(--sans)", fontSize: "clamp(36px, 5vw, 72px)", fontWeight: 700, color: "var(--fg-on-ink)", letterSpacing: "-0.012em", lineHeight: 1.05, marginBottom: 0 }}>
+            <h2 style={{ fontFamily:"var(--sans)", fontSize:"clamp(36px,5vw,72px)", fontWeight:700, color:"#fff", letterSpacing:"-0.012em", lineHeight:1.05, margin:0 }}>
               Selected work.
             </h2>
           </ClipReveal>
-          <Link href="/portfolio" style={{ fontFamily: "var(--sans)", fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.7)", textDecoration: "none", display: "flex", alignItems: "center", gap: 4 }}>
-            View all work <ArrowUpRight size={14} />
+          <Link href="/portfolio" style={{ fontFamily:"var(--sans)", fontSize:14, fontWeight:600, color:"rgba(255,255,255,0.5)", textDecoration:"none", display:"flex", alignItems:"center", gap:4 }}>
+            View all <ArrowUpRight size={14} />
           </Link>
         </div>
 
-        {/* Project rows */}
-        <div>
-          {(featuredProjects as Project[]).map((p, i) => (
-            <motion.a
-              key={p.name}
-              href={p.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              initial={reduce ? false : { opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.06, ease }}
-              onHoverStart={() => !reduce && setHovered(i)}
-              onHoverEnd={() => setHovered(null)}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 24,
-                padding: "28px 0",
-                borderTop: "1px solid rgba(255,255,255,0.08)",
-                textDecoration: "none",
-                cursor: reduce ? "pointer" : "none",
-                position: "relative",
-                overflow: "hidden",
-              }}
-            >
-              {/* Hover fill bar */}
+        {/* 3D stage */}
+        <div style={{ position:"relative", height:460, display:"flex", alignItems:"center", justifyContent:"center", perspective:"1100px" }}>
+          {slots.map((idx, pos) => {
+            const p = featuredProjects[idx] as Project;
+            const isCenter = pos === 1;
+            const isLeft   = pos === 0;
+
+            return (
               <motion.div
+                key={`${active}-${pos}`}
+                animate={reduce ? {} : {
+                  rotateY: isLeft ? 26 : pos === 2 ? -26 : 0,
+                  scale:   isCenter ? 1 : 0.76,
+                  x:       isLeft ? "-62%" : pos === 2 ? "62%" : "0%",
+                  opacity: isCenter ? 1 : 0.52,
+                  zIndex:  isCenter ? 2 : 1,
+                }}
+                transition={{ duration: 0.65, ease: [0.65, 0.01, 0.05, 0.99] }}
+                onClick={!isCenter ? () => go(isLeft ? -1 : 1) : undefined}
                 style={{
                   position: "absolute",
-                  inset: "0 -8px",
-                  background: "rgba(255,255,255,0.03)",
-                  scaleX: 0,
-                  transformOrigin: "left",
-                  borderRadius: 4,
-                }}
-                animate={{ scaleX: hovered === i ? 1 : 0 }}
-                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              />
-
-              {/* Number */}
-              <span style={{ fontFamily: "var(--sans)", fontSize: 11, color: "rgba(255,255,255,0.28)", letterSpacing: "0.1em", flexShrink: 0, width: 28, position: "relative" }}>
-                {String(i + 1).padStart(2, "0")}
-              </span>
-
-              {/* Name */}
-              <motion.span
-                animate={{ x: hovered === i && !reduce ? 8 : 0, color: hovered === i ? "#ffffff" : "rgba(255,255,255,0.72)" }}
-                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                style={{
-                  fontFamily: "var(--sans)",
-                  fontSize: "clamp(28px, 4vw, 64px)",
-                  fontWeight: 700,
-                  flex: 1,
-                  lineHeight: 1,
-                  letterSpacing: "-0.02em",
-                  position: "relative",
-                  display: "block",
+                  width: isCenter ? 640 : 400,
+                  height: isCenter ? 420 : 300,
+                  borderRadius: 18,
+                  overflow: "hidden",
+                  background: p.bg,
+                  cursor: "pointer",
+                  flexShrink: 0,
                 }}
               >
-                {p.name}
-              </motion.span>
+                {/* Project preview fills */}
+                <ProjectPreviewCard project={p} />
 
-              {/* Category */}
-              <span style={{
-                fontFamily: "var(--sans)",
-                fontSize: 11,
-                color: "rgba(255,255,255,0.35)",
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                flexShrink: 0,
-                position: "relative",
-              }}>
-                {p.category}
-              </span>
+                {/* Name overlay */}
+                <div style={{
+                  position:"absolute", bottom:0, left:0, right:0,
+                  padding: isCenter ? "28px 32px" : "16px 20px",
+                  background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)",
+                }}>
+                  <p style={{
+                    fontFamily: "var(--sans)",
+                    fontSize: isCenter ? "clamp(44px,5vw,72px)" : 22,
+                    fontWeight: 700,
+                    color: "#fff",
+                    margin: "0 0 4px",
+                    letterSpacing: "-0.02em",
+                    lineHeight: 1,
+                  }}>
+                    {p.name}
+                  </p>
+                  {isCenter && (
+                    <p style={{ fontFamily:"var(--sans)", fontSize:11, color:"rgba(255,255,255,0.5)", letterSpacing:"0.12em", textTransform:"uppercase", margin:0 }}>
+                      {p.category}
+                    </p>
+                  )}
+                </div>
 
-              {/* Arrow */}
-              <motion.div
-                animate={{ x: hovered === i ? 0 : -6, opacity: hovered === i ? 1 : 0.3 }}
-                transition={{ duration: 0.25, ease }}
-                style={{ flexShrink: 0, position: "relative" }}
-              >
-                <ArrowUpRight size={18} color="#ffffff" />
+                {/* Center card: "View project" pill */}
+                {isCenter && (
+                  <a
+                    href={p.href} target="_blank" rel="noopener noreferrer"
+                    onClick={e => e.stopPropagation()}
+                    style={{
+                      position:"absolute", top:20, right:20,
+                      display:"inline-flex", alignItems:"center", gap:6,
+                      background:"rgba(255,255,255,0.15)",
+                      backdropFilter:"blur(12px)",
+                      color:"#fff", borderRadius:"100px",
+                      padding:"9px 18px",
+                      fontFamily:"var(--sans)", fontWeight:600, fontSize:12,
+                      letterSpacing:"0.06em", textTransform:"uppercase",
+                      textDecoration:"none",
+                      border:"1px solid rgba(255,255,255,0.25)",
+                    }}
+                  >
+                    View <ArrowUpRight size={12} />
+                  </a>
+                )}
               </motion.div>
-            </motion.a>
-          ))}
-          <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }} />
+            );
+          })}
+        </div>
+
+        {/* Navigation pills */}
+        <div style={{ display:"flex", justifyContent:"center", alignItems:"center", gap:16, marginTop:52 }}>
+          <button
+            onClick={() => go(-1)}
+            style={{
+              width:56, height:56, borderRadius:"100px",
+              background:"rgba(173,19,53,0.18)",
+              border:"1px solid rgba(173,19,53,0.4)",
+              color:"#fff", cursor:"pointer",
+              display:"flex", alignItems:"center", justifyContent:"center",
+              transition:"background 0.2s ease",
+            }}
+            onMouseEnter={e => (e.currentTarget.style.background="rgba(173,19,53,0.45)")}
+            onMouseLeave={e => (e.currentTarget.style.background="rgba(173,19,53,0.18)")}
+            aria-label="Previous project"
+          >
+            <ArrowLeft size={18} />
+          </button>
+
+          <span style={{ fontFamily:"var(--sans)", fontSize:12, color:"rgba(255,255,255,0.3)", letterSpacing:"0.14em", minWidth:56, textAlign:"center" }}>
+            {String(active + 1).padStart(2,"0")} / {String(n).padStart(2,"0")}
+          </span>
+
+          <button
+            onClick={() => go(1)}
+            style={{
+              width:56, height:56, borderRadius:"100px",
+              background:"rgba(173,19,53,0.18)",
+              border:"1px solid rgba(173,19,53,0.4)",
+              color:"#fff", cursor:"pointer",
+              display:"flex", alignItems:"center", justifyContent:"center",
+              transition:"background 0.2s ease",
+            }}
+            onMouseEnter={e => (e.currentTarget.style.background="rgba(173,19,53,0.45)")}
+            onMouseLeave={e => (e.currentTarget.style.background="rgba(173,19,53,0.18)")}
+            aria-label="Next project"
+          >
+            <ArrowRight size={18} />
+          </button>
         </div>
       </div>
 
       <style>{`
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
           .work-heading-row { flex-direction: column !important; align-items: flex-start !important; gap: 16px !important; }
         }
       `}</style>
+    </section>
+  );
+}
+
+// ─── StickerBadge ─────────────────────────────────────────────────────────────
+function StickerBadge({ label, rot = 0, style }: { label: string; rot?: number; style?: React.CSSProperties }) {
+  const reduce = useReducedMotion();
+  return (
+    <motion.div
+      initial={reduce ? false : { opacity: 0, scale: 0.7, rotate: rot - 20 }}
+      whileInView={{ opacity: 1, scale: 1, rotate: rot }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      style={{
+        position: "absolute",
+        display: "inline-flex",
+        alignItems: "center",
+        background: "#ffffff",
+        color: "#0a0a0a",
+        borderRadius: "100px",
+        padding: "8px 18px",
+        fontFamily: "var(--sans)",
+        fontWeight: 700,
+        fontSize: 11,
+        letterSpacing: "0.14em",
+        textTransform: "uppercase",
+        boxShadow: "0 6px 24px rgba(0,0,0,0.35)",
+        userSelect: "none",
+        whiteSpace: "nowrap",
+        pointerEvents: "none",
+        transform: `rotate(${rot}deg)`,
+        ...style,
+      }}
+    >
+      {label}
+    </motion.div>
+  );
+}
+
+// ─── CapabilitiesStrip ────────────────────────────────────────────────────────
+const CAPABILITIES = [
+  { text: "Brand Strategy",     fill: true  },
+  { text: "Film · Direction",   fill: false },
+  { text: "Motion · Identity",  fill: true  },
+  { text: "Immersive · Digital",fill: false },
+  { text: "Campaigns",          fill: true  },
+];
+
+function CapabilitiesStrip() {
+  const reduce = useReducedMotion();
+  return (
+    <section style={{ background: "#AD1335", padding: "72px 0 80px", overflow: "hidden", position: "relative" }}>
+      {/* Single decorative scribble */}
+      <ScribbleMark src="/projects/scribbles/s-104.svg" size={110} rot={-14} delay={200}
+        style={{ position:"absolute", top:"8%", right:"4%", opacity:0 }} />
+
+      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 50px" }}>
+        {CAPABILITIES.map((cap, i) => (
+          <motion.div
+            key={i}
+            initial={reduce ? false : { opacity:0, x: i % 2 === 0 ? -32 : 32 }}
+            whileInView={{ opacity:1, x:0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.65, delay: i * 0.07, ease: [0.22,1,0.36,1] }}
+            style={{
+              borderBottom: i < CAPABILITIES.length - 1 ? "1px solid rgba(255,255,255,0.18)" : "none",
+              padding: "14px 0",
+            }}
+          >
+            <span style={{
+              fontFamily: "var(--sans)",
+              fontSize: "clamp(38px, 5.8vw, 90px)",
+              fontWeight: 700,
+              letterSpacing: "-0.025em",
+              lineHeight: 1.05,
+              color: cap.fill ? "#ffffff" : "transparent",
+              WebkitTextStroke: cap.fill ? undefined : "1.5px rgba(255,255,255,0.55)",
+              display: "block",
+              userSelect: "none",
+            }}>
+              {cap.text}
+            </span>
+          </motion.div>
+        ))}
+      </div>
     </section>
   );
 }
@@ -1123,11 +1198,18 @@ export default function HomePage() {
         {/* ══ 2c. PHYSICS SCRIBBLES — Matter.js drop ═══════════════════════════ */}
         <PhysicsScribbles height={300} />
 
+        {/* ══ 2d. CAPABILITIES STRIP ════════════════════════════════════════════ */}
+        <CapabilitiesStrip />
+
         {/* ══ 3. STATEMENT ══════════════════════════════════════════════════════ */}
         <section className="section-pad-xl" style={{ background: "var(--ink)", padding: "72px 0 60px", borderTop: "1px solid rgba(255,255,255,0.08)", position: "relative", overflow: "hidden" }}>
           {/* Single scribble accent */}
           <ScribbleMark src="/projects/scribbles/s-38.svg"  size={130} rot={-20} delay={200}
             style={{ position: "absolute", top: "8%",  right: "4%", opacity: 0 }} className="statement-scribble" />
+          {/* Sticker badges */}
+          <StickerBadge label="Film"      rot={-8}  style={{ top: "12%", left: "4%" }} />
+          <StickerBadge label="Brand"     rot={6}   style={{ top: "18%", right: "12%" }} />
+          <StickerBadge label="Direction" rot={-4}  style={{ bottom: "18%", left: "6%" }} />
           <div className="wrap" style={{ maxWidth: 860, margin: "0 auto" }}>
             <motion.div
               initial={{ scaleX: 0 }}
@@ -1165,7 +1247,7 @@ export default function HomePage() {
         <ServicesTabbed />
 
         {/* ══ 5. SELECTED WORK ══════════════════════════════════════════════════ */}
-        <WorkListSection />
+        <WorkCarousel3D />
 
         {/* ══ 6. CLIENT LOGOS STRIP (MAD pattern) ══════════════════════════════ */}
         <ClientLogosStrip />
