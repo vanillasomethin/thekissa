@@ -16,6 +16,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { BurstBubbles, KineticWordReel, BubbleGrid, Card3D } from "@/components/BubbleKinetic";
 import PhysicsScribbles from "@/components/PhysicsScribbles";
+import BubbleVideo from "@/components/BubbleVideo";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -1056,32 +1057,13 @@ export default function HomePage() {
               </motion.div>
             </div>
 
-            {/* Right: video */}
-            <motion.div
+            {/* Right: bubble video */}
+            <div
               className="hero-video-col"
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.9, delay: 0.4, ease }}
-              style={{
-                position: "relative",
-                height: "min(580px, 70vh)",
-                borderRadius: 20,
-                overflow: "hidden",
-                background: "#111",
-              }}
+              style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
             >
-              <video
-                autoPlay
-                muted
-                loop
-                playsInline
-                style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
-              >
-                <source src="/hero.mp4" type="video/mp4" />
-              </video>
-              {/* subtle vignette at bottom */}
-              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.3) 0%, transparent 50%)" }} />
-            </motion.div>
+              <BubbleVideo src="/hero.mp4" width={420} />
+            </div>
           </div>
 
           {/* Scroll indicator — bottom right */}
@@ -1116,7 +1098,7 @@ export default function HomePage() {
           <style>{`
             @media (max-width: 860px) {
               .hero-grid { grid-template-columns: 1fr !important; }
-              .hero-video-col { height: 260px !important; }
+              .hero-video-col { justify-content: flex-start !important; }
             }
             @media (max-width: 480px) {
               .hero-video-col { display: none !important; }
@@ -1141,11 +1123,9 @@ export default function HomePage() {
 
         {/* ══ 3. STATEMENT ══════════════════════════════════════════════════════ */}
         <section className="section-pad-xl" style={{ background: "var(--ink)", padding: "72px 0 60px", borderTop: "1px solid rgba(255,255,255,0.08)", position: "relative", overflow: "hidden" }}>
-          {/* Scribble accents — far edges */}
+          {/* Single scribble accent */}
           <ScribbleMark src="/projects/scribbles/s-38.svg"  size={130} rot={-20} delay={200}
-            style={{ position: "absolute", top: "8%",  right: "3%", opacity: 0 }} className="statement-scribble" />
-          <ScribbleMark src="/projects/scribbles/s-11.svg"  size={90}  rot={12}  delay={350}
-            style={{ position: "absolute", bottom: "6%", right: "8%", opacity: 0 }} className="statement-scribble" />
+            style={{ position: "absolute", top: "8%",  right: "4%", opacity: 0 }} className="statement-scribble" />
           <div className="wrap" style={{ maxWidth: 860, margin: "0 auto" }}>
             <motion.div
               initial={{ scaleX: 0 }}
