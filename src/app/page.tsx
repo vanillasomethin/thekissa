@@ -997,16 +997,33 @@ export default function HomePage() {
             alignItems: "center",
           }}
         >
-          {/* Parallax bg layer */}
+          {/* Background video — autoplay, muted, looped */}
           <motion.div
             style={{
               position: "absolute",
-              inset: "-20%",
-              background: "var(--ink)",
-              y: bgY,
+              inset: 0,
               zIndex: 0,
+              y: bgY,
             }}
-          />
+          >
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              style={{
+                position: "absolute",
+                inset: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+              }}
+            >
+              <source src="/hero.mp4" type="video/mp4" />
+            </video>
+            {/* Dark overlay so text stays readable */}
+            <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.55)" }} />
+          </motion.div>
 
           {/* Hero scribble accents */}
           <ScribbleMark src="/projects/scribbles/s-04.svg"  size={110} rot={-12} delay={800}
