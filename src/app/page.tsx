@@ -275,13 +275,13 @@ function ClipReveal({
 // ─── Hero cycling headlines ───────────────────────────────────────────────────
 // Each line: max ~16 chars so it never wraps at any viewport at this font size
 const HERO_LINES = [
-  { l1: "We make work",       l2: "people remember." },
-  { l1: "Brand. Film.",       l2: "Space. Story." },
-  { l1: "A frame. A mark.",   l2: "A story that stays." },
+  { l1: "We make work",     l2: "people remember." },
+  { l1: "Brand. Film.",     l2: "Space. Story." },
+  { l1: "A frame. A mark.", l2: "Stories that stay." },
 ];
 
-// The longest/tallest phrase — used as invisible spacer to lock container height
-const HERO_SPACER = { l1: "We make work", l2: "people remember." };
+// Longest lines — invisible spacer locks the container to exactly 2 lines
+const HERO_SPACER = { l1: "A frame. A mark.", l2: "Stories that stay." };
 
 // Three distinct transition styles
 const HERO_VARIANTS = [
@@ -310,7 +310,7 @@ const HERO_VARIANTS = [
 
 const H1_STYLE: React.CSSProperties = {
   fontFamily: "var(--sans)",
-  fontSize: "clamp(40px, 5vw, 80px)",
+  fontSize: "clamp(36px, 4.5vw, 70px)",
   lineHeight: 1.08,
   fontWeight: 700,
   letterSpacing: "-0.02em",
@@ -997,43 +997,9 @@ export default function HomePage() {
             alignItems: "center",
           }}
         >
-          {/* Background video — autoplay, muted, looped */}
-          <motion.div
-            style={{
-              position: "absolute",
-              inset: 0,
-              zIndex: 0,
-              y: bgY,
-            }}
-          >
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              style={{
-                position: "absolute",
-                inset: 0,
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-              }}
-            >
-              <source src="/hero.mp4" type="video/mp4" />
-            </video>
-            {/* Dark overlay so text stays readable */}
-            <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.55)" }} />
-          </motion.div>
-
-          {/* Hero scribble accents */}
-          <ScribbleMark src="/projects/scribbles/s-04.svg"  size={110} rot={-12} delay={800}
-            style={{ position: "absolute", bottom: "12%", left: "4%", opacity: 0 }} className="hero-scribble" />
-          <ScribbleMark src="/projects/scribbles/s-105.svg" size={80}  rot={18}  delay={1000}
-            style={{ position: "absolute", top: "14%", right: "28%", opacity: 0 }} className="hero-scribble" />
-
-          {/* Hero content — text left column */}
+          {/* Hero grid — text left, video right */}
           <div
-            className="wrap"
+            className="wrap hero-grid"
             style={{
               maxWidth: 1200,
               margin: "0 auto",
@@ -1042,9 +1008,14 @@ export default function HomePage() {
               zIndex: 1,
               paddingTop: 100,
               paddingBottom: 56,
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: 48,
+              alignItems: "center",
             }}
           >
-            <div className="hero-content-col" style={{ maxWidth: "55%" }}>
+            {/* Left: text */}
+            <div className="hero-content-col">
               <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease, delay: 0.1 }}>
                 <p style={{
                   fontFamily: "var(--sans)",
@@ -1084,6 +1055,33 @@ export default function HomePage() {
                 <a href="#work" className="btn btn-ghost on-ink">See our work</a>
               </motion.div>
             </div>
+
+            {/* Right: video */}
+            <motion.div
+              className="hero-video-col"
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.9, delay: 0.4, ease }}
+              style={{
+                position: "relative",
+                height: "min(580px, 70vh)",
+                borderRadius: 20,
+                overflow: "hidden",
+                background: "#111",
+              }}
+            >
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+              >
+                <source src="/hero.mp4" type="video/mp4" />
+              </video>
+              {/* subtle vignette at bottom */}
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.3) 0%, transparent 50%)" }} />
+            </motion.div>
           </div>
 
           {/* Scroll indicator — bottom right */}
@@ -1116,8 +1114,12 @@ export default function HomePage() {
           </motion.div>
 
           <style>{`
-            @media (max-width: 680px) {
-              .hero-text-col { max-width: 100% !important; }
+            @media (max-width: 860px) {
+              .hero-grid { grid-template-columns: 1fr !important; }
+              .hero-video-col { height: 260px !important; }
+            }
+            @media (max-width: 480px) {
+              .hero-video-col { display: none !important; }
             }
           `}</style>
         </section>
