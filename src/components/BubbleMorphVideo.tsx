@@ -106,34 +106,35 @@ export default function BubbleMorphVideo({ src, scrollRef }: Props) {
         transition: "width 0.05s linear, height 0.05s linear",
       }}
     >
-      {/* ── Bubble layer: SVG foreignObject clip ── */}
+      {/* ── Bubble layer: CSS clip-path ── */}
       <div
         ref={bubbleLayerRef}
         style={{ position: "absolute", inset: 0, transition: "opacity 0.12s" }}
       >
-        <svg
-          width="100%"
-          height="100%"
-          viewBox="0 0 7150 8117"
-          xmlns="http://www.w3.org/2000/svg"
-          style={{ position: "absolute", top: 0, left: 0 }}
-        >
+        {/* Hidden SVG just for clip definition */}
+        <svg width="0" height="0" style={{ position: "absolute", overflow: "hidden" }} aria-hidden>
           <defs>
-            <clipPath id={`clip-${uid}`} clipPathUnits="userSpaceOnUse">
+            <clipPath id={`clip-${uid}`} clipPathUnits="objectBoundingBox"
+              transform={`scale(${1/7150} ${1/8117})`}>
               <path d={BODY_PATH} />
               <path d={TAIL_PATH} />
             </clipPath>
           </defs>
-          <foreignObject x="0" y="0" width="7150" height="8117" clipPath={`url(#clip-${uid})`}>
-            {/* @ts-expect-error xmlns required inside foreignObject */}
-            <div xmlns="http://www.w3.org/1999/xhtml" style={{ width: "100%", height: "100%" }}>
-              <video autoPlay muted loop playsInline
-                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}>
-                <source src={src} type="video/mp4" />
-              </video>
-            </div>
-          </foreignObject>
         </svg>
+
+        {/* Video clipped via CSS */}
+        <div style={{
+          position: "absolute",
+          inset: 0,
+          clipPath: `url(#clip-${uid})`,
+          WebkitClipPath: `url(#clip-${uid})`,
+          overflow: "hidden",
+        }}>
+          <video autoPlay muted loop playsInline
+            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}>
+            <source src={src} type="video/mp4" />
+          </video>
+        </div>
 
         {/* Crimson frame overlay */}
         <svg

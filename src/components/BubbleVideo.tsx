@@ -26,35 +26,40 @@ export default function BubbleVideo({ src, width = 380, frameColor = "#AD1335" }
       transition={{ duration: 1.0, ease: [0.65, 0.01, 0.05, 0.99], delay: 0.5 }}
       style={{ position: "relative", width, height, flexShrink: 0 }}
     >
-      {/* Video clipped to bubble shape via foreignObject */}
+      {/* Hidden SVG just for clip definition */}
       <svg
-        width={width}
-        height={height}
-        viewBox="0 0 7150 8117"
-        xmlns="http://www.w3.org/2000/svg"
-        style={{ position: "absolute", top: 0, left: 0 }}
+        width="0"
+        height="0"
+        style={{ position: "absolute", overflow: "hidden" }}
+        aria-hidden
       >
         <defs>
-          <clipPath id={`clip-${uid}`} clipPathUnits="userSpaceOnUse">
+          <clipPath id={`clip-${uid}`} clipPathUnits="objectBoundingBox"
+            transform={`scale(${1/7150} ${1/8117})`}>
             <path d={BODY_PATH} />
             <path d={TAIL_PATH} />
           </clipPath>
         </defs>
-        <foreignObject x="0" y="0" width="7150" height="8117" clipPath={`url(#clip-${uid})`}>
-          {/* @ts-expect-error xmlns required inside SVG foreignObject */}
-          <div xmlns="http://www.w3.org/1999/xhtml" style={{ width: "100%", height: "100%" }}>
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-            >
-              <source src={src} type="video/mp4" />
-            </video>
-          </div>
-        </foreignObject>
       </svg>
+
+      {/* Video container clipped via CSS clip-path */}
+      <div style={{
+        position: "absolute",
+        inset: 0,
+        clipPath: `url(#clip-${uid})`,
+        WebkitClipPath: `url(#clip-${uid})`,
+        overflow: "hidden",
+      }}>
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+        >
+          <source src={src} type="video/mp4" />
+        </video>
+      </div>
 
       {/* Brand-colour frame on top */}
       <svg
