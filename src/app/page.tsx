@@ -310,7 +310,7 @@ const HERO_VARIANTS = [
 
 const H1_STYLE: React.CSSProperties = {
   fontFamily: "var(--sans)",
-  fontSize: "clamp(36px, 4.5vw, 70px)",
+  fontSize: "clamp(30px, 3.8vw, 52px)",
   lineHeight: 1.08,
   fontWeight: 700,
   letterSpacing: "-0.02em",
