@@ -15,13 +15,13 @@ const TAIL = `M1317.489,3847.127c-4.326,8.035 -4.413,7.413 -8.52,15.826c-1.537,3
 
 const T = {
   p1_dot:     0,
-  p2_dots:    400,
-  p3_bubbles: 900,
-  p4_grow:    1500,
-  p5_fill:    2000,
-  p6_explode: 2600,
-  p7_flood:   3000,
-  p8_logo:    3800,
+  p2_dots:    700,
+  p3_bubbles: 1500,
+  p4_grow:    2400,
+  p5_fill:    3200,
+  p6_explode: 4100,
+  p7_flood:   4800,
+  p8_logo:    6000,
 };
 
 export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
@@ -184,7 +184,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
     // Phase 7 — red flood → white flash → dark
     t(() => {
       const flood = document.createElement("div");
-      flood.style.cssText = `position:fixed;inset:0;z-index:10;background:#111111;opacity:0;transition:opacity 0.35s ease;`;
+      flood.style.cssText = `position:fixed;inset:0;z-index:10;background:#111111;opacity:0;transition:opacity 0.5s ease;`;
       stage.appendChild(flood);
 
       requestAnimationFrame(() => requestAnimationFrame(() => {
@@ -207,15 +207,15 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
 
     // Phase 8 — logo stamps in
     t(() => {
-      logo.style.transition = "opacity 0.6s ease, transform 0.6s cubic-bezier(0.34,1.56,0.64,1)";
+      logo.style.transition = "opacity 0.7s ease, transform 0.7s cubic-bezier(0.34,1.56,0.64,1)";
       logo.style.opacity    = "1";
-      logo.style.transform  = "scale(1)";
+      logo.style.transform  = "translate(-50%, -50%) scale(1)";
     }, T.p8_logo);
 
     // Exit loading screen
     t(() => {
       setVisible(false);
-    }, T.p8_logo + 900);
+    }, T.p8_logo + 1400);
 
     return () => { timers.forEach(clearTimeout); };
   // eslint-disable-next-line react-hooks/exhaustive-deps

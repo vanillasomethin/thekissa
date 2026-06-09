@@ -136,17 +136,6 @@ export default function BubbleMorphVideo({ src, scrollRef }: Props) {
           </video>
         </div>
 
-        {/* Crimson frame overlay */}
-        <svg
-          width="100%"
-          height="100%"
-          viewBox="0 0 7150 8117"
-          xmlns="http://www.w3.org/2000/svg"
-          style={{ position: "absolute", top: 0, left: 0, pointerEvents: "none", fillRule: "evenodd" }}
-        >
-          <path d={BODY_PATH} fill="#1c1c1c" fillOpacity={0.25} />
-          <path d={TAIL_PATH} fill="#1c1c1c" fillOpacity={0.25} />
-        </svg>
       </div>
 
       {/* ── Rect layer: rounded clip for landscape / portrait ── */}

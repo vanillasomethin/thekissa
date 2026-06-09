@@ -441,7 +441,7 @@ function ServicesTabbed() {
   const s = services[active];
 
   return (
-    <section className="section-pad-xl" style={{ background: "var(--ink)", padding: "80px 0", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+    <section className="section-pad-xl" style={{ background: "var(--ink)", padding: "56px 0", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
       <div className="services-wrap" style={{ maxWidth: 1200, margin: "0 auto", padding: "0 50px" }}>
         <AnimatePresence mode="wait">
           <motion.div
@@ -551,7 +551,7 @@ function TestimonialsSlider() {
   const t = testimonials[current];
 
   return (
-    <section className="section-pad-xl" style={{ background: "rgb(28,28,28)", padding: "80px 0" }}>
+    <section className="section-pad-xl" style={{ background: "rgb(28,28,28)", padding: "56px 0" }}>
       <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
         {/* Header */}
         <ClipReveal>
@@ -772,7 +772,7 @@ function WorkCarousel3D() {
   const slots = ([-1, 0, 1] as const).map(d => (active + d + n) % n);
 
   return (
-    <section id="work" style={{ background: "rgb(10,10,10)", padding: "80px 0 100px", overflow: "hidden" }}>
+    <section id="work" style={{ background: "rgb(10,10,10)", padding: "56px 0 72px", overflow: "hidden" }}>
       <div className="wrap" style={{ maxWidth: 1200, margin: "0 auto", padding: "0 50px" }}>
 
         {/* Header row */}
@@ -876,14 +876,14 @@ function WorkCarousel3D() {
             onClick={() => go(-1)}
             style={{
               width:56, height:56, borderRadius:"100px",
-              background:"rgba(173,19,53,0.18)",
-              border:"1px solid rgba(173,19,53,0.4)",
+              background:"rgba(255,255,255,0.08)",
+              border:"1px solid rgba(255,255,255,0.22)",
               color:"#fff", cursor:"pointer",
               display:"flex", alignItems:"center", justifyContent:"center",
               transition:"background 0.2s ease",
             }}
-            onMouseEnter={e => (e.currentTarget.style.background="rgba(173,19,53,0.45)")}
-            onMouseLeave={e => (e.currentTarget.style.background="rgba(173,19,53,0.18)")}
+            onMouseEnter={e => (e.currentTarget.style.background="rgba(255,255,255,0.18)")}
+            onMouseLeave={e => (e.currentTarget.style.background="rgba(255,255,255,0.08)")}
             aria-label="Previous project"
           >
             <ArrowLeft size={18} />
@@ -897,14 +897,14 @@ function WorkCarousel3D() {
             onClick={() => go(1)}
             style={{
               width:56, height:56, borderRadius:"100px",
-              background:"rgba(173,19,53,0.18)",
-              border:"1px solid rgba(173,19,53,0.4)",
+              background:"rgba(255,255,255,0.08)",
+              border:"1px solid rgba(255,255,255,0.22)",
               color:"#fff", cursor:"pointer",
               display:"flex", alignItems:"center", justifyContent:"center",
               transition:"background 0.2s ease",
             }}
-            onMouseEnter={e => (e.currentTarget.style.background="rgba(173,19,53,0.45)")}
-            onMouseLeave={e => (e.currentTarget.style.background="rgba(173,19,53,0.18)")}
+            onMouseEnter={e => (e.currentTarget.style.background="rgba(255,255,255,0.18)")}
+            onMouseLeave={e => (e.currentTarget.style.background="rgba(255,255,255,0.08)")}
             aria-label="Next project"
           >
             <ArrowRight size={18} />
@@ -968,7 +968,7 @@ const CAPABILITIES = [
 function CapabilitiesStrip() {
   const reduce = useReducedMotion();
   return (
-    <section style={{ background: "#1c1c1c", padding: "72px 0 80px", overflow: "hidden", position: "relative" }}>
+    <section style={{ background: "#1c1c1c", padding: "48px 0 56px", overflow: "hidden", position: "relative" }}>
       {/* Single decorative scribble */}
       <ScribbleMark src="/projects/scribbles/s-104.svg" size={110} rot={-14} delay={200}
         style={{ position:"absolute", top:"8%", right:"4%", opacity:0 }} />
@@ -1057,7 +1057,7 @@ export default function HomePage() {
         <section
           ref={heroRef}
           style={{
-            height: "300vh",
+            height: "200vh",
             position: "relative",
             background: "var(--ink)",
           }}
@@ -1196,13 +1196,13 @@ export default function HomePage() {
         <KineticWordReel />
 
         {/* ══ 2c. PHYSICS SCRIBBLES — Matter.js drop ═══════════════════════════ */}
-        <PhysicsScribbles height={300} />
+        <PhysicsScribbles height={160} />
 
         {/* ══ 2d. CAPABILITIES STRIP ════════════════════════════════════════════ */}
         <CapabilitiesStrip />
 
         {/* ══ 3. STATEMENT ══════════════════════════════════════════════════════ */}
-        <section className="section-pad-xl" style={{ background: "var(--ink)", padding: "72px 0 60px", borderTop: "1px solid rgba(255,255,255,0.08)", position: "relative", overflow: "hidden" }}>
+        <section className="section-pad-xl" style={{ background: "var(--ink)", padding: "48px 0 40px", borderTop: "1px solid rgba(255,255,255,0.08)", position: "relative", overflow: "hidden" }}>
           {/* Single scribble accent */}
           <ScribbleMark src="/projects/scribbles/s-38.svg"  size={130} rot={-20} delay={200}
             style={{ position: "absolute", top: "8%",  right: "4%", opacity: 0 }} className="statement-scribble" />
@@ -1259,7 +1259,7 @@ export default function HomePage() {
         <BubbleGrid />
 
         {/* ══ 9. CTA BANNER — MAD bordered box ════════════════════════════════ */}
-        <section className="section-pad-lg" style={{ background: "#000000", padding: "60px 0" }}>
+        <section className="section-pad-lg" style={{ background: "#000000", padding: "48px 0" }}>
           <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto", padding: "0 50px" }}>
             <motion.div
               initial={{ opacity: 0, y: 24 }}
