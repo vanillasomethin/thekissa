@@ -63,7 +63,7 @@
   --line-strong:    rgba(255,255,255,0.22);
 
   /* ── Iridescent accent (Kissa signature) ─────────────────── */
-  --gradient-iridescent: linear-gradient(255deg, rgb(250,203,14), rgb(240,107,168) 30%, rgb(120,186,230) 65%, rgba(255,255,255,0.12));
+  --gradient-iridescent: linear-gradient(255deg, rgba(255,255,255,0.85), rgba(180,180,180,0.6) 40%, rgba(100,100,100,0.4) 70%, rgba(255,255,255,0.08));
 
   /* ── MAD Typography ──────────────────────────────────────── */
   --sans:           'Brockmann', 'Helvetica Neue', Arial, sans-serif;
