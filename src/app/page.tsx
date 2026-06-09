@@ -968,7 +968,7 @@ const CAPABILITIES = [
 function CapabilitiesStrip() {
   const reduce = useReducedMotion();
   return (
-    <section style={{ background: "#AD1335", padding: "72px 0 80px", overflow: "hidden", position: "relative" }}>
+    <section style={{ background: "#1c1c1c", padding: "72px 0 80px", overflow: "hidden", position: "relative" }}>
       {/* Single decorative scribble */}
       <ScribbleMark src="/projects/scribbles/s-104.svg" size={110} rot={-14} delay={200}
         style={{ position:"absolute", top:"8%", right:"4%", opacity:0 }} />

@@ -144,8 +144,8 @@ export default function BubbleMorphVideo({ src, scrollRef }: Props) {
           xmlns="http://www.w3.org/2000/svg"
           style={{ position: "absolute", top: 0, left: 0, pointerEvents: "none", fillRule: "evenodd" }}
         >
-          <path d={BODY_PATH} fill="#AD1335" fillOpacity={0.18} />
-          <path d={TAIL_PATH} fill="#AD1335" fillOpacity={0.18} />
+          <path d={BODY_PATH} fill="#1c1c1c" fillOpacity={0.25} />
+          <path d={TAIL_PATH} fill="#1c1c1c" fillOpacity={0.25} />
         </svg>
       </div>
 
@@ -173,7 +173,7 @@ export default function BubbleMorphVideo({ src, scrollRef }: Props) {
         style={{
           position: "absolute",
           inset: 0,
-          border: "5px solid #AD1335",
+          border: "5px solid #333333",
           borderRadius: 14,
           opacity: 0,
           pointerEvents: "none",

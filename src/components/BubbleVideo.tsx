@@ -15,7 +15,7 @@ interface BubbleVideoProps {
   frameColor?: string;
 }
 
-export default function BubbleVideo({ src, width = 380, frameColor = "#AD1335" }: BubbleVideoProps) {
+export default function BubbleVideo({ src, width = 380, frameColor = "#1c1c1c" }: BubbleVideoProps) {
   const uid = useId().replace(/:/g, "");
   const height = Math.round(width * (8117 / 7150));
 
