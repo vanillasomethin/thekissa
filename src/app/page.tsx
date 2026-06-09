@@ -444,7 +444,7 @@ function ServicesTabbed() {
   const s = services[active];
 
   return (
-    <section className="section-pad-xl" style={{ background: "var(--ink)", padding: "140px 0", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+    <section className="section-pad-xl" style={{ background: "var(--ink)", padding: "80px 0", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
       <div className="services-wrap" style={{ maxWidth: 1200, margin: "0 auto", padding: "0 50px" }}>
         <AnimatePresence mode="wait">
           <motion.div
@@ -554,11 +554,11 @@ function TestimonialsSlider() {
   const t = testimonials[current];
 
   return (
-    <section className="section-pad-xl" style={{ background: "rgb(28,28,28)", padding: "140px 0" }}>
+    <section className="section-pad-xl" style={{ background: "rgb(28,28,28)", padding: "80px 0" }}>
       <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
         {/* Header */}
         <ClipReveal>
-          <h2 style={{ fontFamily: "var(--sans)", fontSize: "clamp(36px,5vw,68px)", fontWeight: 700, color: "var(--fg-on-ink)", letterSpacing: "-0.012em", lineHeight: 1.05, marginTop: 0, marginBottom: 72 }}>
+          <h2 style={{ fontFamily: "var(--sans)", fontSize: "clamp(36px,5vw,68px)", fontWeight: 700, color: "var(--fg-on-ink)", letterSpacing: "-0.012em", lineHeight: 1.05, marginTop: 0, marginBottom: 48 }}>
             What our clients say.
           </h2>
         </ClipReveal>
@@ -782,7 +782,7 @@ function WorkListSection() {
     <section
       id="work"
       onMouseMove={onMouseMove}
-      style={{ background: "rgb(18,18,18)", padding: "120px 0 140px", position: "relative" }}
+      style={{ background: "rgb(18,18,18)", padding: "72px 0 80px", position: "relative" }}
     >
       {/* Floating cursor preview */}
       {!reduce && (
@@ -822,7 +822,7 @@ function WorkListSection() {
 
       <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto" }}>
         {/* Header */}
-        <div className="work-heading-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 72 }}>
+        <div className="work-heading-row" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 48 }}>
           <ClipReveal>
             <h2 style={{ fontFamily: "var(--sans)", fontSize: "clamp(36px, 5vw, 72px)", fontWeight: 700, color: "var(--fg-on-ink)", letterSpacing: "-0.012em", lineHeight: 1.05, marginBottom: 0 }}>
               Selected work.
@@ -851,7 +851,7 @@ function WorkListSection() {
                 display: "flex",
                 alignItems: "center",
                 gap: 24,
-                padding: "32px 0",
+                padding: "28px 0",
                 borderTop: "1px solid rgba(255,255,255,0.08)",
                 textDecoration: "none",
                 cursor: reduce ? "pointer" : "none",
@@ -884,7 +884,7 @@ function WorkListSection() {
                 transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                 style={{
                   fontFamily: "var(--sans)",
-                  fontSize: "clamp(26px, 3.5vw, 52px)",
+                  fontSize: "clamp(28px, 4vw, 64px)",
                   fontWeight: 700,
                   flex: 1,
                   lineHeight: 1,
@@ -1023,8 +1023,8 @@ export default function HomePage() {
               width: "100%",
               position: "relative",
               zIndex: 1,
-              paddingTop: 120,
-              paddingBottom: 80,
+              paddingTop: 100,
+              paddingBottom: 56,
             }}
           >
             <div className="hero-content-col" style={{ maxWidth: "55%" }}>
@@ -1118,10 +1118,10 @@ export default function HomePage() {
         <KineticWordReel />
 
         {/* ══ 2c. PHYSICS SCRIBBLES — Matter.js drop ═══════════════════════════ */}
-        <PhysicsScribbles height={380} />
+        <PhysicsScribbles height={300} />
 
         {/* ══ 3. STATEMENT ══════════════════════════════════════════════════════ */}
-        <section className="section-pad-xl" style={{ background: "var(--ink)", padding: "120px 0 100px", borderTop: "1px solid rgba(255,255,255,0.08)", position: "relative", overflow: "hidden" }}>
+        <section className="section-pad-xl" style={{ background: "var(--ink)", padding: "72px 0 60px", borderTop: "1px solid rgba(255,255,255,0.08)", position: "relative", overflow: "hidden" }}>
           {/* Scribble accents — far edges */}
           <ScribbleMark src="/projects/scribbles/s-38.svg"  size={130} rot={-20} delay={200}
             style={{ position: "absolute", top: "8%",  right: "3%", opacity: 0 }} className="statement-scribble" />
@@ -1176,7 +1176,7 @@ export default function HomePage() {
         <BubbleGrid />
 
         {/* ══ 9. CTA BANNER — MAD bordered box ════════════════════════════════ */}
-        <section className="section-pad-lg" style={{ background: "#000000", padding: "100px 0" }}>
+        <section className="section-pad-lg" style={{ background: "#000000", padding: "60px 0" }}>
           <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto", padding: "0 50px" }}>
             <motion.div
               initial={{ opacity: 0, y: 24 }}
