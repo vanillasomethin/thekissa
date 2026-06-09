@@ -35,6 +35,8 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
     const bubbles = bubblesRef.current;
     const logo    = logoRef.current;
     if (!stage || !bubbles || !logo) return;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const B = bubbles!;
 
     const W  = window.innerWidth;
     const H  = window.innerHeight;
@@ -57,7 +59,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
         <path d="${BODY}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"/>
         <path d="${TAIL}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"/>
       </svg>`;
-      bubbles.appendChild(d);
+      B.appendChild(d);
       return d;
     }
 
@@ -66,7 +68,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
       const d = document.createElement("div");
       d.style.cssText = `position:absolute;width:${s}px;height:${s}px;left:${x - s / 2}px;top:${y - s / 2}px;opacity:0;transform:scale(0);`;
       d.innerHTML = `<svg viewBox="0 0 20 20" style="display:block;width:100%;height:100%;"><circle cx="10" cy="10" r="9" fill="${RED}"/></svg>`;
-      bubbles.appendChild(d);
+      B.appendChild(d);
       return d;
     }
 
