@@ -13,6 +13,7 @@ import Footer from "@/components/Footer";
 import { BurstBubbles, KineticWordReel, BubbleGrid, Card3D } from "@/components/BubbleKinetic";
 import PhysicsScribbles from "@/components/PhysicsScribbles";
 import BubbleMorphVideo from "@/components/BubbleMorphVideo";
+import ShaderBackground from "@/components/ShaderBackground";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -1089,6 +1090,7 @@ export default function HomePage() {
               alignItems: "center",
             }}
           >
+            <ShaderBackground style={{ opacity: 0.5 }} />
             <BurstBubbles />
 
             {/* Hero grid — text left, morphing video right */}
@@ -1276,8 +1278,9 @@ export default function HomePage() {
         <BubbleGrid />
 
         {/* ══ 9. CTA BANNER — MAD bordered box ════════════════════════════════ */}
-        <section className="section-pad-lg" style={{ background: "#000000", padding: "48px 0" }}>
-          <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto", padding: "0 50px" }}>
+        <section className="section-pad-lg" style={{ background: "#000000", padding: "48px 0", position: "relative", overflow: "hidden" }}>
+          <ShaderBackground style={{ opacity: 0.4 }} />
+          <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto", padding: "0 50px", position: "relative" }}>
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -1292,6 +1295,7 @@ export default function HomePage() {
                 alignItems: "center",
                 gap: 60,
                 flexWrap: "wrap",
+                position: "relative",
               }}
             >
               {/* Scribble + orbit cluster */}
