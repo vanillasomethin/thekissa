@@ -13,6 +13,12 @@ import Footer from "@/components/Footer";
 import { BurstBubbles, KineticWordReel, BubbleGrid, Card3D } from "@/components/BubbleKinetic";
 import PhysicsScribbles from "@/components/PhysicsScribbles";
 import BubbleMorphVideo from "@/components/BubbleMorphVideo";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -357,20 +363,15 @@ function HeroText() {
 const SERVICE_COMPOSITIONS = [
   // 01 Story & Brand
   [
-    { src: "/projects/scribbles/s-105.svg", size: 200, top: "8%",  left: "10%", rot: -8  },
-    { src: "/projects/scribbles/s-11.svg",  size: 130, top: "44%", left: "50%", rot: 15  },
-    { src: "/projects/scribbles/s-10.svg",  size: 56,  top: "12%", left: "64%", rot: -20 },
+    { src: "/projects/scribbles/s-105.svg", size: 260, top: "12%", left: "16%", rot: -8 },
   ],
   // 02 Motion & Film
   [
-    { src: "/projects/scribbles/s-04.svg",  size: 210, top: "6%",  left: "8%",  rot: 5   },
-    { src: "/projects/scribbles/s-38.svg",  size: 140, top: "44%", left: "46%", rot: -12 },
+    { src: "/projects/scribbles/s-04.svg",  size: 260, top: "10%", left: "14%", rot: 5  },
   ],
   // 03 Digital & Immersive
   [
-    { src: "/projects/scribbles/s-138.svg", size: 185, top: "10%", left: "10%", rot: 10  },
-    { src: "/projects/scribbles/s-05.svg",  size: 120, top: "46%", left: "48%", rot: -18 },
-    { src: "/projects/scribbles/s-104.svg", size: 64,  top: "8%",  left: "62%", rot: 25  },
+    { src: "/projects/scribbles/s-138.svg", size: 250, top: "12%", left: "16%", rot: 10 },
   ],
 ];
 
@@ -455,7 +456,7 @@ function ServicesTabbed() {
               gridTemplateColumns: "1fr 1fr",
               gap: "80px",
               alignItems: "center",
-              minHeight: 480,
+              minHeight: 420,
             }}
             className="services-grid"
           >
@@ -762,73 +763,122 @@ function ProjectPreviewCard({ project }: { project: Project }) {
   );
 }
 
-function WorkCarousel3D() {
-  const [active, setActive] = useState(0);
-  const reduce = useReducedMotion();
+// Scroll-scrubbed horizontal strip — the page scroll drives the track sideways,
+// so the work reveals itself as you scroll (pixel.melbourne pattern).
+function WorkScrollStrip() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const trackRef   = useRef<HTMLDivElement>(null);
+  const reduce     = useReducedMotion();
   const n = featuredProjects.length;
-  const go = (dir: number) => setActive(i => (i + dir + n) % n);
 
-  // 3 visible slots: prev, current, next
-  const slots = ([-1, 0, 1] as const).map(d => (active + d + n) % n);
+  const CARD_W = 520;
+  const CARD_GAP = 32;
+
+  useEffect(() => {
+    if (reduce || !sectionRef.current || !trackRef.current) return;
+    const track = trackRef.current;
+
+    const getDistance = () => Math.max(0, track.scrollWidth - window.innerWidth + 100);
+
+    const tween = gsap.to(track, {
+      x: () => -getDistance(),
+      ease: "none",
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top top",
+        end: () => `+=${getDistance()}`,
+        scrub: 1,
+        pin: true,
+        invalidateOnRefresh: true,
+      },
+    });
+
+    // Subtle parallax: each card's inner content drifts against the track
+    const cards = track.querySelectorAll<HTMLElement>(".work-card-inner");
+    cards.forEach((card) => {
+      gsap.fromTo(card, { x: 40 }, {
+        x: -40,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: () => `+=${getDistance()}`,
+          scrub: 1.4,
+        },
+      });
+    });
+
+    return () => {
+      tween.scrollTrigger?.kill();
+      tween.kill();
+      ScrollTrigger.getAll().forEach((t) => {
+        if (t.trigger === sectionRef.current) t.kill();
+      });
+    };
+  }, [reduce]);
 
   return (
-    <section id="work" style={{ background: "rgb(10,10,10)", padding: "56px 0 72px", overflow: "hidden" }}>
-      <div className="wrap" style={{ maxWidth: 1200, margin: "0 auto", padding: "0 50px" }}>
-
-        {/* Header row */}
-        <div className="work-heading-row" style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-end", marginBottom: 64 }}>
-          <ClipReveal>
-            <h2 style={{ fontFamily:"var(--sans)", fontSize:"clamp(36px,5vw,72px)", fontWeight:700, color:"#fff", letterSpacing:"-0.012em", lineHeight:1.05, margin:0 }}>
-              Selected work.
-            </h2>
-          </ClipReveal>
-          <Link href="/portfolio" style={{ fontFamily:"var(--sans)", fontSize:14, fontWeight:600, color:"rgba(255,255,255,0.5)", textDecoration:"none", display:"flex", alignItems:"center", gap:4 }}>
+    <section
+      id="work"
+      ref={sectionRef}
+      style={{ background: "rgb(10,10,10)", overflow: "hidden", position: "relative" }}
+    >
+      <div style={{ height: "100vh", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+        {/* Header */}
+        <div className="wrap work-heading-row" style={{ maxWidth: 1200, margin: "0 auto", width: "100%", padding: "0 50px", display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 48 }}>
+          <h2 style={{ fontFamily: "var(--sans)", fontSize: "clamp(36px,5vw,72px)", fontWeight: 700, color: "#fff", letterSpacing: "-0.012em", lineHeight: 1.05, margin: 0 }}>
+            Selected work.
+          </h2>
+          <Link href="/portfolio" style={{ fontFamily: "var(--sans)", fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.5)", textDecoration: "none", display: "flex", alignItems: "center", gap: 4 }}>
             View all <ArrowUpRight size={14} />
           </Link>
         </div>
 
-        {/* 3D stage */}
-        <div style={{ position:"relative", height:460, display:"flex", alignItems:"center", justifyContent:"center", perspective:"1100px" }}>
-          {slots.map((idx, pos) => {
-            const p = featuredProjects[idx] as Project;
-            const isCenter = pos === 1;
-            const isLeft   = pos === 0;
-
+        {/* Horizontal track — driven by vertical scroll */}
+        <div
+          ref={trackRef}
+          style={{
+            display: "flex",
+            gap: CARD_GAP,
+            paddingLeft: "max(50px, calc((100vw - 1200px) / 2 + 50px))",
+            paddingRight: 100,
+            width: "max-content",
+            willChange: "transform",
+          }}
+        >
+          {featuredProjects.map((proj, i) => {
+            const p = proj as Project;
             return (
-              <motion.div
-                key={`${active}-${pos}`}
-                animate={reduce ? {} : {
-                  rotateY: isLeft ? 26 : pos === 2 ? -26 : 0,
-                  scale:   isCenter ? 1 : 0.76,
-                  x:       isLeft ? "-62%" : pos === 2 ? "62%" : "0%",
-                  opacity: isCenter ? 1 : 0.52,
-                  zIndex:  isCenter ? 2 : 1,
-                }}
-                transition={{ duration: 0.65, ease: [0.65, 0.01, 0.05, 0.99] }}
-                onClick={!isCenter ? () => go(isLeft ? -1 : 1) : undefined}
+              <a
+                key={p.name + i}
+                href={p.href}
+                target="_blank"
+                rel="noopener noreferrer"
                 style={{
-                  position: "absolute",
-                  width: isCenter ? 640 : 400,
-                  height: isCenter ? 420 : 300,
+                  position: "relative",
+                  width: CARD_W,
+                  height: 380,
                   borderRadius: 18,
                   overflow: "hidden",
                   background: p.bg,
-                  cursor: "pointer",
                   flexShrink: 0,
+                  textDecoration: "none",
+                  display: "block",
                 }}
               >
-                {/* Project preview fills */}
-                <ProjectPreviewCard project={p} />
+                <div className="work-card-inner" style={{ position: "absolute", inset: -40 }}>
+                  <ProjectPreviewCard project={p} />
+                </div>
 
                 {/* Name overlay */}
                 <div style={{
-                  position:"absolute", bottom:0, left:0, right:0,
-                  padding: isCenter ? "28px 32px" : "16px 20px",
+                  position: "absolute", bottom: 0, left: 0, right: 0,
+                  padding: "24px 28px",
                   background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)",
                 }}>
                   <p style={{
                     fontFamily: "var(--sans)",
-                    fontSize: isCenter ? "clamp(44px,5vw,72px)" : 22,
+                    fontSize: "clamp(32px,3.4vw,48px)",
                     fontWeight: 700,
                     color: "#fff",
                     margin: "0 0 4px",
@@ -837,79 +887,46 @@ function WorkCarousel3D() {
                   }}>
                     {p.name}
                   </p>
-                  {isCenter && (
-                    <p style={{ fontFamily:"var(--sans)", fontSize:11, color:"rgba(255,255,255,0.5)", letterSpacing:"0.12em", textTransform:"uppercase", margin:0 }}>
-                      {p.category}
-                    </p>
-                  )}
+                  <p style={{ fontFamily: "var(--sans)", fontSize: 11, color: "rgba(255,255,255,0.5)", letterSpacing: "0.12em", textTransform: "uppercase", margin: 0 }}>
+                    {p.category}
+                  </p>
                 </div>
 
-                {/* Center card: "View project" pill */}
-                {isCenter && (
-                  <a
-                    href={p.href} target="_blank" rel="noopener noreferrer"
-                    onClick={e => e.stopPropagation()}
-                    style={{
-                      position:"absolute", top:20, right:20,
-                      display:"inline-flex", alignItems:"center", gap:6,
-                      background:"rgba(255,255,255,0.15)",
-                      backdropFilter:"blur(12px)",
-                      color:"#fff", borderRadius:"100px",
-                      padding:"9px 18px",
-                      fontFamily:"var(--sans)", fontWeight:600, fontSize:12,
-                      letterSpacing:"0.06em", textTransform:"uppercase",
-                      textDecoration:"none",
-                      border:"1px solid rgba(255,255,255,0.25)",
-                    }}
-                  >
-                    View <ArrowUpRight size={12} />
-                  </a>
-                )}
-              </motion.div>
+                {/* index */}
+                <span style={{
+                  position: "absolute", top: 20, left: 24,
+                  fontFamily: "var(--sans)", fontSize: 12, fontWeight: 600,
+                  letterSpacing: "0.14em", color: "rgba(255,255,255,0.45)",
+                }}>
+                  {String(i + 1).padStart(2, "0")} / {String(n).padStart(2, "0")}
+                </span>
+
+                <span style={{
+                  position: "absolute", top: 16, right: 16,
+                  display: "inline-flex", alignItems: "center", gap: 6,
+                  background: "rgba(255,255,255,0.12)",
+                  backdropFilter: "blur(12px)",
+                  color: "#fff", borderRadius: "100px",
+                  padding: "8px 16px",
+                  fontFamily: "var(--sans)", fontWeight: 600, fontSize: 11,
+                  letterSpacing: "0.06em", textTransform: "uppercase",
+                  border: "1px solid rgba(255,255,255,0.22)",
+                }}>
+                  View <ArrowUpRight size={12} />
+                </span>
+              </a>
             );
           })}
         </div>
 
-        {/* Navigation pills */}
-        <div style={{ display:"flex", justifyContent:"center", alignItems:"center", gap:16, marginTop:52 }}>
-          <button
-            onClick={() => go(-1)}
-            style={{
-              width:56, height:56, borderRadius:"100px",
-              background:"rgba(255,255,255,0.08)",
-              border:"1px solid rgba(255,255,255,0.22)",
-              color:"#fff", cursor:"pointer",
-              display:"flex", alignItems:"center", justifyContent:"center",
-              transition:"background 0.2s ease",
-            }}
-            onMouseEnter={e => (e.currentTarget.style.background="rgba(255,255,255,0.18)")}
-            onMouseLeave={e => (e.currentTarget.style.background="rgba(255,255,255,0.08)")}
-            aria-label="Previous project"
-          >
-            <ArrowLeft size={18} />
-          </button>
-
-          <span style={{ fontFamily:"var(--sans)", fontSize:12, color:"rgba(255,255,255,0.3)", letterSpacing:"0.14em", minWidth:56, textAlign:"center" }}>
-            {String(active + 1).padStart(2,"0")} / {String(n).padStart(2,"0")}
-          </span>
-
-          <button
-            onClick={() => go(1)}
-            style={{
-              width:56, height:56, borderRadius:"100px",
-              background:"rgba(255,255,255,0.08)",
-              border:"1px solid rgba(255,255,255,0.22)",
-              color:"#fff", cursor:"pointer",
-              display:"flex", alignItems:"center", justifyContent:"center",
-              transition:"background 0.2s ease",
-            }}
-            onMouseEnter={e => (e.currentTarget.style.background="rgba(255,255,255,0.18)")}
-            onMouseLeave={e => (e.currentTarget.style.background="rgba(255,255,255,0.08)")}
-            aria-label="Next project"
-          >
-            <ArrowRight size={18} />
-          </button>
-        </div>
+        {/* Scroll hint */}
+        <p style={{
+          fontFamily: "var(--sans)", fontSize: 10, letterSpacing: "0.18em",
+          textTransform: "uppercase", color: "rgba(255,255,255,0.3)",
+          textAlign: "center", marginTop: 40,
+        }}>
+          Keep scrolling →
+        </p>
       </div>
 
       <style>{`
@@ -1247,7 +1264,7 @@ export default function HomePage() {
         <ServicesTabbed />
 
         {/* ══ 5. SELECTED WORK ══════════════════════════════════════════════════ */}
-        <WorkCarousel3D />
+        <WorkScrollStrip />
 
         {/* ══ 6. CLIENT LOGOS STRIP (MAD pattern) ══════════════════════════════ */}
         <ClientLogosStrip />

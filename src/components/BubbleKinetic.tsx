@@ -99,7 +99,7 @@ export function KineticWordReel() {
   const x = useTransform(scrollYProgress, [0, 1], ["0%", "-35%"]);
 
   return (
-    <section ref={ref} style={{ background: "#0a0a0a", padding: "48px 0", overflow: "hidden" }}>
+    <section ref={ref} style={{ background: "#0a0a0a", padding: "32px 0", overflow: "hidden" }}>
       <motion.div style={{ x: reduce ? 0 : x, display: "flex", alignItems: "center", gap: 38, whiteSpace: "nowrap" }}>
         {[...WORDS, ...WORDS].map((w, i) => (
           <div key={i} style={{ display: "flex", alignItems: "center", gap: 24, flexShrink: 0 }}>
@@ -151,7 +151,7 @@ export function BubbleGrid() {
   }, [reduce]);
 
   return (
-    <section className="section-pad-lg" style={{ background: "#000000", padding: "60px 0" }}>
+    <section className="section-pad-lg" style={{ background: "#000000", padding: "48px 0" }}>
       <div style={{ maxWidth: 1100, margin: "0 auto", padding: "0 50px" }}>
         <div
           ref={containerRef}
