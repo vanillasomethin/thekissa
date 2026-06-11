@@ -11,40 +11,31 @@ const INK = "#000000";
 
 // Brand bubble — exact shape from the Kissa logo.
 const BUBBLE_PATH =
-  "M 89.71875 447.589844 L 89.71875 538.636719 C 89.71875 581.875 102.347656 600.210938 121.460938 607.527344 L 470.175781 678.648438 C 529.8125 697.007812 593.5625 656.058594 597.953125 589.382812 L 597.953125 50.019531 C 597.953125 22.753906 575.847656 0.648438 548.582031 0.648438 C 544.007812 0.648438 539.449219 1.28125 535.050781 2.539062 L 123.304688 86.566406 C 103.234375 93.339844 89.71875 112.15625 89.71875 133.347656 L 89.71875 322.265625 L 3.347656 387.941406 C -1.023438 392.667969 -1.023438 399.964844 3.347656 404.6875 L 89.710938 470.367188 Z";
+  "M 89.71875 447.589844 L 89.71875 538.636719 C 89.71875 581.875 102.347656 600.210938 121.460938 607.527344 L 470.175781 678.648438 C 529.8125 697.007812 593.5625 656.058594 597.953125 589.382812 L 597.953125 50.019531 C 597.953125 22.753906 575.847656 0.648438 548.582031 0.648438 C 544.007812 0.648438 539.449219 1.28125 535.050781 2.539062 L 123.304688 86.566406 C 103.234375 93.339844 89.71875 112.15625 89.71875 133.347656 L 89.71875 322.265625 L 3.347656 387.941406 C -1.023438 392.667969 -1.023438 399.964844 3.347656 404.6875 L 89.710938 470.367188";
 const BUBBLE_VB = "0 0 598 684";
 
-// Phase timeline (ms) — deliberately unhurried
+// Phase timeline (ms) — deliberately unhurried, ~9s total
 const T = {
-  twoDots:      200,
-  dotTrail:     1000,
-  grid:         2300,
-  conversation: 3900,
-  blackSea:     5400,
-  whiteSpace:   6000,
-  whiteScreen:  7000,
-  stamp:        7700,
-  exit:         9000,
+  oneDot:    150,    // single dot appears
+  toBubble:  900,    // dot grows into a bubble
+  talk:      2000,   // second bubble appears, they "talk" (pulse)
+  multiply:  4000,   // multiple bubbles appear/scatter
+  compress:  6300,   // bubbles converge & compress toward center
+  logoStamp: 7600,   // logo forms from compressed bubbles
+  exit:      9200,
 };
 
 export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
   const [visible, setVisible] = useState(true);
-  const stageRef      = useRef<HTMLDivElement>(null);
-  const floodRef      = useRef<HTMLDivElement>(null);
-  const whitespaceRef = useRef<HTMLDivElement>(null);
-  const whitewipeRef  = useRef<HTMLDivElement>(null);
-  const logoRef       = useRef<HTMLImageElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const logoRef  = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const stage = stageRef.current;
-    const flood = floodRef.current;
-    const whitespace = whitespaceRef.current;
-    const whitewipe = whitewipeRef.current;
-    const logo = logoRef.current;
-    if (!stage || !flood || !whitespace || !whitewipe || !logo) return;
+    const logo  = logoRef.current;
+    if (!stage || !logo) return;
 
-    const S = stage, F = flood, WS = whitespace, WW = whitewipe, LG = logo;
-
+    const S = stage, LG = logo;
     const W = window.innerWidth;
     const H = window.innerHeight;
     const cx = W / 2;
@@ -55,15 +46,6 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
       const id = setTimeout(fn, ms);
       timers.push(id);
     };
-
-    function dot(x: number, y: number, r: number) {
-      const d = document.createElement("div");
-      const s = r * 2;
-      d.style.cssText = `position:absolute;width:${s}px;height:${s}px;left:${x - r}px;top:${y - r}px;opacity:0;transform:scale(0);will-change:transform,opacity,left,top;`;
-      d.innerHTML = `<svg viewBox="0 0 20 20" style="display:block;width:100%;height:100%;"><circle cx="10" cy="10" r="10" fill="${INK}"/></svg>`;
-      S.appendChild(d);
-      return d;
-    }
 
     function bub(x: number, y: number, w: number, h: number, filled: boolean, faint = false) {
       const d = document.createElement("div");
@@ -78,124 +60,123 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
       return d;
     }
 
-    function show(el: HTMLElement, delay = 0, dur = 280) {
+    function dot(x: number, y: number, r: number) {
+      const d = document.createElement("div");
+      const s = r * 2;
+      d.style.cssText = `position:absolute;width:${s}px;height:${s}px;left:${x - r}px;top:${y - r}px;opacity:0;transform:scale(0);will-change:transform,opacity,left,top;`;
+      d.innerHTML = `<svg viewBox="0 0 20 20" style="display:block;width:100%;height:100%;"><circle cx="10" cy="10" r="10" fill="${INK}"/></svg>`;
+      S.appendChild(d);
+      return d;
+    }
+
+    function show(el: HTMLElement, delay = 0, dur = 320) {
       t(() => {
         el.style.transition = `opacity ${dur}ms ease, transform ${dur}ms cubic-bezier(0.34,1.56,0.64,1)`;
         el.style.opacity = "1";
         el.style.transform = "scale(1)";
       }, delay);
     }
-    function hide(el: HTMLElement, delay = 0, dur = 200) {
+    function hide(el: HTMLElement, delay = 0, dur = 220) {
       t(() => {
         el.style.transition = `opacity ${dur}ms ease, transform ${dur}ms ease`;
         el.style.opacity = "0";
-        el.style.transform = "scale(0.5)";
+        el.style.transform = "scale(0.4)";
       }, delay);
+    }
+    function moveTo(el: HTMLElement, x: number, y: number, w: number, h: number, dur = 900) {
+      el.style.transition = `left ${dur}ms cubic-bezier(0.65,0,0.35,1), top ${dur}ms cubic-bezier(0.65,0,0.35,1), width ${dur}ms cubic-bezier(0.65,0,0.35,1), height ${dur}ms cubic-bezier(0.65,0,0.35,1)`;
+      el.style.left = `${x - w / 2}px`;
+      el.style.top = `${y - h / 2}px`;
+      el.style.width = `${w}px`;
+      el.style.height = `${h}px`;
     }
     function clearStage(delay = 0) {
       t(() => {
         const children = Array.from(S.children);
-        children.forEach((c, i) => hide(c as HTMLElement, i * 10, 180));
-        t(() => { S.innerHTML = ""; }, 600);
+        children.forEach((c, i) => hide(c as HTMLElement, i * 8, 180));
+        t(() => { S.innerHTML = ""; }, 500);
       }, delay);
     }
 
-    // ── Phase 1: two dots appear ────────────────────────────────────────────
+    // ── Phase 1: a single dot appears ───────────────────────────────────────
     t(() => {
-      const a = dot(cx - 22, cy, 8);
-      const b = dot(cx + 22, cy, 8);
-      show(a, 0); show(b, 120);
-    }, T.twoDots);
+      const a = dot(cx, cy, 9);
+      show(a, 0, 320);
+    }, T.oneDot);
 
-    // ── Phase 2: dot trail drifts across ────────────────────────────────────
-    t(() => {
-      clearStage(0);
-      const sizes = [7, 5, 4, 8, 11, 9, 4, 6, 4, 3];
-      const startX = cx - 260;
-      sizes.forEach((r, i) => {
-        const x = startX + i * 55;
-        const d = dot(x, cy, r);
-        show(d, i * 55, 220);
-        t(() => {
-          d.style.transition = "left 0.9s cubic-bezier(0.45,0,0.55,1)";
-          d.style.left = `${parseFloat(d.style.left) + 70}px`;
-        }, i * 55 + 200);
-      });
-    }, T.dotTrail);
-
-    // ── Phase 3: full-screen grid, middle row filled ────────────────────────
-    t(() => {
-      clearStage(0);
-      const BW = 54, BH = 62;
-      const gx = 96, gy = 112;
-      const cols = Math.ceil(W / gx) + 2;
-      const rows = Math.ceil(H / gy) + 2;
-      const ox = cx - ((cols - 1) * gx) / 2;
-      const oy = cy - ((rows - 1) * gy) / 2;
-      const midRow = Math.floor(rows / 2);
-
-      for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-          const filled = r === midRow;
-          const faint  = !filled;
-          const jx = (Math.random() - 0.5) * 12;
-          const jy = (Math.random() - 0.5) * 12;
-          const b = bub(ox + c * gx + jx, oy + r * gy + jy, BW, BH, filled, faint);
-          if (Math.random() > 0.6) (b.firstChild as HTMLElement).style.transform = "scaleX(-1)";
-          const dist = Math.hypot(c - cols / 2, (r - rows / 2) * 1.4);
-          show(b, dist * 55, 260);
-        }
-      }
-    }, T.grid);
-
-    // ── Phase 4: conversation cluster ───────────────────────────────────────
+    // ── Phase 2: dot grows into a single bubble ─────────────────────────────
     t(() => {
       clearStage(0);
       t(() => {
-        const BW = 98, BH = 113;
-        const slots = [-1.5, -0.5, 0.5, 1.5];
-        slots.forEach((ix, i) => {
-          const b = bub(cx + ix * 125, cy, BW, BH, true);
-          if (i % 2 === 1) (b.firstChild as HTMLElement).style.transform = "scaleX(-1)";
-          show(b, i * 110, 300);
-        });
+        const b = bub(cx, cy, 90, 103, true);
+        show(b, 0, 380);
+      }, 250);
+    }, T.toBubble);
 
-        for (let i = 0; i < 22; i++) {
+    // ── Phase 3: a second bubble appears — they "talk" (pulse exchange) ────
+    t(() => {
+      const left  = bub(cx - 70, cy, 90, 103, true);
+      const right = bub(cx + 70, cy, 90, 103, false);
+      // re-center & shrink the existing bubble to the left position
+      const existing = S.children[0] as HTMLElement | undefined;
+      if (existing) moveTo(existing, cx - 70, cy, 90, 103, 500);
+      show(right, 250, 380);
+      // pulse "conversation" — alternate scale pulses
+      const pulse = (el: HTMLElement, delay: number) => {
+        t(() => {
+          el.style.transition = "transform 0.3s ease";
+          el.style.transform = "scale(1.12)";
+          t(() => { el.style.transform = "scale(1)"; }, 260);
+        }, delay);
+      };
+      for (let i = 0; i < 3; i++) {
+        pulse(existing ?? left, 700 + i * 560);
+        pulse(right, 980 + i * 560);
+      }
+    }, T.talk);
+
+    // ── Phase 4: multiplies into many bubbles, scatter across screen ───────
+    t(() => {
+      clearStage(0);
+      t(() => {
+        // central cluster
+        const slots = [-1.4, -0.45, 0.45, 1.4];
+        slots.forEach((ix, i) => {
+          const b = bub(cx + ix * 110, cy, 90, 103, true);
+          if (i % 2 === 1) (b.firstChild as HTMLElement).style.transform = "scaleX(-1)";
+          show(b, i * 90, 320);
+        });
+        // scattered faint bubbles
+        for (let i = 0; i < 18; i++) {
           const x = Math.random() * W;
           const y = Math.random() * H;
-          if (Math.abs(x - cx) < 280 && Math.abs(y - cy) < 120) continue;
-          const s = 28 + Math.random() * 30;
-          const b = bub(x, y, s, s * 1.13, false, true);
+          if (Math.abs(x - cx) < 280 && Math.abs(y - cy) < 130) continue;
+          const s = 30 + Math.random() * 34;
+          const b = bub(x, y, s, s * (684 / 598), false, true);
           if (Math.random() > 0.5) (b.firstChild as HTMLElement).style.transform = "scaleX(-1)";
-          show(b, 300 + i * 45, 280);
+          show(b, 250 + i * 50, 300);
         }
-      }, 350);
-    }, T.conversation);
+      }, 250);
+    }, T.multiply);
 
-    // ── Phase 5: black sea floods ───────────────────────────────────────────
+    // ── Phase 5: bubbles converge & compress toward the center ─────────────
     t(() => {
-      F.style.opacity = "1";
-      clearStage(300);
-    }, T.blackSea);
+      const children = Array.from(S.children) as HTMLElement[];
+      children.forEach((c, i) => {
+        const w = parseFloat(c.style.width) * 0.18;
+        const h = parseFloat(c.style.height) * 0.18;
+        moveTo(c, cx, cy, w, h, 700);
+        t(() => { c.style.opacity = "0"; }, 650 + i * 4);
+      });
+      t(() => { S.innerHTML = ""; }, 800);
+    }, T.compress);
 
-    // ── Phase 5b: white space with ink logo appears in the black sea ───────
+    // ── Phase 6: logo forms from the compressed bubbles ─────────────────────
     t(() => {
-      WS.style.opacity = "1";
-      WS.style.transform = "scale(1)";
-    }, T.whiteSpace);
-
-    // ── Phase 6: white screen wipes over everything ─────────────────────────
-    t(() => {
-      WW.style.opacity = "1";
-      t(() => { F.style.opacity = "0"; }, 400);
-    }, T.whiteScreen);
-
-    // ── Phase 7: black logo stamps onto white ────────────────────────────────
-    t(() => {
-      LG.style.transition = "opacity 0.45s cubic-bezier(0.22,1.2,0.36,1), transform 0.45s cubic-bezier(0.22,1.2,0.36,1)";
+      LG.style.transition = "opacity 0.5s cubic-bezier(0.22,1.2,0.36,1), transform 0.5s cubic-bezier(0.22,1.2,0.36,1)";
       LG.style.opacity = "1";
       LG.style.transform = "translate(-50%, -50%) scale(1)";
-    }, T.stamp);
+    }, T.logoStamp);
 
     // ── Exit ─────────────────────────────────────────────────────────────────
     t(() => setVisible(false), T.exit);
@@ -226,73 +207,25 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
             style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
           />
 
-          {/* Black sea flood */}
+          {/* Logo, formed in ink at the end */}
           <div
-            ref={floodRef}
-            style={{
-              position: "fixed",
-              inset: 0,
-              background: "#000000",
-              opacity: 0,
-              zIndex: 10,
-              pointerEvents: "none",
-              transition: "opacity 0.5s ease",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            {/* White space holding the ink logo */}
-            <div
-              ref={whitespaceRef}
-              style={{
-                width: 92,
-                height: 104,
-                background: "#ffffff",
-                borderRadius: 10,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                opacity: 0,
-                transform: "scale(0.5)",
-                transition: "opacity 0.4s ease, transform 0.4s cubic-bezier(0.34,1.56,0.64,1)",
-              }}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/kissa-logo.svg" alt="Kissa" style={{ width: 56 }} />
-            </div>
-          </div>
-
-          {/* White wipe */}
-          <div
-            ref={whitewipeRef}
-            style={{
-              position: "fixed",
-              inset: 0,
-              background: "#ffffff",
-              opacity: 0,
-              zIndex: 20,
-              pointerEvents: "none",
-              transition: "opacity 0.6s ease",
-            }}
-          />
-
-          {/* Black logo stamps on white */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
             ref={logoRef}
-            src="/kissa-logo.svg"
-            alt="Kissa"
             style={{
               position:  "fixed",
               top:       "50%",
               left:      "50%",
-              width:     180,
-              transform: "translate(-50%, -50%) scale(1.6)",
+              width:     130,
+              height:    Math.round(130 * (684 / 598)),
+              transform: "translate(-50%, -50%) scale(0.6)",
               opacity:   0,
               zIndex:    30,
+              pointerEvents: "none",
             }}
-          />
+          >
+            <svg viewBox={BUBBLE_VB} xmlns="http://www.w3.org/2000/svg" style={{ display: "block", width: "100%", height: "100%", overflow: "visible" }}>
+              <path d={BUBBLE_PATH} fill={INK} stroke="none" strokeLinejoin="round" />
+            </svg>
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

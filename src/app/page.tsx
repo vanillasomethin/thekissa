@@ -10,10 +10,11 @@ import { ArrowUpRight, ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { BurstBubbles, KineticWordReel, BubbleGrid, Card3D } from "@/components/BubbleKinetic";
+import { BurstBubbles, KineticWordReel, BubbleGrid } from "@/components/BubbleKinetic";
 import PhysicsScribbles from "@/components/PhysicsScribbles";
 import BubbleMorphVideo from "@/components/BubbleMorphVideo";
 import ShaderBackground from "@/components/ShaderBackground";
+import ProjectCard3D from "@/components/ProjectCard3D";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -764,6 +765,104 @@ function ProjectPreviewCard({ project }: { project: Project }) {
   );
 }
 
+// Single work card — r3f rounded-glass plate (pmndrs cards-with-border-radius
+// pattern) tilting toward the pointer, with the project preview/name overlaid.
+function WorkCard({ p, i, n, CARD_W }: { p: Project; i: number; n: number; CARD_W: number }) {
+  const pointerRef = useRef({ x: 0, y: 0 });
+
+  function onMouseMove(e: React.MouseEvent<HTMLDivElement>) {
+    const rect = e.currentTarget.getBoundingClientRect();
+    pointerRef.current = {
+      x: (e.clientX - rect.left) / rect.width - 0.5,
+      y: (e.clientY - rect.top) / rect.height - 0.5,
+    };
+  }
+
+  function onMouseLeave() {
+    pointerRef.current = { x: 0, y: 0 };
+  }
+
+  return (
+    <div
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
+      style={{
+        position: "relative",
+        width: CARD_W,
+        height: 380,
+        borderRadius: 18,
+        flexShrink: 0,
+        boxShadow: "0 30px 60px -20px rgba(0,0,0,0.6)",
+      }}
+    >
+      <ProjectCard3D accent={p.accent} pointerRef={pointerRef} />
+      <a
+        href={p.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          position: "absolute",
+          inset: 0,
+          borderRadius: 18,
+          overflow: "hidden",
+          background: p.bg,
+          textDecoration: "none",
+          display: "block",
+        }}
+      >
+        <div className="work-card-inner" style={{ position: "absolute", inset: -40 }}>
+          <ProjectPreviewCard project={p} />
+        </div>
+
+        {/* Name overlay */}
+        <div style={{
+          position: "absolute", bottom: 0, left: 0, right: 0,
+          padding: "24px 28px",
+          background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)",
+        }}>
+          <p style={{
+            fontFamily: "var(--sans)",
+            fontSize: "clamp(32px,3.4vw,48px)",
+            fontWeight: 700,
+            color: "#fff",
+            margin: "0 0 4px",
+            letterSpacing: "-0.02em",
+            lineHeight: 1,
+          }}>
+            {p.name}
+          </p>
+          <p style={{ fontFamily: "var(--sans)", fontSize: 11, color: "rgba(255,255,255,0.5)", letterSpacing: "0.12em", textTransform: "uppercase", margin: 0 }}>
+            {p.category}
+          </p>
+        </div>
+
+        {/* index */}
+        <span style={{
+          position: "absolute", top: 20, left: 24,
+          fontFamily: "var(--sans)", fontSize: 12, fontWeight: 600,
+          letterSpacing: "0.14em", color: "rgba(255,255,255,0.45)",
+        }}>
+          {String(i + 1).padStart(2, "0")} / {String(n).padStart(2, "0")}
+        </span>
+
+        <span style={{
+          position: "absolute", top: 16, right: 16,
+          display: "inline-flex", alignItems: "center", gap: 6,
+          background: "rgba(255,255,255,0.12)",
+          backdropFilter: "blur(12px)",
+          color: "#fff", borderRadius: "100px",
+          padding: "8px 16px",
+          fontFamily: "var(--sans)", fontWeight: 600, fontSize: 11,
+          letterSpacing: "0.06em", textTransform: "uppercase",
+          border: "1px solid rgba(255,255,255,0.22)",
+        }}>
+          View <ArrowUpRight size={12} />
+        </span>
+      </a>
+    </div>
+  );
+}
+
 // Scroll-scrubbed horizontal strip — the page scroll drives the track sideways,
 // so the work reveals itself as you scroll (pixel.melbourne pattern).
 function WorkScrollStrip() {
@@ -849,83 +948,7 @@ function WorkScrollStrip() {
         >
           {featuredProjects.map((proj, i) => {
             const p = proj as Project;
-            return (
-              <Card3D
-                key={p.name + i}
-                style={{
-                  position: "relative",
-                  width: CARD_W,
-                  height: 380,
-                  borderRadius: 18,
-                  flexShrink: 0,
-                  boxShadow: "0 30px 60px -20px rgba(0,0,0,0.6)",
-                }}
-              >
-              <a
-                href={p.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  borderRadius: 18,
-                  overflow: "hidden",
-                  background: p.bg,
-                  textDecoration: "none",
-                  display: "block",
-                }}
-              >
-                <div className="work-card-inner" style={{ position: "absolute", inset: -40 }}>
-                  <ProjectPreviewCard project={p} />
-                </div>
-
-                {/* Name overlay */}
-                <div style={{
-                  position: "absolute", bottom: 0, left: 0, right: 0,
-                  padding: "24px 28px",
-                  background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)",
-                }}>
-                  <p style={{
-                    fontFamily: "var(--sans)",
-                    fontSize: "clamp(32px,3.4vw,48px)",
-                    fontWeight: 700,
-                    color: "#fff",
-                    margin: "0 0 4px",
-                    letterSpacing: "-0.02em",
-                    lineHeight: 1,
-                  }}>
-                    {p.name}
-                  </p>
-                  <p style={{ fontFamily: "var(--sans)", fontSize: 11, color: "rgba(255,255,255,0.5)", letterSpacing: "0.12em", textTransform: "uppercase", margin: 0 }}>
-                    {p.category}
-                  </p>
-                </div>
-
-                {/* index */}
-                <span style={{
-                  position: "absolute", top: 20, left: 24,
-                  fontFamily: "var(--sans)", fontSize: 12, fontWeight: 600,
-                  letterSpacing: "0.14em", color: "rgba(255,255,255,0.45)",
-                }}>
-                  {String(i + 1).padStart(2, "0")} / {String(n).padStart(2, "0")}
-                </span>
-
-                <span style={{
-                  position: "absolute", top: 16, right: 16,
-                  display: "inline-flex", alignItems: "center", gap: 6,
-                  background: "rgba(255,255,255,0.12)",
-                  backdropFilter: "blur(12px)",
-                  color: "#fff", borderRadius: "100px",
-                  padding: "8px 16px",
-                  fontFamily: "var(--sans)", fontWeight: 600, fontSize: 11,
-                  letterSpacing: "0.06em", textTransform: "uppercase",
-                  border: "1px solid rgba(255,255,255,0.22)",
-                }}>
-                  View <ArrowUpRight size={12} />
-                </span>
-              </a>
-              </Card3D>
-            );
+            return <WorkCard key={p.name + i} p={p} i={i} n={n} CARD_W={CARD_W} />;
           })}
         </div>
 
