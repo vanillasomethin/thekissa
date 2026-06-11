@@ -850,19 +850,27 @@ function WorkScrollStrip() {
           {featuredProjects.map((proj, i) => {
             const p = proj as Project;
             return (
-              <a
+              <Card3D
                 key={p.name + i}
-                href={p.href}
-                target="_blank"
-                rel="noopener noreferrer"
                 style={{
                   position: "relative",
                   width: CARD_W,
                   height: 380,
                   borderRadius: 18,
+                  flexShrink: 0,
+                  boxShadow: "0 30px 60px -20px rgba(0,0,0,0.6)",
+                }}
+              >
+              <a
+                href={p.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  borderRadius: 18,
                   overflow: "hidden",
                   background: p.bg,
-                  flexShrink: 0,
                   textDecoration: "none",
                   display: "block",
                 }}
@@ -916,6 +924,7 @@ function WorkScrollStrip() {
                   View <ArrowUpRight size={12} />
                 </span>
               </a>
+              </Card3D>
             );
           })}
         </div>
