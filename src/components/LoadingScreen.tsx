@@ -259,7 +259,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
               }}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo-ink.png" alt="Kissa" style={{ width: 60 }} />
+              <img src="/kissa-logo.svg" alt="Kissa" style={{ width: 56 }} />
             </div>
           </div>
 
@@ -281,13 +281,13 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             ref={logoRef}
-            src="/logo-ink.png"
+            src="/kissa-logo.svg"
             alt="Kissa"
             style={{
               position:  "fixed",
               top:       "50%",
               left:      "50%",
-              width:     240,
+              width:     180,
               transform: "translate(-50%, -50%) scale(1.6)",
               opacity:   0,
               zIndex:    30,
