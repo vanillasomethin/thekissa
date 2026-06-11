@@ -73,8 +73,25 @@ export default function PortfolioPage() {
   const [canvaDesigns, setCanvaDesigns] = useState<CanvaDesign[]>([]);
   const [canvaAuthenticated, setCanvaAuthenticated] = useState(false);
   const [canvaError, setCanvaError] = useState<string | null>(null);
+  const [showManualEntry, setShowManualEntry] = useState(false);
+  const [manualText, setManualText] = useState("");
+  const [manualError, setManualError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Manual fallback takes precedence if previously saved
+    try {
+      const saved = localStorage.getItem("kissa_manual_canva_designs");
+      if (saved) {
+        const parsed = JSON.parse(saved) as CanvaDesign[];
+        setCanvaDesigns(parsed);
+        setCanvaAuthenticated(true);
+        setManualText(saved);
+        return;
+      }
+    } catch {
+      // ignore corrupt local storage
+    }
+
     fetch("/api/canva/portfolio")
       .then((r) => r.json())
       .then((data) => {
@@ -91,6 +108,27 @@ export default function PortfolioPage() {
       })
       .catch((e) => setCanvaError(e.message));
   }, []);
+
+  function applyManualDesigns() {
+    setManualError(null);
+    if (!manualText.trim()) {
+      localStorage.removeItem("kissa_manual_canva_designs");
+      setCanvaDesigns([]);
+      setCanvaAuthenticated(false);
+      return;
+    }
+    try {
+      const parsed = JSON.parse(manualText) as CanvaDesign[];
+      if (!Array.isArray(parsed)) throw new Error("Expected a JSON array");
+      localStorage.setItem("kissa_manual_canva_designs", JSON.stringify(parsed));
+      setCanvaDesigns(parsed);
+      setCanvaAuthenticated(true);
+      setCanvaError(null);
+      setShowManualEntry(false);
+    } catch (e) {
+      setManualError(e instanceof Error ? e.message : String(e));
+    }
+  }
 
   const filtered =
     selected === "All" ? PROJECTS : PROJECTS.filter((p) => p.category === selected);
@@ -251,28 +289,89 @@ export default function PortfolioPage() {
             {!canvaAuthenticated && (
               <div
                 style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
                   background: "var(--bone)",
                   border: "1px solid var(--line)",
                   borderRadius: 12,
                   padding: "14px 20px",
                   marginBottom: 32,
-                  flexWrap: "wrap",
-                  gap: 12,
                 }}
               >
-                <p style={{ fontFamily: "var(--sans)", fontSize: 14, color: "var(--fg2)", margin: 0 }}>
-                  Connect Canva to load real project thumbnails.
-                </p>
-                <a
-                  href="/api/auth/canva"
-                  className="btn btn-primary"
-                  style={{ padding: "10px 20px", fontSize: 14 }}
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    flexWrap: "wrap",
+                    gap: 12,
+                  }}
                 >
-                  <Link2 size={14} /> Connect Canva
-                </a>
+                  <p style={{ fontFamily: "var(--sans)", fontSize: 14, color: "var(--fg2)", margin: 0 }}>
+                    Connect Canva to load real project thumbnails.
+                  </p>
+                  <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+                    <a
+                      href="/api/auth/canva"
+                      className="btn btn-primary"
+                      style={{ padding: "10px 20px", fontSize: 14 }}
+                    >
+                      <Link2 size={14} /> Connect Canva
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => setShowManualEntry((v) => !v)}
+                      style={{ padding: "10px 20px", fontSize: 14, cursor: "pointer", borderRadius: 100, border: "1px solid var(--line)", background: "transparent", color: "var(--fg)", fontFamily: "var(--sans)", fontWeight: 600 }}
+                    >
+                      Manual entry
+                    </button>
+                  </div>
+                </div>
+
+                {showManualEntry && (
+                  <div style={{ marginTop: 16 }}>
+                    <p style={{ fontFamily: "var(--sans)", fontSize: 12, color: "var(--fg3)", margin: "0 0 8px" }}>
+                      Paste a JSON array of designs, e.g. {"[{\"id\":\"1\",\"name\":\"FYTURE\",\"urls\":{\"view_url\":\"https://...\"},\"thumbnail\":{\"url\":\"https://...\",\"width\":800,\"height\":600},\"created_at\":0,\"updated_at\":0}]"}
+                    </p>
+                    <textarea
+                      value={manualText}
+                      onChange={(e) => setManualText(e.target.value)}
+                      rows={6}
+                      style={{
+                        width: "100%",
+                        fontFamily: "monospace",
+                        fontSize: 12,
+                        padding: 12,
+                        borderRadius: 8,
+                        border: "1px solid var(--line)",
+                        background: "var(--paper)",
+                        color: "var(--fg)",
+                        resize: "vertical",
+                      }}
+                      placeholder="[]"
+                    />
+                    {manualError && (
+                      <p style={{ fontFamily: "var(--sans)", fontSize: 12, color: "#c0392b", margin: "8px 0 0" }}>
+                        {manualError}
+                      </p>
+                    )}
+                    <div style={{ display: "flex", gap: 10, marginTop: 10 }}>
+                      <button
+                        type="button"
+                        onClick={applyManualDesigns}
+                        className="btn btn-primary"
+                        style={{ padding: "10px 20px", fontSize: 14, cursor: "pointer" }}
+                      >
+                        Save
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setShowManualEntry(false)}
+                        style={{ padding: "10px 20px", fontSize: 14, cursor: "pointer", borderRadius: 100, border: "1px solid var(--line)", background: "transparent", color: "var(--fg)", fontFamily: "var(--sans)", fontWeight: 600 }}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
             <motion.div
