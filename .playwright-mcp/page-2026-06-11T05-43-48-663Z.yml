@@ -1,0 +1,282 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic:
+      - generic:
+        - img "Kissa"
+    - img "Kissa" [ref=e3]
+  - banner [ref=e4]:
+    - navigation [ref=e5]:
+      - link "the Kissa — home" [ref=e6]:
+        - /url: /
+        - img "the Kissa" [ref=e8]
+      - generic [ref=e9]:
+        - link "Work" [ref=e10]:
+          - /url: /work
+        - link "Services" [ref=e11]:
+          - /url: /services
+        - link "Studio" [ref=e12]:
+          - /url: /studio
+        - link "Contact" [ref=e13]:
+          - /url: /contact
+        - link "Let's Talk" [ref=e14]:
+          - /url: /contact
+      - button "Open menu" [ref=e15]:
+        - img [ref=e17]
+  - main [ref=e18]:
+    - generic [ref=e20]:
+      - generic:
+        - generic:
+          - img
+        - generic:
+          - img
+        - generic:
+          - img
+        - generic:
+          - img
+        - generic:
+          - img
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - paragraph [ref=e24]: A media art agency
+          - heading "We make work people remember." [level=1] [ref=e26]:
+            - text: We make work
+            - text: people remember.
+          - paragraph [ref=e27]: Brand, film, and space — built to last in memory.
+          - generic [ref=e28]:
+            - link "Begin the story" [ref=e29]:
+              - /url: mailto:hello@thekissa.com
+            - link "See our work" [ref=e30]:
+              - /url: "#work"
+        - generic [ref=e33]:
+          - img
+      - generic [ref=e39]: Scroll
+    - generic [ref=e43]: BRANDED CONTENT · VIDEO PRODUCTION · BRAND STRATEGY · SOCIAL CAMPAIGNS · PHOTOGRAPHY · ANIMATION · IMMERSIVE EXPERIENCES · BRANDED CONTENT · VIDEO PRODUCTION · BRAND STRATEGY · SOCIAL CAMPAIGNS · PHOTOGRAPHY · ANIMATION · IMMERSIVE EXPERIENCES ·
+    - generic [ref=e45]:
+      - generic [ref=e47]: STORY
+      - generic [ref=e50]: FILM
+      - generic [ref=e53]: BRAND
+      - generic [ref=e56]: MOTION
+      - generic [ref=e59]: IDENTITY
+      - generic [ref=e62]: EXPERIENCE
+      - generic [ref=e65]: DIRECTION
+      - generic [ref=e68]: WORLD
+      - generic [ref=e71]: STORY
+      - generic [ref=e74]: FILM
+      - generic [ref=e77]: BRAND
+      - generic [ref=e80]: MOTION
+      - generic [ref=e83]: IDENTITY
+      - generic [ref=e86]: EXPERIENCE
+      - generic [ref=e89]: DIRECTION
+      - generic [ref=e92]: WORLD
+    - generic [ref=e96]:
+      - generic [ref=e98]: Brand Strategy
+      - generic [ref=e100]: Film · Direction
+      - generic [ref=e102]: Motion · Identity
+      - generic [ref=e104]: Immersive · Digital
+      - generic [ref=e106]: Campaigns
+    - generic [ref=e107]:
+      - generic: Film
+      - generic: Brand
+      - generic: Direction
+      - generic [ref=e108]:
+        - paragraph [ref=e111]: Most work is forgettable.
+        - paragraph [ref=e114]: Ours is not.
+        - paragraph [ref=e115]: We work with brands that have something genuine to say and help them say it in a way no one expected. In film, identity, space, and the moments between — we make work that earns its place in memory.
+    - generic [ref=e121]:
+      - paragraph [ref=e122]: "01"
+      - heading "Identity sharp enough to hold its own." [level=2] [ref=e123]
+      - paragraph [ref=e124]: "We build from the inside out: the naming, the voice, the visual logic, the reason someone picks you over everyone else. Not style applied to a business — a business made legible through style."
+      - generic [ref=e125]:
+        - generic [ref=e126]: Brand strategy
+        - generic [ref=e127]: Visual identity
+        - generic [ref=e128]: Branded content
+        - generic [ref=e129]: Campaigns
+        - generic [ref=e130]: Copywriting
+      - generic [ref=e131]:
+        - 'button "Service 1: Story & Brand" [ref=e132]'
+        - 'button "Service 2: Motion & Film" [ref=e133]'
+        - 'button "Service 3: Digital & Immersive" [ref=e134]'
+    - generic [ref=e136]:
+      - generic [ref=e137]:
+        - heading "Selected work." [level=2] [ref=e138]
+        - link "View all" [ref=e139]:
+          - /url: /portfolio
+          - text: View all
+          - img [ref=e140]
+      - generic [ref=e143]:
+        - link "F FYTURE Branding 01 / 06 View" [ref=e145]:
+          - /url: https://www.canva.com/d/TT5LBPgwQwxGJOZ
+          - generic [ref=e148]: F
+          - generic [ref=e150]:
+            - paragraph [ref=e151]: FYTURE
+            - paragraph [ref=e152]: Branding
+          - generic [ref=e153]: 01 / 06
+          - generic [ref=e154]:
+            - text: View
+            - img [ref=e155]
+        - link "T Tecfides Tech & Finance 02 / 06 View" [ref=e159]:
+          - /url: https://www.canva.com/d/uAp3r5ONIJyRW2t
+          - generic [ref=e162]: T
+          - generic [ref=e164]:
+            - paragraph [ref=e165]: Tecfides
+            - paragraph [ref=e166]: Tech & Finance
+          - generic [ref=e167]: 02 / 06
+          - generic [ref=e168]:
+            - text: View
+            - img [ref=e169]
+        - link "N Natura Wellness 03 / 06 View" [ref=e173]:
+          - /url: https://www.canva.com/d/5atF6nUAu2myTup
+          - generic [ref=e176]: "N"
+          - generic [ref=e178]:
+            - paragraph [ref=e179]: Natura
+            - paragraph [ref=e180]: Wellness
+          - generic [ref=e181]: 03 / 06
+          - generic [ref=e182]:
+            - text: View
+            - img [ref=e183]
+        - link "M Mezze Food & Beverage 04 / 06 View" [ref=e187]:
+          - /url: https://www.canva.com/d/4e8NxvP6rD4weV7
+          - generic [ref=e190]: M
+          - generic [ref=e192]:
+            - paragraph [ref=e193]: Mezze
+            - paragraph [ref=e194]: Food & Beverage
+          - generic [ref=e195]: 04 / 06
+          - generic [ref=e196]:
+            - text: View
+            - img [ref=e197]
+        - link "Scribbles Branding 05 / 06 View" [ref=e201]:
+          - /url: https://www.canva.com/d/y4ZGuierNsuJMza
+          - generic [ref=e204]:
+            - paragraph [ref=e205]: Scribbles
+            - paragraph [ref=e206]: Branding
+          - generic [ref=e207]: 05 / 06
+          - generic [ref=e208]:
+            - text: View
+            - img [ref=e209]
+        - link "L Lyfsense Health 06 / 06 View" [ref=e213]:
+          - /url: https://www.canva.com/d/GqmEIxZ6C6ned0v
+          - generic [ref=e216]: L
+          - generic [ref=e218]:
+            - paragraph [ref=e219]: Lyfsense
+            - paragraph [ref=e220]: Health
+          - generic [ref=e221]: 06 / 06
+          - generic [ref=e222]:
+            - text: View
+            - img [ref=e223]
+      - paragraph [ref=e226]: Keep scrolling →
+    - generic [ref=e228]:
+      - generic [ref=e229]: FYTURE
+      - generic [ref=e230]:
+        - generic [ref=e231]: /
+        - text: TECFIDES
+      - generic [ref=e232]:
+        - generic [ref=e233]: /
+        - text: NATURA
+      - generic [ref=e234]:
+        - generic [ref=e235]: /
+        - text: MEZZE
+      - generic [ref=e236]:
+        - generic [ref=e237]: /
+        - text: SCRIBBLES
+      - generic [ref=e238]:
+        - generic [ref=e239]: /
+        - text: LYFSENSE
+      - generic [ref=e240]:
+        - generic [ref=e241]: /
+        - text: FYTURE
+      - generic [ref=e242]:
+        - generic [ref=e243]: /
+        - text: TECFIDES
+      - generic [ref=e244]:
+        - generic [ref=e245]: /
+        - text: NATURA
+      - generic [ref=e246]:
+        - generic [ref=e247]: /
+        - text: MEZZE
+      - generic [ref=e248]:
+        - generic [ref=e249]: /
+        - text: SCRIBBLES
+      - generic [ref=e250]:
+        - generic [ref=e251]: /
+        - text: LYFSENSE
+    - generic [ref=e253]:
+      - heading "What our clients say." [level=2] [ref=e256]
+      - generic [ref=e257]:
+        - generic [ref=e259]:
+          - generic [ref=e260]:
+            - generic [ref=e261]: PS
+            - generic [ref=e262]:
+              - paragraph [ref=e263]: Priya S.
+              - paragraph [ref=e264]: Brand Director · TECFIDES
+          - paragraph [ref=e266]: “They did not just make us a video. They found the story we had been trying to tell for years, and they told it with a clarity we could not have imagined.”
+        - generic [ref=e267]:
+          - button "Previous" [ref=e268]:
+            - img [ref=e269]
+          - button "Next" [ref=e271]:
+            - img [ref=e272]
+          - generic [ref=e274]:
+            - button "Testimonial 1" [ref=e275]
+            - button "Testimonial 2" [ref=e276]
+            - button "Testimonial 3" [ref=e277]
+            - button "Testimonial 4" [ref=e278]
+          - generic [ref=e279]: 01 / 04
+    - generic [ref=e282]:
+      - generic [ref=e283]:
+        - paragraph [ref=e284]: 23+
+        - paragraph [ref=e285]: Brands launched
+        - paragraph [ref=e286]: across 6 markets
+      - generic [ref=e287]:
+        - paragraph [ref=e288]: 200M+
+        - paragraph [ref=e289]: Views generated
+        - paragraph [ref=e290]: organic & paid
+      - generic [ref=e291]:
+        - paragraph [ref=e292]: 55%
+        - paragraph [ref=e293]: First-impression lift
+        - paragraph [ref=e294]: average across clients
+      - generic [ref=e295]:
+        - paragraph [ref=e296]: 6+
+        - paragraph [ref=e297]: Markets served
+        - paragraph [ref=e298]: Nairobi · Dubai · London
+    - generic [ref=e302]:
+      - heading "Something worth making starts here." [level=2] [ref=e303]:
+        - text: Something worth
+        - text: making starts here.
+      - paragraph [ref=e304]: We take on work we believe in. If you have a project that deserves real craft behind it, write to us.
+      - generic [ref=e305]:
+        - link "Begin the story" [ref=e306]:
+          - /url: mailto:hello@thekissa.com
+          - text: Begin the story
+          - img [ref=e307]
+        - link "hello@thekissa.com" [ref=e310]:
+          - /url: mailto:hello@thekissa.com
+  - contentinfo [ref=e311]:
+    - generic [ref=e312]:
+      - generic [ref=e313]:
+        - link "the Kissa — home" [ref=e314]:
+          - /url: /
+          - img "the Kissa" [ref=e316]
+        - generic [ref=e317]:
+          - link "Work" [ref=e318]:
+            - /url: /work
+          - link "Services" [ref=e319]:
+            - /url: /services
+          - link "Studio" [ref=e320]:
+            - /url: /studio
+          - link "Blog" [ref=e321]:
+            - /url: /blog
+          - link "Careers" [ref=e322]:
+            - /url: /careers
+        - generic [ref=e323]:
+          - link "IG" [ref=e324]:
+            - /url: https://instagram.com
+          - link "LI" [ref=e325]:
+            - /url: https://linkedin.com
+          - link "YT" [ref=e326]:
+            - /url: https://youtube.com
+        - link "hello@thekissa.com" [ref=e328]:
+          - /url: mailto:hello@thekissa.com
+      - generic [ref=e329]:
+        - paragraph [ref=e330]: © 2026 the Kissa. Where art meets storytelling.
+        - paragraph [ref=e331]: Nairobi · Dubai · London
+  - button "Open Next.js Dev Tools" [ref=e337] [cursor=pointer]:
+    - img [ref=e338]
