@@ -1084,7 +1084,7 @@ export default function HomePage() {
         <section
           ref={heroRef}
           style={{
-            height: "200vh",
+            height: "160vh",
             position: "relative",
             background: "var(--ink)",
           }}
