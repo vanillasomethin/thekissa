@@ -14,15 +14,15 @@ const BUBBLE_PATH =
   "M 89.71875 447.589844 L 89.71875 538.636719 C 89.71875 581.875 102.347656 600.210938 121.460938 607.527344 L 470.175781 678.648438 C 529.8125 697.007812 593.5625 656.058594 597.953125 589.382812 L 597.953125 50.019531 C 597.953125 22.753906 575.847656 0.648438 548.582031 0.648438 C 544.007812 0.648438 539.449219 1.28125 535.050781 2.539062 L 123.304688 86.566406 C 103.234375 93.339844 89.71875 112.15625 89.71875 133.347656 L 89.71875 322.265625 L 3.347656 387.941406 C -1.023438 392.667969 -1.023438 399.964844 3.347656 404.6875 L 89.710938 470.367188";
 const BUBBLE_VB = "0 0 598 684";
 
-// Phase timeline (ms) — deliberately unhurried, ~9s total
+// Phase timeline (ms) — deliberately unhurried, ~9.5s total
 const T = {
   oneDot:    150,    // single dot appears
-  toBubble:  900,    // dot grows into a bubble
-  talk:      2000,   // second bubble appears, they "talk" (pulse)
-  multiply:  4000,   // multiple bubbles appear/scatter
-  compress:  6300,   // bubbles converge & compress toward center
-  logoStamp: 7600,   // logo forms from compressed bubbles
-  exit:      9200,
+  toBubble:  1000,   // dot grows into a bubble
+  talk:      2200,   // second bubble appears, they "talk" (pulse)
+  multiply:  4300,   // bubble multiplies into a small cluster
+  compress:  6300,   // cluster converges & compresses toward center
+  logoStamp: 7300,   // logo forms from the compressed cluster
+  exit:      9500,   // hold the logo, then fade out
 };
 
 export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
@@ -115,47 +115,43 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
 
     // ── Phase 3: a second bubble appears — they "talk" (pulse exchange) ────
     t(() => {
-      const left  = bub(cx - 70, cy, 90, 103, true);
-      const right = bub(cx + 70, cy, 90, 103, false);
-      // re-center & shrink the existing bubble to the left position
+      // re-center the existing bubble to the left, bring in a second on the right
       const existing = S.children[0] as HTMLElement | undefined;
       if (existing) moveTo(existing, cx - 70, cy, 90, 103, 500);
-      show(right, 250, 380);
-      // pulse "conversation" — alternate scale pulses
-      const pulse = (el: HTMLElement, delay: number) => {
-        t(() => {
-          el.style.transition = "transform 0.3s ease";
-          el.style.transform = "scale(1.12)";
-          t(() => { el.style.transform = "scale(1)"; }, 260);
-        }, delay);
-      };
-      for (let i = 0; i < 3; i++) {
-        pulse(existing ?? left, 700 + i * 560);
-        pulse(right, 980 + i * 560);
-      }
+      t(() => {
+        const right = bub(cx + 70, cy, 90, 103, false);
+        if (right.firstChild) (right.firstChild as HTMLElement).style.transform = "scaleX(-1)";
+        show(right, 0, 380);
+        // pulse "conversation" — alternate scale pulses
+        const pulse = (el: HTMLElement, delay: number) => {
+          t(() => {
+            el.style.transition = "transform 0.3s ease";
+            el.style.transform = "scale(1.12)";
+            t(() => { el.style.transform = "scale(1)"; }, 260);
+          }, delay);
+        };
+        for (let i = 0; i < 3; i++) {
+          if (existing) pulse(existing, i * 560);
+          pulse(right, 280 + i * 560);
+        }
+      }, 500);
     }, T.talk);
 
-    // ── Phase 4: multiplies into many bubbles, scatter across screen ───────
+    // ── Phase 4: the pair multiplies into a small cluster ───────────────────
     t(() => {
       clearStage(0);
       t(() => {
-        // central cluster
-        const slots = [-1.4, -0.45, 0.45, 1.4];
-        slots.forEach((ix, i) => {
-          const b = bub(cx + ix * 110, cy, 90, 103, true);
+        const slots: [number, number][] = [
+          [-1.3, -0.25],
+          [-0.4, 0.3],
+          [0.4, -0.3],
+          [1.3, 0.25],
+        ];
+        slots.forEach(([ix, iy], i) => {
+          const b = bub(cx + ix * 110, cy + iy * 110, 90, 103, true);
           if (i % 2 === 1) (b.firstChild as HTMLElement).style.transform = "scaleX(-1)";
-          show(b, i * 90, 320);
+          show(b, i * 110, 340);
         });
-        // scattered faint bubbles
-        for (let i = 0; i < 18; i++) {
-          const x = Math.random() * W;
-          const y = Math.random() * H;
-          if (Math.abs(x - cx) < 280 && Math.abs(y - cy) < 130) continue;
-          const s = 30 + Math.random() * 34;
-          const b = bub(x, y, s, s * (684 / 598), false, true);
-          if (Math.random() > 0.5) (b.firstChild as HTMLElement).style.transform = "scaleX(-1)";
-          show(b, 250 + i * 50, 300);
-        }
       }, 250);
     }, T.multiply);
 

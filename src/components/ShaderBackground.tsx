@@ -27,11 +27,11 @@ export default function ShaderBackground({ style }: ShaderBackgroundProps) {
         wireframe={false}
         shader="defaults"
         uTime={0}
-        uSpeed={0.2}
-        uStrength={3}
-        uDensity={1.3}
+        uSpeed={0.3}
+        uStrength={4}
+        uDensity={1.5}
         uFrequency={5.5}
-        uAmplitude={1.5}
+        uAmplitude={2.2}
         positionX={0}
         positionY={0}
         positionZ={0}
