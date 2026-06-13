@@ -1188,7 +1188,7 @@ export default function HomePage() {
                 className="hero-video-col"
                 style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
               >
-                <BubbleMorphVideo src="/kissa-post1.mp4" scrollRef={heroRef} />
+                <BubbleMorphVideo src="/kissa-post1.mp4" />
               </div>
             </div>
 
