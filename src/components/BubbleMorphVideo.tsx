@@ -3,11 +3,6 @@
 import { useRef, useEffect, useId } from "react";
 import { useReducedMotion } from "motion/react";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
 
 // Brand bubble — exact shape from the Kissa logo, solid geometry safe for clipPath.
 const BUBBLE_PATH =
@@ -20,72 +15,64 @@ const BUBBLE_W = 380;
 const BUBBLE_H = Math.round(BUBBLE_W * (BUBBLE_VB_H / BUBBLE_VB_W)); // 438
 const LAND_W   = 600; // 16:9
 const LAND_H   = 338;
-const PORT_W   = 240; // 9:16
-const PORT_H   = 427;
 
 function lerp(a: number, b: number, t: number) { return a + (b - a) * t; }
-function easeIO(t: number) { return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t; }
-function norm(p: number, lo: number, hi: number) { return Math.max(0, Math.min(1, (p - lo) / (hi - lo))); }
 
 interface Props {
   src: string;
-  scrollRef: React.RefObject<HTMLElement | null>;
 }
 
-export default function BubbleMorphVideo({ src, scrollRef }: Props) {
+// Hover/cursor-driven morph: bubble shape <-> rounded landscape rect.
+// A single persistent wrapper element is resized in place — only its
+// dimensions/clip change, so the element identity never changes.
+export default function BubbleMorphVideo({ src }: Props) {
   const uid = useId().replace(/:/g, "");
   const reduce = useReducedMotion();
 
-  const wrapperRef      = useRef<HTMLDivElement>(null);
-  const bubbleLayerRef  = useRef<HTMLDivElement>(null);
-  const rectLayerRef    = useRef<HTMLDivElement>(null);
-  const rectFrameRef    = useRef<HTMLDivElement>(null);
+  const wrapperRef     = useRef<HTMLDivElement>(null);
+  const bubbleLayerRef = useRef<HTMLDivElement>(null);
+  const rectLayerRef   = useRef<HTMLDivElement>(null);
+  const rectFrameRef   = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (reduce || !scrollRef.current || !wrapperRef.current) return;
-
     const wrapper     = wrapperRef.current;
     const bubbleLayer = bubbleLayerRef.current;
     const rectLayer   = rectLayerRef.current;
     const rectFrame   = rectFrameRef.current;
+    if (!wrapper || !bubbleLayer || !rectLayer || !rectFrame) return;
 
-    const trigger = ScrollTrigger.create({
-      trigger: scrollRef.current,
-      start: "top top",
-      end: "bottom bottom",
-      scrub: 1.5,
-      onUpdate(self) {
-        const p = self.progress;
-        let w: number, h: number, bOp: number, rOp: number;
+    if (reduce) return;
 
-        if (p < 0.28) {
-          w = BUBBLE_W; h = BUBBLE_H; bOp = 1; rOp = 0;
-        } else if (p < 0.52) {
-          const t = easeIO(norm(p, 0.28, 0.52));
-          w = lerp(BUBBLE_W, LAND_W, t);
-          h = lerp(BUBBLE_H, LAND_H, t);
-          bOp = 1 - t; rOp = t;
-        } else if (p < 0.68) {
-          w = LAND_W; h = LAND_H; bOp = 0; rOp = 1;
-        } else if (p < 0.92) {
-          const t = easeIO(norm(p, 0.68, 0.92));
-          w = lerp(LAND_W, PORT_W, t);
-          h = lerp(LAND_H, PORT_H, t);
-          bOp = 0; rOp = 1;
-        } else {
-          w = PORT_W; h = PORT_H; bOp = 0; rOp = 1;
-        }
+    const state = { p: 0 };
 
-        wrapper.style.width  = `${w}px`;
-        wrapper.style.height = `${h}px`;
-        if (bubbleLayer) bubbleLayer.style.opacity = String(bOp);
-        if (rectLayer)   rectLayer.style.opacity   = String(rOp);
-        if (rectFrame)   rectFrame.style.opacity   = String(rOp);
-      },
-    });
+    function apply() {
+      const t = state.p;
+      const w = lerp(BUBBLE_W, LAND_W, t);
+      const h = lerp(BUBBLE_H, LAND_H, t);
+      wrapper!.style.width  = `${w}px`;
+      wrapper!.style.height = `${h}px`;
+      bubbleLayer!.style.opacity = String(1 - t);
+      rectLayer!.style.opacity   = String(t);
+      rectFrame!.style.opacity   = String(t);
+    }
 
-    return () => trigger.kill();
-  }, [reduce, scrollRef]);
+    function onEnter() {
+      gsap.to(state, { p: 1, duration: 0.7, ease: "power3.out", onUpdate: apply });
+    }
+    function onLeave() {
+      gsap.to(state, { p: 0, duration: 0.6, ease: "power3.inOut", onUpdate: apply });
+    }
+
+    wrapper.addEventListener("mouseenter", onEnter);
+    wrapper.addEventListener("mouseleave", onLeave);
+    apply();
+
+    return () => {
+      wrapper.removeEventListener("mouseenter", onEnter);
+      wrapper.removeEventListener("mouseleave", onLeave);
+      gsap.killTweensOf(state);
+    };
+  }, [reduce]);
 
   return (
     <div
@@ -96,7 +83,7 @@ export default function BubbleMorphVideo({ src, scrollRef }: Props) {
         height: BUBBLE_H,
         flexShrink: 0,
         willChange: "width, height",
-        transition: "width 0.05s linear, height 0.05s linear",
+        cursor: reduce ? "default" : "pointer",
       }}
     >
       {/* ── Bubble layer ── */}
@@ -128,12 +115,12 @@ export default function BubbleMorphVideo({ src, scrollRef }: Props) {
           </video>
         </div>
 
-        {/* Single-border outline tracing the bubble */}
+        {/* Single-border outline tracing the bubble — fixed aspect, no stretch */}
         <svg
           width="100%"
           height="100%"
           viewBox={`0 0 ${BUBBLE_VB_W} ${BUBBLE_VB_H}`}
-          preserveAspectRatio="none"
+          preserveAspectRatio="xMidYMid meet"
           xmlns="http://www.w3.org/2000/svg"
           style={{ position: "absolute", top: 0, left: 0, pointerEvents: "none", overflow: "visible" }}
         >

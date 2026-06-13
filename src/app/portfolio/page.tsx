@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
-import { ArrowUpRight, Link2 } from "lucide-react";
+import { ArrowUpRight, Upload } from "lucide-react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import type { CanvaDesign } from "@/lib/canva";
+import type { PortfolioMediaManifest, PortfolioMediaEntry } from "@/lib/portfolioMedia";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
@@ -70,65 +70,27 @@ function ClipReveal({
 
 export default function PortfolioPage() {
   const [selected, setSelected] = useState("All");
-  const [canvaDesigns, setCanvaDesigns] = useState<CanvaDesign[]>([]);
-  const [canvaAuthenticated, setCanvaAuthenticated] = useState(false);
-  const [canvaError, setCanvaError] = useState<string | null>(null);
-  const [showManualEntry, setShowManualEntry] = useState(false);
-  const [manualText, setManualText] = useState("");
-  const [manualError, setManualError] = useState<string | null>(null);
+  const [media, setMedia] = useState<PortfolioMediaManifest>({});
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    // Manual fallback takes precedence if previously saved
-    try {
-      const saved = localStorage.getItem("kissa_manual_canva_designs");
-      if (saved) {
-        const parsed = JSON.parse(saved) as CanvaDesign[];
-        setCanvaDesigns(parsed);
-        setCanvaAuthenticated(true);
-        setManualText(saved);
-        return;
-      }
-    } catch {
-      // ignore corrupt local storage
-    }
-
-    fetch("/api/canva/portfolio")
+    setIsAdmin(new URLSearchParams(window.location.search).get("admin") === "1");
+    fetch("/api/portfolio/media")
       .then((r) => r.json())
-      .then((data) => {
-        if (data?.error === "unauthenticated") return;
-        if (data?.error) {
-          setCanvaAuthenticated(true);
-          setCanvaError(JSON.stringify(data, null, 2));
-          return;
-        }
-        if (data?.designs) {
-          setCanvaDesigns(data.designs);
-          setCanvaAuthenticated(true);
-        }
-      })
-      .catch((e) => setCanvaError(e.message));
+      .then((data) => setMedia(data?.media ?? {}))
+      .catch(() => {});
   }, []);
 
-  function applyManualDesigns() {
-    setManualError(null);
-    if (!manualText.trim()) {
-      localStorage.removeItem("kissa_manual_canva_designs");
-      setCanvaDesigns([]);
-      setCanvaAuthenticated(false);
-      return;
-    }
-    try {
-      const parsed = JSON.parse(manualText) as CanvaDesign[];
-      if (!Array.isArray(parsed)) throw new Error("Expected a JSON array");
-      localStorage.setItem("kissa_manual_canva_designs", JSON.stringify(parsed));
-      setCanvaDesigns(parsed);
-      setCanvaAuthenticated(true);
-      setCanvaError(null);
-      setShowManualEntry(false);
-    } catch (e) {
-      setManualError(e instanceof Error ? e.message : String(e));
-    }
+  async function handleUpload(slug: string, file: File) {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("slug", slug);
+    const res = await fetch("/api/portfolio/upload", { method: "POST", body: formData });
+    if (!res.ok) return;
+    const data = await res.json();
+    setMedia((prev) => ({ ...prev, [slug]: { url: data.url, type: data.type } }));
   }
+
 
   const filtered =
     selected === "All" ? PROJECTS : PROJECTS.filter((p) => p.category === selected);
@@ -281,12 +243,7 @@ export default function PortfolioPage() {
         {/* ── Portfolio Grid ─────────────────────────────────────────────────── */}
         <section style={{ background: "var(--paper)", padding: "80px 0 120px" }}>
           <div className="wrap">
-            {canvaError && (
-              <pre style={{ background: "#1a0a0a", color: "#ff6b6b", padding: 16, borderRadius: 8, fontSize: 12, overflowX: "auto", marginBottom: 24 }}>
-                {canvaError}
-              </pre>
-            )}
-            {!canvaAuthenticated && (
+            {isAdmin && (
               <div
                 style={{
                   background: "var(--bone)",
@@ -296,82 +253,9 @@ export default function PortfolioPage() {
                   marginBottom: 32,
                 }}
               >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    flexWrap: "wrap",
-                    gap: 12,
-                  }}
-                >
-                  <p style={{ fontFamily: "var(--sans)", fontSize: 14, color: "var(--fg2)", margin: 0 }}>
-                    Connect Canva to load real project thumbnails.
-                  </p>
-                  <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-                    <a
-                      href="/api/auth/canva"
-                      className="btn btn-primary"
-                      style={{ padding: "10px 20px", fontSize: 14 }}
-                    >
-                      <Link2 size={14} /> Connect Canva
-                    </a>
-                    <button
-                      type="button"
-                      onClick={() => setShowManualEntry((v) => !v)}
-                      style={{ padding: "10px 20px", fontSize: 14, cursor: "pointer", borderRadius: 100, border: "1px solid var(--line)", background: "transparent", color: "var(--fg)", fontFamily: "var(--sans)", fontWeight: 600 }}
-                    >
-                      Manual entry
-                    </button>
-                  </div>
-                </div>
-
-                {showManualEntry && (
-                  <div style={{ marginTop: 16 }}>
-                    <p style={{ fontFamily: "var(--sans)", fontSize: 12, color: "var(--fg3)", margin: "0 0 8px" }}>
-                      Paste a JSON array of designs, e.g. {"[{\"id\":\"1\",\"name\":\"FYTURE\",\"urls\":{\"view_url\":\"https://...\"},\"thumbnail\":{\"url\":\"https://...\",\"width\":800,\"height\":600},\"created_at\":0,\"updated_at\":0}]"}
-                    </p>
-                    <textarea
-                      value={manualText}
-                      onChange={(e) => setManualText(e.target.value)}
-                      rows={6}
-                      style={{
-                        width: "100%",
-                        fontFamily: "monospace",
-                        fontSize: 12,
-                        padding: 12,
-                        borderRadius: 8,
-                        border: "1px solid var(--line)",
-                        background: "var(--paper)",
-                        color: "var(--fg)",
-                        resize: "vertical",
-                      }}
-                      placeholder="[]"
-                    />
-                    {manualError && (
-                      <p style={{ fontFamily: "var(--sans)", fontSize: 12, color: "#c0392b", margin: "8px 0 0" }}>
-                        {manualError}
-                      </p>
-                    )}
-                    <div style={{ display: "flex", gap: 10, marginTop: 10 }}>
-                      <button
-                        type="button"
-                        onClick={applyManualDesigns}
-                        className="btn btn-primary"
-                        style={{ padding: "10px 20px", fontSize: 14, cursor: "pointer" }}
-                      >
-                        Save
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setShowManualEntry(false)}
-                        style={{ padding: "10px 20px", fontSize: 14, cursor: "pointer", borderRadius: 100, border: "1px solid var(--line)", background: "transparent", color: "var(--fg)", fontFamily: "var(--sans)", fontWeight: 600 }}
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                )}
+                <p style={{ fontFamily: "var(--sans)", fontSize: 14, color: "var(--fg2)", margin: 0 }}>
+                  Admin mode — hover a project card below to upload its image or video (from Canva export, etc).
+                </p>
               </div>
             )}
             <motion.div
@@ -383,19 +267,16 @@ export default function PortfolioPage() {
               }}
             >
               <AnimatePresence mode="popLayout">
-                {filtered.map((project, i) => {
-                  const canvaDesign = canvaDesigns.find(
-                    (d) => d.name.toLowerCase() === project.name.toLowerCase()
-                  );
-                  return (
-                    <ProjectCard
-                      key={project.slug}
-                      project={project}
-                      index={i}
-                      thumbnail={canvaDesign?.thumbnail?.url}
-                    />
-                  );
-                })}
+                {filtered.map((project, i) => (
+                  <ProjectCard
+                    key={project.slug}
+                    project={project}
+                    index={i}
+                    media={media[project.slug]}
+                    isAdmin={isAdmin}
+                    onUpload={(file) => handleUpload(project.slug, file)}
+                  />
+                ))}
               </AnimatePresence>
             </motion.div>
 
@@ -479,11 +360,15 @@ export default function PortfolioPage() {
 function ProjectCard({
   project,
   index,
-  thumbnail,
+  media,
+  isAdmin,
+  onUpload,
 }: {
   project: (typeof PROJECTS)[0];
   index: number;
-  thumbnail?: string;
+  media?: PortfolioMediaEntry;
+  isAdmin?: boolean;
+  onUpload?: (file: File) => void;
 }) {
   const [hovered, setHovered] = useState(false);
 
@@ -530,11 +415,29 @@ function ProjectCard({
           overflow: "hidden",
         }}
       >
-        {/* Real thumbnail when available */}
-        {thumbnail && (
+        {/* Uploaded thumbnail/video when available */}
+        {media && media.type === "video" && (
+          <video
+            src={media.url}
+            autoPlay
+            muted
+            loop
+            playsInline
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              opacity: hovered ? 0.9 : 0.8,
+              transition: "opacity 0.3s ease-out",
+            }}
+          />
+        )}
+        {media && media.type === "image" && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={thumbnail}
+            src={media.url}
             alt={project.name}
             style={{
               position: "absolute",
@@ -546,6 +449,40 @@ function ProjectCard({
               transition: "opacity 0.3s ease-out",
             }}
           />
+        )}
+        {isAdmin && (
+          <label
+            style={{
+              position: "absolute",
+              top: 12,
+              right: 12,
+              zIndex: 5,
+              display: "flex",
+              alignItems: "center",
+              gap: 6,
+              padding: "8px 14px",
+              borderRadius: 100,
+              background: "rgba(0,0,0,0.6)",
+              color: "#fff",
+              fontFamily: "var(--sans)",
+              fontSize: 12,
+              fontWeight: 600,
+              cursor: "pointer",
+              opacity: hovered ? 1 : 0,
+              transition: "opacity 0.2s ease-out",
+            }}
+          >
+            <Upload size={12} /> Upload
+            <input
+              type="file"
+              accept="image/*,video/*"
+              style={{ display: "none" }}
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file && onUpload) onUpload(file);
+              }}
+            />
+          </label>
         )}
         {/* Accent radial glow */}
         <div
