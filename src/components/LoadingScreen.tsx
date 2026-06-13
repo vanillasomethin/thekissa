@@ -11,7 +11,7 @@ const INK = "#000000";
 
 // Brand bubble — exact shape from the Kissa logo.
 const BUBBLE_PATH =
-  "M 89.71875 447.589844 L 89.71875 538.636719 C 89.71875 581.875 102.347656 600.210938 121.460938 607.527344 L 470.175781 678.648438 C 529.8125 697.007812 593.5625 656.058594 597.953125 589.382812 L 597.953125 50.019531 C 597.953125 22.753906 575.847656 0.648438 548.582031 0.648438 C 544.007812 0.648438 539.449219 1.28125 535.050781 2.539062 L 123.304688 86.566406 C 103.234375 93.339844 89.71875 112.15625 89.71875 133.347656 L 89.71875 322.265625 L 3.347656 387.941406 C -1.023438 392.667969 -1.023438 399.964844 3.347656 404.6875 L 89.710938 470.367188";
+  "M 89.71875 447.589844 L 89.71875 538.636719 C 89.71875 581.875 102.347656 600.210938 121.460938 607.527344 L 470.175781 678.648438 C 529.8125 697.007812 593.5625 656.058594 597.953125 589.382812 L 597.953125 50.019531 C 597.953125 22.753906 575.847656 0.648438 548.582031 0.648438 C 544.007812 0.648438 539.449219 1.28125 535.050781 2.539062 L 123.304688 86.566406 C 103.234375 93.339844 89.71875 112.15625 89.71875 133.347656 L 89.71875 322.265625 L 3.347656 387.941406 C -1.023438 392.667969 -1.023438 399.964844 3.347656 404.6875 L 89.71875 447.589844 Z";
 const BUBBLE_VB = "0 0 598 684";
 
 // Phase timeline (ms) — deliberately unhurried, ~9.5s total
@@ -90,13 +90,6 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
       el.style.width = `${w}px`;
       el.style.height = `${h}px`;
     }
-    function clearStage(delay = 0) {
-      t(() => {
-        const children = Array.from(S.children);
-        children.forEach((c, i) => hide(c as HTMLElement, i * 8, 180));
-        t(() => { S.innerHTML = ""; }, 500);
-      }, delay);
-    }
 
     // ── Phase 1: a single dot appears ───────────────────────────────────────
     t(() => {
@@ -104,13 +97,13 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
       show(a, 0, 320);
     }, T.oneDot);
 
-    // ── Phase 2: dot grows into a single bubble ─────────────────────────────
+    // ── Phase 2: dot grows into a single bubble (crossfade, no flash) ───────
     t(() => {
-      clearStage(0);
-      t(() => {
-        const b = bub(cx, cy, 90, 103, true);
-        show(b, 0, 380);
-      }, 250);
+      const old = Array.from(S.children) as HTMLElement[];
+      const b = bub(cx, cy, 90, 103, true);
+      show(b, 0, 420);
+      old.forEach((el) => hide(el, 0, 320));
+      t(() => { old.forEach((el) => el.remove()); }, 340);
     }, T.toBubble);
 
     // ── Phase 3: a second bubble appears — they "talk" (pulse exchange) ────
@@ -137,22 +130,22 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
       }, 500);
     }, T.talk);
 
-    // ── Phase 4: the pair multiplies into a small cluster ───────────────────
+    // ── Phase 4: the pair multiplies into a small cluster (crossfade) ──────
     t(() => {
-      clearStage(0);
-      t(() => {
-        const slots: [number, number][] = [
-          [-1.3, -0.25],
-          [-0.4, 0.3],
-          [0.4, -0.3],
-          [1.3, 0.25],
-        ];
-        slots.forEach(([ix, iy], i) => {
-          const b = bub(cx + ix * 110, cy + iy * 110, 90, 103, true);
-          if (i % 2 === 1) (b.firstChild as HTMLElement).style.transform = "scaleX(-1)";
-          show(b, i * 110, 340);
-        });
-      }, 250);
+      const old = Array.from(S.children) as HTMLElement[];
+      const slots: [number, number][] = [
+        [-1.3, -0.25],
+        [-0.4, 0.3],
+        [0.4, -0.3],
+        [1.3, 0.25],
+      ];
+      slots.forEach(([ix, iy], i) => {
+        const b = bub(cx + ix * 110, cy + iy * 110, 90, 103, true);
+        if (i % 2 === 1) (b.firstChild as HTMLElement).style.transform = "scaleX(-1)";
+        show(b, i * 90, 360);
+      });
+      old.forEach((el, i) => hide(el, i * 60, 320));
+      t(() => { old.forEach((el) => el.remove()); }, 420);
     }, T.multiply);
 
     // ── Phase 5: bubbles converge & compress toward the center ─────────────
