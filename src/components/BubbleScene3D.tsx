@@ -129,7 +129,7 @@ function ScrollLayer() {
 
   return (
     <group ref={group}>
-      <BubbleMesh scale={1.4} position={[0, 0, 0]} opacity={0.9} speed={0.6} phase={0} />
+      <BubbleMesh scale={1.68} position={[0, 0, 0]} opacity={0.9} speed={0.6} phase={0} />
       <BubbleMesh scale={0.6} position={[4.2, 1.5, -2]} wireframe opacity={0.5} speed={0.9} phase={1.2} />
       <BubbleMesh scale={0.4} position={[-4, -1.2, -1]} wireframe opacity={0.35} speed={1.1} phase={2.4} />
     </group>

@@ -805,7 +805,6 @@ function WorkCard({ p, i, n, CARD_W }: { p: Project; i: number; n: number; CARD_
           inset: 0,
           borderRadius: 18,
           overflow: "hidden",
-          background: p.bg,
           textDecoration: "none",
           display: "block",
         }}
@@ -1122,7 +1121,7 @@ export default function HomePage() {
               alignItems: "center",
             }}
           >
-            <ShaderBackground style={{ opacity: 0.5 }} />
+            <ShaderBackground style={{ opacity: 0.85 }} />
             <BurstBubbles />
 
             {/* Hero grid — text left, morphing video right */}
@@ -1311,7 +1310,7 @@ export default function HomePage() {
 
         {/* ══ 9. CTA BANNER — MAD bordered box ════════════════════════════════ */}
         <section className="section-pad-lg" style={{ background: "#000000", padding: "48px 0", position: "relative", overflow: "hidden" }}>
-          <ShaderBackground style={{ opacity: 0.4 }} />
+          <ShaderBackground style={{ opacity: 0.85 }} />
           <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto", padding: "0 50px", position: "relative" }}>
             <motion.div
               initial={{ opacity: 0, y: 24 }}
