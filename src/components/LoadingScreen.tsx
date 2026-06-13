@@ -211,16 +211,14 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
               top:       "50%",
               left:      "50%",
               width:     130,
-              height:    Math.round(130 * (684 / 598)),
+              height:    Math.round(130 * (17580 / 14063)),
               transform: "translate(-50%, -50%) scale(0.6)",
               opacity:   0,
               zIndex:    30,
               pointerEvents: "none",
             }}
           >
-            <svg viewBox={BUBBLE_VB} xmlns="http://www.w3.org/2000/svg" style={{ display: "block", width: "100%", height: "100%", overflow: "visible" }}>
-              <path d={BUBBLE_PATH} fill={INK} stroke="none" strokeLinejoin="round" />
-            </svg>
+            <img src="/kissafilled.svg" alt="" style={{ display: "block", width: "100%", height: "100%" }} />
           </div>
         </motion.div>
       )}

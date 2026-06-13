@@ -2,7 +2,7 @@
 
 import { useRef, useMemo } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { RoundedBox } from "@react-three/drei";
+import { RoundedBox, MeshTransmissionMaterial } from "@react-three/drei";
 import * as THREE from "three";
 
 interface ProjectCard3DProps {
@@ -29,14 +29,19 @@ function TiltPlate({ accent, pointerRef }: { accent: string; pointerRef: React.R
   return (
     <group ref={groupRef}>
       <RoundedBox args={[aspect * 2.4, 2.4, 0.18]} radius={0.16} smoothness={6}>
-        <meshPhysicalMaterial
+        <MeshTransmissionMaterial
           color={color}
-          roughness={0.35}
-          metalness={0.1}
+          roughness={0.15}
+          thickness={0.5}
+          transmission={1}
+          ior={1.2}
+          chromaticAberration={0.04}
+          anisotropy={0.1}
+          distortion={0.15}
+          distortionScale={0.2}
+          temporalDistortion={0.1}
           clearcoat={0.6}
           clearcoatRoughness={0.25}
-          transparent
-          opacity={0.5}
         />
       </RoundedBox>
     </group>
