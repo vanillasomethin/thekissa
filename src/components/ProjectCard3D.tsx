@@ -13,21 +13,40 @@ interface ProjectCard3DProps {
 
 function TiltPlate({ accent, pointerRef }: { accent: string; pointerRef: React.RefObject<{ x: number; y: number }> }) {
   const groupRef = useRef<THREE.Group>(null);
+  const cylinderRef = useRef<THREE.Group>(null);
   const { size } = useThree();
   const aspect = size.width / size.height;
 
-  useFrame(() => {
+  useFrame((_, delta) => {
     const g = groupRef.current;
-    if (!g) return;
-    const { x, y } = pointerRef.current;
-    g.rotation.x += (-y * 0.5 - g.rotation.x) * 0.08;
-    g.rotation.y += (x * 0.6 - g.rotation.y) * 0.08;
+    if (g) {
+      const { x, y } = pointerRef.current;
+      g.rotation.x += (-y * 0.5 - g.rotation.x) * 0.08;
+      g.rotation.y += (x * 0.6 - g.rotation.y) * 0.08;
+    }
+    const cyl = cylinderRef.current;
+    if (cyl) cyl.rotation.y += delta * 0.25;
   });
 
   const color = useMemo(() => new THREE.Color(accent), [accent]);
 
   return (
     <group ref={groupRef}>
+      {/* Ambient revolving cylinder behind the card — pmndrs carousel-style accent */}
+      <group ref={cylinderRef} position={[0, 0, -1.2]}>
+        <mesh rotation={[Math.PI / 2, 0, 0]}>
+          <cylinderGeometry args={[1.6, 1.6, 2.6, 48, 1, true]} />
+          <meshPhysicalMaterial
+            color={color}
+            roughness={0.4}
+            metalness={0.2}
+            transparent
+            opacity={0.18}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
+      </group>
+
       <RoundedBox args={[aspect * 2.4, 2.4, 0.18]} radius={0.16} smoothness={6}>
         <MeshTransmissionMaterial
           color={color}
