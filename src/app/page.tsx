@@ -1100,7 +1100,8 @@ export default function HomePage() {
   return (
     <>
       <Navbar />
-      <main style={{ overflowX: "hidden" }}>
+      <ShaderBackground style={{ position: "fixed", inset: 0, width: "100vw", height: "100vh", zIndex: -1, opacity: 0.85 }} />
+      <main style={{ overflowX: "hidden", position: "relative" }}>
 
         {/* ══ 1. HERO — 300vh scroll driver with sticky stage ══════════════════ */}
         <section
@@ -1121,7 +1122,6 @@ export default function HomePage() {
               alignItems: "center",
             }}
           >
-            <ShaderBackground style={{ opacity: 0.85 }} />
             <BurstBubbles />
 
             {/* Hero grid — text left, morphing video right */}
@@ -1309,8 +1309,7 @@ export default function HomePage() {
         <BubbleGrid />
 
         {/* ══ 9. CTA BANNER — MAD bordered box ════════════════════════════════ */}
-        <section className="section-pad-lg" style={{ background: "#000000", padding: "48px 0", position: "relative", overflow: "hidden" }}>
-          <ShaderBackground style={{ opacity: 0.85 }} />
+        <section className="section-pad-lg" style={{ background: "transparent", padding: "48px 0", position: "relative", overflow: "hidden" }}>
           <div className="wrap" style={{ maxWidth: 1100, margin: "0 auto", padding: "0 50px", position: "relative" }}>
             <motion.div
               initial={{ opacity: 0, y: 24 }}
