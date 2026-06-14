@@ -72,6 +72,7 @@ export default function PortfolioPage() {
   const [selected, setSelected] = useState("All");
   const [media, setMedia] = useState<PortfolioMediaManifest>({});
   const [isAdmin, setIsAdmin] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
 
   useEffect(() => {
     setIsAdmin(new URLSearchParams(window.location.search).get("admin") === "1");
@@ -82,13 +83,22 @@ export default function PortfolioPage() {
   }, []);
 
   async function handleUpload(slug: string, file: File) {
+    setUploadError(null);
     const formData = new FormData();
     formData.append("file", file);
     formData.append("slug", slug);
-    const res = await fetch("/api/portfolio/upload", { method: "POST", body: formData });
-    if (!res.ok) return;
-    const data = await res.json();
-    setMedia((prev) => ({ ...prev, [slug]: { url: data.url, type: data.type } }));
+    try {
+      const res = await fetch("/api/portfolio/upload", { method: "POST", body: formData });
+      if (!res.ok) {
+        const body = await res.json().catch(() => null);
+        setUploadError(body?.error || `Upload failed (${res.status})`);
+        return;
+      }
+      const data = await res.json();
+      setMedia((prev) => ({ ...prev, [slug]: { url: data.url, type: data.type } }));
+    } catch {
+      setUploadError("Upload failed — network error");
+    }
   }
 
 
@@ -98,6 +108,46 @@ export default function PortfolioPage() {
   return (
     <>
       <Navbar />
+
+      {/* Upload error toast */}
+      <AnimatePresence>
+        {uploadError && (
+          <motion.div
+            initial={{ opacity: 0, y: -16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.25, ease }}
+            style={{
+              position: "fixed",
+              top: 20,
+              left: "50%",
+              transform: "translateX(-50%)",
+              zIndex: 9998,
+              background: "#c0392b",
+              color: "#fff",
+              fontFamily: "var(--sans)",
+              fontSize: 13,
+              fontWeight: 600,
+              padding: "10px 18px",
+              borderRadius: 8,
+              boxShadow: "0 8px 24px rgba(0,0,0,0.3)",
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+            }}
+          >
+            {uploadError}
+            <button
+              onClick={() => setUploadError(null)}
+              style={{ background: "none", border: "none", color: "#fff", cursor: "pointer", fontSize: 14, lineHeight: 1, padding: 0 }}
+              aria-label="Dismiss"
+            >
+              ×
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <main>
 
         {/* ── Hero ──────────────────────────────────────────────────────────── */}

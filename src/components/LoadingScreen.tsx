@@ -130,19 +130,28 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
       }, 500);
     }, T.talk);
 
-    // ── Phase 4: the pair multiplies into a small cluster (crossfade) ──────
+    // ── Phase 4: bubbles multiply and fill the whole screen ─────────────────
     t(() => {
       const old = Array.from(S.children) as HTMLElement[];
-      const slots: [number, number][] = [
-        [-1.3, -0.25],
-        [-0.4, 0.3],
-        [0.4, -0.3],
-        [1.3, 0.25],
-      ];
-      slots.forEach(([ix, iy], i) => {
-        const b = bub(cx + ix * 110, cy + iy * 110, 90, 103, true);
+      // grid of slots spanning the full viewport, with jitter
+      const cols = 5, rows = 4;
+      const slots: [number, number][] = [];
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const jx = (Math.random() - 0.5) * 0.4;
+          const jy = (Math.random() - 0.5) * 0.4;
+          slots.push([
+            ((c + 0.5) / cols + jx / cols) * W,
+            ((r + 0.5) / rows + jy / rows) * H,
+          ]);
+        }
+      }
+      slots.forEach(([px, py], i) => {
+        const scale = 0.6 + Math.random() * 0.5;
+        const w = 90 * scale, h = 103 * scale;
+        const b = bub(px, py, w, h, true);
         if (i % 2 === 1) (b.firstChild as HTMLElement).style.transform = "scaleX(-1)";
-        show(b, i * 90, 360);
+        show(b, i * 28, 360);
       });
       old.forEach((el, i) => hide(el, i * 60, 320));
       t(() => { old.forEach((el) => el.remove()); }, 420);
@@ -204,7 +213,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
               top:       "50%",
               left:      "50%",
               width:     130,
-              height:    Math.round(130 * (17580 / 14063)),
+              height:    Math.round(130 * (10200 / 7650)),
               transform: "translate(-50%, -50%) scale(0.6)",
               opacity:   0,
               zIndex:    30,

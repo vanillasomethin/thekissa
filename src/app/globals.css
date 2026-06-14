@@ -47,7 +47,7 @@
   --mad-white:      #ffffff;
 
   /* ── Semantic aliases ────────────────────────────────────── */
-  --ink:            var(--mad-black);
+  --ink:            rgba(0, 0, 0, 0.55);
   --bg:             var(--mad-black);
   --bg-alt:         var(--mad-dark);
   --surface:        var(--mad-dark);
