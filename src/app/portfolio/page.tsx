@@ -36,6 +36,32 @@ const PROJECTS = [
   { slug: "tmed",              name: "Tmed",              category: "Tech & Finance",      canvaUrl: "https://www.canva.com/d/zRQbUcH4o-74Giq", bg: "linear-gradient(145deg,#1E2840 0%,#0F1418 70%)", accent: "#4860A0", light: false , cover: "/portfolio/tmed.png"},
 ];
 
+const DESCRIPTIONS: Record<string, string> = {
+  "fyture": "A bold identity system built for a brand stepping confidently into tomorrow — clean type, sharp contrast, and a mark designed to scale across digital and print.",
+  "mezze": "Warm, appetite-driven branding for a Mediterranean food concept — earthy tones and inviting typography that bring the menu to life before the first bite.",
+  "vs": "A refined, minimal brand identity balancing structure and personality — versatile across packaging, signage, and digital touchpoints.",
+  "tecfides": "A confident tech & finance identity — precise grids, a trustworthy palette, and a mark built to feel secure and modern.",
+  "natura": "An organic, nature-forward identity for a wellness brand — soft greens, natural textures, and a calm, grounded visual language.",
+  "hearing-ear-care": "A clear, approachable healthcare identity — friendly typography and a calming palette designed to put patients at ease.",
+  "asbc": "A structured, professional identity for a finance-led brand — disciplined grids and a confident colour story.",
+  "scribbles": "A playful, hand-drawn brand world — loose marker textures and energetic typography for a creative, expressive identity.",
+  "kere-pedals": "A vibrant identity for a cycling brand — dynamic colour and movement-led graphics that capture momentum.",
+  "hyderabadi-dhaba": "A rich, flavour-forward identity for a regional restaurant — warm spice tones and bold signage-ready typography.",
+  "travel-now": "A fresh, adventure-driven travel brand identity — open skies, clean iconography, and a sense of movement.",
+  "gurukripa": "A heritage-rooted food brand identity — warm, traditional tones paired with modern packaging structure.",
+  "lyfsense": "A clean, modern health-tech identity — calming greens and clear typography built for trust at a glance.",
+  "chocolate-dairies": "An indulgent, premium identity for a chocolate & dairy brand — rich tones and elegant packaging-led design.",
+  "pranik": "A grounded, natural healthcare identity — soft greens and approachable typography for everyday wellness.",
+  "armario": "A warm, tactile identity for a lifestyle/furniture brand — earthy palette and considered, editorial layouts.",
+  "espoir-cube": "A bold, structured identity built around geometry and contrast — confident branding for a forward-thinking studio.",
+  "dip-n-melt": "A playful, indulgent identity for a dessert brand — golden tones and a fun, craveable visual language.",
+  "alive": "An energetic wellness identity — vibrant greens and motion-led graphics that feel fresh and active.",
+  "sorbete": "A bright, refreshing identity for a frozen treats brand — punchy colour and a cooling, summery feel.",
+  "eqmed": "A precise, clinical identity for a healthcare brand — cool tones and clean typography that signal expertise.",
+  "hayatibb": "A warm, trustworthy healthcare identity — approachable colour and clear, friendly typography.",
+  "tmed": "A sharp, modern tech & finance identity — structured layouts and a confident, professional palette.",
+};
+
 const ALL_CATEGORIES = ["All", ...Array.from(new Set(PROJECTS.map((p) => p.category)))];
 
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number];
@@ -70,6 +96,7 @@ function ClipReveal({
 
 export default function PortfolioPage() {
   const [selected, setSelected] = useState("All");
+  const [openSlug, setOpenSlug] = useState<string | null>(null);
   const [media, setMedia] = useState<PortfolioMediaManifest>({});
   const [isAdmin, setIsAdmin] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
@@ -325,6 +352,7 @@ export default function PortfolioPage() {
                     media={media[project.slug]}
                     isAdmin={isAdmin}
                     onUpload={(file) => handleUpload(project.slug, file)}
+                    onOpen={() => setOpenSlug(project.slug)}
                   />
                 ))}
               </AnimatePresence>
@@ -400,6 +428,84 @@ export default function PortfolioPage() {
         </section>
 
       </main>
+
+      {/* ── Project detail modal ─────────────────────────────────────────── */}
+      <AnimatePresence>
+        {openSlug && (() => {
+          const project = PROJECTS.find((p) => p.slug === openSlug);
+          if (!project) return null;
+          return (
+            <motion.div
+              key="modal-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.25 }}
+              onClick={() => setOpenSlug(null)}
+              style={{
+                position: "fixed",
+                inset: 0,
+                zIndex: 9990,
+                background: "rgba(10,6,5,0.78)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: 24,
+              }}
+            >
+              <motion.div
+                initial={{ opacity: 0, y: 24, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 24, scale: 0.97 }}
+                transition={{ duration: 0.3, ease }}
+                onClick={(e) => e.stopPropagation()}
+                style={{
+                  background: "#fff",
+                  borderRadius: 20,
+                  overflow: "hidden",
+                  maxWidth: 760,
+                  width: "100%",
+                  maxHeight: "88vh",
+                  overflowY: "auto",
+                }}
+              >
+                <div style={{ aspectRatio: "16/10", position: "relative", background: project.bg }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={(media[project.slug]?.url) || project.cover}
+                    alt={project.name}
+                    style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+                  />
+                </div>
+                <div style={{ padding: "28px 32px 36px" }}>
+                  <div
+                    style={{
+                      fontFamily: "var(--sans)", fontSize: 11, fontWeight: 600,
+                      textTransform: "uppercase", letterSpacing: "0.14em",
+                      color: "var(--fg3)", marginBottom: 10,
+                    }}
+                  >
+                    {project.category}
+                  </div>
+                  <h3
+                    style={{
+                      fontFamily: "var(--sans)", fontWeight: 700,
+                      fontSize: "clamp(28px, 4vw, 40px)", color: "var(--fg1)",
+                      margin: "0 0 16px", letterSpacing: "-0.015em",
+                    }}
+                  >
+                    {project.name}
+                  </h3>
+                  <p style={{ fontFamily: "var(--sans)", fontSize: 15, lineHeight: 1.7, color: "var(--fg2)", margin: 0 }}>
+                    {DESCRIPTIONS[project.slug] || "A bespoke brand identity crafted by the Kissa team."}
+                  </p>
+                </div>
+              </motion.div>
+            </motion.div>
+          );
+        })()}
+      </AnimatePresence>
+
       <Footer />
     </>
   );
@@ -413,12 +519,14 @@ function ProjectCard({
   media,
   isAdmin,
   onUpload,
+  onOpen,
 }: {
   project: (typeof PROJECTS)[0];
   index: number;
   media?: PortfolioMediaEntry;
   isAdmin?: boolean;
   onUpload?: (file: File) => void;
+  onOpen?: () => void;
 }) {
   const [hovered, setHovered] = useState(false);
 
@@ -638,6 +746,7 @@ function ProjectCard({
             {project.category}
           </div>
           <div
+            onClick={() => onOpen?.()}
             style={{
               fontFamily: "var(--sans)",
               fontSize: "clamp(20px, 3vw, 26px)",
@@ -645,72 +754,16 @@ function ProjectCard({
               color: "#fff",
               lineHeight: 1.1,
               letterSpacing: "-0.015em",
+              cursor: "pointer",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
             }}
           >
             {project.name}
+            <ArrowUpRight size={18} style={{ opacity: hovered ? 1 : 0, transition: "opacity 0.2s" }} />
           </div>
-          <motion.a
-            href={project.canvaUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            animate={{ opacity: hovered ? 1 : 0, y: hovered ? 0 : 8 }}
-            transition={{ duration: 0.2 }}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 5,
-              marginTop: 12,
-              fontFamily: "var(--sans)",
-              fontSize: 13,
-              fontWeight: 600,
-              color: "rgba(255,255,255,0.85)",
-              textDecoration: "none",
-            }}
-          >
-            View on Canva <ArrowUpRight size={13} />
-          </motion.a>
         </div>
-      </div>
-
-      {/* Bottom meta */}
-      <div
-        style={{
-          background: "#fff",
-          padding: "14px 20px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: 8,
-        }}
-      >
-        <span
-          style={{
-            fontFamily: "var(--sans)",
-            fontWeight: 700,
-            fontSize: 15,
-            color: "var(--fg1)",
-            letterSpacing: "-0.005em",
-          }}
-        >
-          {project.name}
-        </span>
-        <a
-          href={project.canvaUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={(e) => e.stopPropagation()}
-          aria-label={`View ${project.name} on Canva`}
-          style={{
-            color: hovered ? "var(--crimson)" : "var(--fg3)",
-            display: "flex",
-            alignItems: "center",
-            flexShrink: 0,
-            transition: "color 0.2s",
-          }}
-        >
-          <ArrowUpRight size={16} />
-        </a>
       </div>
     </motion.div>
   );
