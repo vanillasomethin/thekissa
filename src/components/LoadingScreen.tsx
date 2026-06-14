@@ -222,7 +222,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
               pointerEvents: "none",
             }}
           >
-            <img src="/kissafilled.svg" alt="the Kissa" style={{ display: "block", width: 150, height: Math.round(150 * (14000 / 12000)) }} />
+            <img src="/kissa%20logo%20black.svg" alt="the Kissa" style={{ display: "block", width: 170, height: Math.round(170 * (3925 / 4042)) }} />
             <span className="k-caption" style={{ color: INK, opacity: 0.6 }}>Every great story starts with a conversation</span>
           </div>
         </motion.div>
