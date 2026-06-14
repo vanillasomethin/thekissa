@@ -15,12 +15,18 @@ export async function POST(request: NextRequest) {
   const ext = file.name.split(".").pop()?.toLowerCase() || (type === "video" ? "mp4" : "jpg");
   const path = `portfolio/${slug}.${ext}`;
 
-  const blob = await put(path, file, {
-    access: "public",
-    addRandomSuffix: false,
-    allowOverwrite: true,
-    contentType: file.type,
-  });
+  let blob;
+  try {
+    blob = await put(path, file, {
+      access: "public",
+      addRandomSuffix: false,
+      allowOverwrite: true,
+      contentType: file.type,
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Upload to storage failed";
+    return NextResponse.json({ error: message }, { status: 500 });
+  }
 
   const manifest = await getManifest();
   manifest[slug] = { url: blob.url, type };
