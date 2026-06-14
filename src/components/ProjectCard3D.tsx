@@ -76,7 +76,7 @@ export default function ProjectCard3D({ accent, className, pointerRef }: Project
   return (
     <Canvas
       className={className}
-      style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}
+      style={{ position: "absolute", inset: -32, width: "calc(100% + 64px)", height: "calc(100% + 64px)", pointerEvents: "none" }}
       gl={{ alpha: true, antialias: true }}
       dpr={[1, 1.5]}
       camera={{ position: [0, 0, 4], fov: 35 }}

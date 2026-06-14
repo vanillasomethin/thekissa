@@ -1103,11 +1103,11 @@ export default function HomePage() {
       <ShaderBackground style={{ position: "fixed", inset: 0, width: "100vw", height: "100vh", zIndex: -1, opacity: 0.85 }} />
       <main style={{ overflowX: "hidden", position: "relative" }}>
 
-        {/* ══ 1. HERO — 300vh scroll driver with sticky stage ══════════════════ */}
+        {/* ══ 1. HERO ══════════════════════════════════════════════════════════ */}
         <section
           ref={heroRef}
           style={{
-            height: "160vh",
+            height: "100vh",
             position: "relative",
             background: "var(--ink)",
           }}
