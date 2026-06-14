@@ -138,6 +138,7 @@ const services = [
 const featuredProjects = [
   {
     name: "FYTURE",
+    cover: "/portfolio/fyture.png",
     category: "Branding",
     href: "https://www.canva.com/d/TT5LBPgwQwxGJOZ",
     bg: "linear-gradient(160deg,#3A0F1E 0%,#1C0810 60%,#16100F)",
@@ -145,6 +146,7 @@ const featuredProjects = [
   },
   {
     name: "Tecfides",
+    cover: "/portfolio/tecfides.png",
     category: "Tech & Finance",
     href: "https://www.canva.com/d/uAp3r5ONIJyRW2t",
     bg: "linear-gradient(160deg,#1A2A3A 0%,#0F141A 60%,#16100F)",
@@ -152,6 +154,7 @@ const featuredProjects = [
   },
   {
     name: "Natura",
+    cover: "/portfolio/natura.png",
     category: "Wellness",
     href: "https://www.canva.com/d/5atF6nUAu2myTup",
     bg: "linear-gradient(160deg,#243010 0%,#101508 60%,#16100F)",
@@ -159,6 +162,7 @@ const featuredProjects = [
   },
   {
     name: "Mezze",
+    cover: "/portfolio/mezze.png",
     category: "Food & Beverage",
     href: "https://www.canva.com/d/4e8NxvP6rD4weV7",
     bg: "linear-gradient(160deg,#1E3A20 0%,#0F1A10 60%,#16100F)",
@@ -166,6 +170,7 @@ const featuredProjects = [
   },
   {
     name: "Scribbles",
+    cover: "/portfolio/scribbles.png",
     category: "Branding",
     href: "https://www.canva.com/d/y4ZGuierNsuJMza",
     bg: "linear-gradient(160deg,#1a1a1a 0%,#0d0d0d 100%)",
@@ -181,6 +186,7 @@ const featuredProjects = [
   },
   {
     name: "Lyfsense",
+    cover: "/portfolio/lyfsense.png",
     category: "Health",
     href: "https://www.canva.com/d/GqmEIxZ6C6ned0v",
     bg: "linear-gradient(160deg,#1E3828 0%,#0F1814 60%,#16100F)",
@@ -731,9 +737,20 @@ interface Project {
   bg: string;
   accent: string;
   svgAssets?: string[];
+  cover?: string;
 }
 
 function ProjectPreviewCard({ project }: { project: Project }) {
+  if (project.cover) {
+    return (
+      <>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={project.cover} alt={project.name}
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 65%)" }} />
+      </>
+    );
+  }
   if (project.svgAssets && project.svgAssets.length > 0) {
     const positions = [
       { top: "8%",  left: "10%",  rotate: "-12deg" },
