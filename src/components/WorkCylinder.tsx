@@ -13,8 +13,8 @@ interface CylinderProject {
   cover?: string;
 }
 
-const CARD_W = 4.6;
-const CARD_H = 2.9;
+const CARD_W = 5.6;
+const CARD_H = 3.5;
 const RADIUS = 5.6;
 
 function Card({
@@ -49,6 +49,7 @@ function Card({
     const a = angle + groupRotation.current;
     g.position.set(Math.sin(a) * RADIUS, 0, Math.cos(a) * RADIUS);
     g.rotation.y = a;
+    g.rotation.z = Math.sin(a * 2 + index) * 0.06;
     const target = hoveredIndex === index ? 1.08 : 1;
     g.scale.x += (target - g.scale.x) * 0.08;
     g.scale.y += (target - g.scale.y) * 0.08;
@@ -96,17 +97,19 @@ function Scene({
       <ambientLight intensity={0.7} />
       <directionalLight position={[3, 5, 6]} intensity={1.2} />
       <Suspense fallback={null}>
-        {projects.map((p, i) => (
-          <Card
-            key={p.name + i}
-            project={p}
-            index={i}
-            total={projects.length}
-            groupRotation={groupRotation}
-            hoveredIndex={hoveredIndex}
-            setHoveredIndex={setHoveredIndex}
-          />
-        ))}
+        <group rotation={[0.16, 0, -0.05]}>
+          {projects.map((p, i) => (
+            <Card
+              key={p.name + i}
+              project={p}
+              index={i}
+              total={projects.length}
+              groupRotation={groupRotation}
+              hoveredIndex={hoveredIndex}
+              setHoveredIndex={setHoveredIndex}
+            />
+          ))}
+        </group>
       </Suspense>
     </>
   );
