@@ -13,9 +13,9 @@ interface CylinderProject {
   cover?: string;
 }
 
-const CARD_W = 2.6;
-const CARD_H = 1.6;
-const RADIUS = 4.4;
+const CARD_W = 1.9;
+const CARD_H = 1.2;
+const RADIUS = 5.6;
 
 function Card({
   project,
@@ -34,6 +34,13 @@ function Card({
 }) {
   const ref = useRef<THREE.Group>(null);
   const texture = project.cover ? useTexture(project.cover) : null;
+  if (texture) {
+    texture.anisotropy = 16;
+    texture.minFilter = THREE.LinearMipmapLinearFilter;
+    texture.magFilter = THREE.LinearFilter;
+    texture.generateMipmaps = true;
+    texture.colorSpace = THREE.SRGBColorSpace;
+  }
   const angle = (index / total) * Math.PI * 2;
 
   useFrame(() => {
@@ -42,10 +49,10 @@ function Card({
     const a = angle + groupRotation.current;
     g.position.set(Math.sin(a) * RADIUS, 0, Math.cos(a) * RADIUS);
     g.rotation.y = a;
-    const target = hoveredIndex === index ? 1.12 : 1;
-    g.scale.x += (target - g.scale.x) * 0.12;
-    g.scale.y += (target - g.scale.y) * 0.12;
-    g.scale.z += (target - g.scale.z) * 0.12;
+    const target = hoveredIndex === index ? 1.08 : 1;
+    g.scale.x += (target - g.scale.x) * 0.08;
+    g.scale.y += (target - g.scale.y) * 0.08;
+    g.scale.z += (target - g.scale.z) * 0.08;
   });
 
   return (
@@ -112,14 +119,17 @@ export default function WorkCylinder({ projects }: { projects: CylinderProject[]
 
   const lastScroll = useRef<number | null>(null);
 
+  const targetVelocity = useRef(0);
+
   const Rig = () => {
     useFrame(() => {
       if (lastScroll.current === null) lastScroll.current = window.scrollY;
       const delta = window.scrollY - lastScroll.current;
       lastScroll.current = window.scrollY;
-      velocity.current += delta * 0.0014;
+      targetVelocity.current += delta * 0.00022;
+      targetVelocity.current *= 0.82;
+      velocity.current += (targetVelocity.current - velocity.current) * 0.12;
       groupRotation.current += velocity.current;
-      velocity.current *= 0.9;
     });
     return null;
   };
@@ -127,9 +137,9 @@ export default function WorkCylinder({ projects }: { projects: CylinderProject[]
   return (
     <div style={{ position: "absolute", inset: 0 }}>
       <Canvas
-        camera={{ position: [0, 0.4, 6.5], fov: 42 }}
+        camera={{ position: [0, 0.3, 9.5], fov: 38 }}
         gl={{ alpha: true, antialias: true }}
-        dpr={[1, 1.5]}
+        dpr={[1, 2]}
         style={{ touchAction: "none" }}
       >
         <Rig />
