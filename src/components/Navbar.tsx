@@ -51,10 +51,8 @@ export default function Navbar() {
           }}
         >
           {/* Logo — circular MAD-style container */}
-          <Link href="/" aria-label="the Kissa — home">
+          <Link href="/" aria-label="the Kissa — home" className="brand-bubble">
             <div style={{
-              width: 68,
-              height: 68,
               borderRadius: "50%",
               background: "rgb(28,28,28)",
               boxShadow: "rgba(0,0,0,0.75) 0px 0px 20px 0px",
@@ -68,7 +66,8 @@ export default function Navbar() {
                 alt="the Kissa"
                 height={36}
                 width={108}
-                style={{ height: "36px", width: "auto" }}
+                className="brand-bubble-img"
+                style={{ width: "auto" }}
                 priority
               />
             </div>
@@ -139,6 +138,12 @@ export default function Navbar() {
       </header>
 
       <style>{`
+        .brand-bubble > div { width: 104px; height: 104px; }
+        .brand-bubble-img { height: 54px !important; }
+        @media (max-width: 640px) {
+          .brand-bubble > div { width: 76px; height: 76px; }
+          .brand-bubble-img { height: 38px !important; }
+        }
         @media (min-width: 860px) {
           #desktop-nav { display: flex !important; }
           #desktop-cta { display: inline-flex !important; }

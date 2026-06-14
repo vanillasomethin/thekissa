@@ -14,7 +14,7 @@ import { BurstBubbles, KineticWordReel, BubbleGrid } from "@/components/BubbleKi
 import PhysicsScribbles from "@/components/PhysicsScribbles";
 import BubbleMorphVideo from "@/components/BubbleMorphVideo";
 import ShaderBackground from "@/components/ShaderBackground";
-import ProjectCard3D from "@/components/ProjectCard3D";
+import WorkCylinder from "@/components/WorkCylinder";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -784,101 +784,6 @@ function ProjectPreviewCard({ project }: { project: Project }) {
 
 // Single work card — r3f rounded-glass plate (pmndrs cards-with-border-radius
 // pattern) tilting toward the pointer, with the project preview/name overlaid.
-function WorkCard({ p, i, n, CARD_W }: { p: Project; i: number; n: number; CARD_W: number }) {
-  const pointerRef = useRef({ x: 0, y: 0 });
-
-  function onMouseMove(e: React.MouseEvent<HTMLDivElement>) {
-    const rect = e.currentTarget.getBoundingClientRect();
-    pointerRef.current = {
-      x: (e.clientX - rect.left) / rect.width - 0.5,
-      y: (e.clientY - rect.top) / rect.height - 0.5,
-    };
-  }
-
-  function onMouseLeave() {
-    pointerRef.current = { x: 0, y: 0 };
-  }
-
-  return (
-    <div
-      onMouseMove={onMouseMove}
-      onMouseLeave={onMouseLeave}
-      style={{
-        position: "relative",
-        width: CARD_W,
-        height: 380,
-        borderRadius: 18,
-        flexShrink: 0,
-        boxShadow: "0 30px 60px -20px rgba(0,0,0,0.6)",
-      }}
-    >
-      <ProjectCard3D accent={p.accent} pointerRef={pointerRef} />
-      <a
-        href={p.href}
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{
-          position: "absolute",
-          inset: 0,
-          borderRadius: 18,
-          overflow: "hidden",
-          textDecoration: "none",
-          display: "block",
-        }}
-      >
-        <div className="work-card-inner" style={{ position: "absolute", inset: -40 }}>
-          <ProjectPreviewCard project={p} />
-        </div>
-
-        {/* Name overlay */}
-        <div style={{
-          position: "absolute", bottom: 0, left: 0, right: 0,
-          padding: "24px 28px",
-          background: "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)",
-        }}>
-          <p style={{
-            fontFamily: "var(--sans)",
-            fontSize: "clamp(32px,3.4vw,48px)",
-            fontWeight: 700,
-            color: "#fff",
-            margin: "0 0 4px",
-            letterSpacing: "-0.02em",
-            lineHeight: 1,
-          }}>
-            {p.name}
-          </p>
-          <p style={{ fontFamily: "var(--sans)", fontSize: 11, color: "rgba(255,255,255,0.5)", letterSpacing: "0.12em", textTransform: "uppercase", margin: 0 }}>
-            {p.category}
-          </p>
-        </div>
-
-        {/* index */}
-        <span style={{
-          position: "absolute", top: 20, left: 24,
-          fontFamily: "var(--sans)", fontSize: 12, fontWeight: 600,
-          letterSpacing: "0.14em", color: "rgba(255,255,255,0.45)",
-        }}>
-          {String(i + 1).padStart(2, "0")} / {String(n).padStart(2, "0")}
-        </span>
-
-        <span style={{
-          position: "absolute", top: 16, right: 16,
-          display: "inline-flex", alignItems: "center", gap: 6,
-          background: "rgba(255,255,255,0.12)",
-          backdropFilter: "blur(12px)",
-          color: "#fff", borderRadius: "100px",
-          padding: "8px 16px",
-          fontFamily: "var(--sans)", fontWeight: 600, fontSize: 11,
-          letterSpacing: "0.06em", textTransform: "uppercase",
-          border: "1px solid rgba(255,255,255,0.22)",
-        }}>
-          View <ArrowUpRight size={12} />
-        </span>
-      </a>
-    </div>
-  );
-}
-
 // Scroll-scrubbed horizontal strip — the page scroll drives the track sideways,
 // so the work reveals itself as you scroll (pixel.melbourne pattern).
 function WorkScrollStrip() {
@@ -887,61 +792,17 @@ function WorkScrollStrip() {
   const reduce     = useReducedMotion();
   const n = featuredProjects.length;
 
-  const CARD_W = 520;
-  const CARD_GAP = 32;
-
-  useEffect(() => {
-    if (reduce || !sectionRef.current || !trackRef.current) return;
-    const track = trackRef.current;
-
-    const getDistance = () => Math.max(0, track.scrollWidth - window.innerWidth + 100);
-
-    const tween = gsap.to(track, {
-      x: () => -getDistance(),
-      ease: "none",
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top top",
-        end: () => `+=${getDistance()}`,
-        scrub: 1,
-        pin: true,
-        invalidateOnRefresh: true,
-      },
-    });
-
-    // Subtle parallax: each card's inner content drifts against the track
-    const cards = track.querySelectorAll<HTMLElement>(".work-card-inner");
-    cards.forEach((card) => {
-      gsap.fromTo(card, { x: 40 }, {
-        x: -40,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: () => `+=${getDistance()}`,
-          scrub: 1.4,
-        },
-      });
-    });
-
-    return () => {
-      tween.scrollTrigger?.kill();
-      tween.kill();
-      ScrollTrigger.getAll().forEach((t) => {
-        if (t.trigger === sectionRef.current) t.kill();
-      });
-    };
-  }, [reduce]);
+  void trackRef; void n; void reduce;
 
   return (
     <section
       id="work"
       ref={sectionRef}
-      style={{ background: "rgb(10,10,10)", overflow: "hidden", position: "relative" }}
+      style={{ background: "rgb(10,10,10)", overflow: "hidden", position: "relative", height: "220vh" }}
     >
-      <div style={{ height: "100vh", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+      <div style={{ position: "sticky", top: 0, height: "100vh", display: "flex", flexDirection: "column", justifyContent: "center" }}>
         {/* Header */}
-        <div className="wrap work-heading-row" style={{ maxWidth: 1200, margin: "0 auto", width: "100%", padding: "0 50px", display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 48 }}>
+        <div className="wrap work-heading-row" style={{ maxWidth: 1200, margin: "0 auto", width: "100%", padding: "0 50px", display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 48, position: "relative", zIndex: 2 }}>
           <h2 style={{ fontFamily: "var(--sans)", fontSize: "clamp(36px,5vw,72px)", fontWeight: 700, color: "#fff", letterSpacing: "-0.012em", lineHeight: 1.05, margin: 0 }}>
             Selected work.
           </h2>
@@ -950,29 +811,24 @@ function WorkScrollStrip() {
           </Link>
         </div>
 
-        {/* Horizontal track — driven by vertical scroll */}
-        <div
-          ref={trackRef}
-          style={{
-            display: "flex",
-            gap: CARD_GAP,
-            paddingLeft: "max(50px, calc((100vw - 1200px) / 2 + 50px))",
-            paddingRight: 100,
-            width: "max-content",
-            willChange: "transform",
-          }}
-        >
-          {featuredProjects.map((proj, i) => {
-            const p = proj as Project;
-            return <WorkCard key={p.name + i} p={p} i={i} n={n} CARD_W={CARD_W} />;
-          })}
+        {/* 3D rotating cylinder of project cards — speed/rotation driven by scroll */}
+        <div style={{ position: "relative", flex: 1 }}>
+          <WorkCylinder
+            projects={featuredProjects.map((p) => ({
+              name: p.name,
+              category: p.category,
+              href: p.href,
+              accent: p.accent,
+              cover: p.cover,
+            }))}
+          />
         </div>
 
         {/* Scroll hint */}
         <p style={{
           fontFamily: "var(--sans)", fontSize: 10, letterSpacing: "0.18em",
           textTransform: "uppercase", color: "rgba(255,255,255,0.3)",
-          textAlign: "center", marginTop: 40,
+          textAlign: "center", marginTop: 40, position: "relative", zIndex: 2,
         }}>
           Keep scrolling →
         </p>
