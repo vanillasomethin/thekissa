@@ -212,15 +212,18 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
               position:  "fixed",
               top:       "50%",
               left:      "50%",
-              width:     130,
-              height:    Math.round(130 * (10200 / 7650)),
+              display:   "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "18px",
               transform: "translate(-50%, -50%) scale(0.6)",
               opacity:   0,
               zIndex:    30,
               pointerEvents: "none",
             }}
           >
-            <img src="/kissafilled.svg" alt="" style={{ display: "block", width: "100%", height: "100%" }} />
+            <img src="/kissa-logo.svg" alt="the Kissa" style={{ display: "block", width: 180, height: Math.round(180 * (706.5 / 727.5)) }} />
+            <span className="k-caption" style={{ color: INK, opacity: 0.6 }}>Every great story starts with a conversation</span>
           </div>
         </motion.div>
       )}

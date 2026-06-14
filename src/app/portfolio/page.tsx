@@ -11,29 +11,29 @@ import type { PortfolioMediaManifest, PortfolioMediaEntry } from "@/lib/portfoli
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const PROJECTS = [
-  { slug: "fyture",            name: "FYTURE",            category: "Branding",           canvaUrl: "https://www.canva.com/d/TT5LBPgwQwxGJOZ", bg: "linear-gradient(145deg,#3A0F1E 0%,#1C0810 70%)", accent: "#C4455E", light: false },
-  { slug: "mezze",             name: "Mezze",             category: "Food & Beverage",     canvaUrl: "https://www.canva.com/d/4e8NxvP6rD4weV7", bg: "linear-gradient(145deg,#1E3A20 0%,#0F1A10 70%)", accent: "#5A9A60", light: false },
-  { slug: "vs",                name: "VS",                category: "Branding",           canvaUrl: "https://www.canva.com/d/lzVUP4x-0_j4Giu", bg: "linear-gradient(145deg,#2A2010 0%,#10100F 70%)", accent: "#B08A40", light: false },
-  { slug: "tecfides",          name: "Tecfides",          category: "Tech & Finance",      canvaUrl: "https://www.canva.com/d/uAp3r5ONIJyRW2t", bg: "linear-gradient(145deg,#1A2A3A 0%,#0F141A 70%)", accent: "#4A7FA0", light: false },
-  { slug: "natura",            name: "Natura",            category: "Wellness & Lifestyle",canvaUrl: "https://www.canva.com/d/5atF6nUAu2myTup", bg: "linear-gradient(145deg,#243010 0%,#101508 70%)", accent: "#7AAA40", light: false },
-  { slug: "hearing-ear-care",  name: "Hearing Ear Care",  category: "Health",              canvaUrl: "https://www.canva.com/d/_XDPj1ASuUmRVy9", bg: "linear-gradient(145deg,#142030 0%,#0A1018 70%)", accent: "#4A90C0", light: false },
-  { slug: "asbc",              name: "ASBC",              category: "Tech & Finance",      canvaUrl: "https://www.canva.com/d/exxmAdW_9dBXBMu", bg: "linear-gradient(145deg,#1E2440 0%,#0F1218 70%)", accent: "#5060B0", light: false },
-  { slug: "scribbles",         name: "Scribbles",         category: "Branding",           canvaUrl: "https://www.canva.com/d/y4ZGuierNsuJMza", bg: "linear-gradient(145deg,#3A2010 0%,#18100F 70%)", accent: "#C07040", light: false },
-  { slug: "kere-pedals",       name: "Kere Pedals",       category: "Branding",           canvaUrl: "https://www.canva.com/d/QyGODGlg6dG5SDF", bg: "linear-gradient(145deg,#20103A 0%,#100F18 70%)", accent: "#7050C0", light: false },
-  { slug: "hyderabadi-dhaba",  name: "Hyderabadi Dhaba",  category: "Food & Beverage",     canvaUrl: "https://www.canva.com/d/MI7BarHBxPEkBaS", bg: "linear-gradient(145deg,#3A2010 0%,#180E08 70%)", accent: "#C07030", light: false },
-  { slug: "travel-now",        name: "Travel Now",        category: "Wellness & Lifestyle",canvaUrl: "https://www.canva.com/d/c_eEfVej9so5gqu", bg: "linear-gradient(145deg,#10283A 0%,#081018 70%)", accent: "#3080B0", light: false },
-  { slug: "gurukripa",         name: "Gurukripa",         category: "Food & Beverage",     canvaUrl: "https://www.canva.com/d/dhxLE02h2RJJRJE", bg: "linear-gradient(145deg,#3A2015 0%,#180F0A 70%)", accent: "#C08050", light: false },
-  { slug: "lyfsense",          name: "Lyfsense",          category: "Health",              canvaUrl: "https://www.canva.com/d/GqmEIxZ6C6ned0v", bg: "linear-gradient(145deg,#1E3828 0%,#0F1814 70%)", accent: "#50B080", light: false },
-  { slug: "chocolate-dairies", name: "Chocolate Dairies", category: "Food & Beverage",     canvaUrl: "https://www.canva.com/d/pbq3mWpSOb8pdlK", bg: "linear-gradient(145deg,#3A1810 0%,#180C08 70%)", accent: "#A05030", light: false },
-  { slug: "pranik",            name: "Pranik",            category: "Health",              canvaUrl: "https://www.canva.com/d/9-FsZ9v_Njndj88", bg: "linear-gradient(145deg,#204020 0%,#0F1A10 70%)", accent: "#60A060", light: false },
-  { slug: "armario",           name: "Armario",           category: "Branding",           canvaUrl: "https://www.canva.com/d/ZO04RqVk5EkiRCs", bg: "linear-gradient(145deg,#40201A 0%,#18100F 70%)", accent: "#B06050", light: false },
-  { slug: "espoir-cube",       name: "Espoir Cube",       category: "Branding",           canvaUrl: "https://www.canva.com/d/psdC61XxI9NI2Zu", bg: "linear-gradient(145deg,#2A2040 0%,#100F18 70%)", accent: "#8070B0", light: false },
-  { slug: "dip-n-melt",        name: "Dip n Melt",        category: "Food & Beverage",     canvaUrl: "https://www.canva.com/d/GvzfZGfDu3pj4ln", bg: "linear-gradient(145deg,#3A280A 0%,#181008 70%)", accent: "#B09040", light: false },
-  { slug: "alive",             name: "Alive",             category: "Wellness & Lifestyle",canvaUrl: "https://www.canva.com/d/YX8nZA1NEv7FyP6", bg: "linear-gradient(145deg,#10381A 0%,#0A1810 70%)", accent: "#40B060", light: false },
-  { slug: "sorbete",           name: "Sorbete",           category: "Food & Beverage",     canvaUrl: "https://www.canva.com/d/h0dM5G2nJ8Txp5m", bg: "linear-gradient(145deg,#402015 0%,#180D08 70%)", accent: "#C06040", light: false },
-  { slug: "eqmed",             name: "EQMed",             category: "Health",              canvaUrl: "https://www.canva.com/d/yUQQzCWSNc8-yO8", bg: "linear-gradient(145deg,#10243A 0%,#081018 70%)", accent: "#4070A0", light: false },
-  { slug: "hayatibb",          name: "Hayatibb",          category: "Health",              canvaUrl: "https://www.canva.com/d/Zj2mWu5_8FKn9iM", bg: "linear-gradient(145deg,#2A2A10 0%,#10100A 70%)", accent: "#A0A040", light: false },
-  { slug: "tmed",              name: "Tmed",              category: "Tech & Finance",      canvaUrl: "https://www.canva.com/d/zRQbUcH4o-74Giq", bg: "linear-gradient(145deg,#1E2840 0%,#0F1418 70%)", accent: "#4860A0", light: false },
+  { slug: "fyture",            name: "FYTURE",            category: "Branding",           canvaUrl: "https://www.canva.com/d/TT5LBPgwQwxGJOZ", bg: "linear-gradient(145deg,#3A0F1E 0%,#1C0810 70%)", accent: "#C4455E", light: false , cover: "/portfolio/fyture.png"},
+  { slug: "mezze",             name: "Mezze",             category: "Food & Beverage",     canvaUrl: "https://www.canva.com/d/4e8NxvP6rD4weV7", bg: "linear-gradient(145deg,#1E3A20 0%,#0F1A10 70%)", accent: "#5A9A60", light: false , cover: "/portfolio/mezze.png"},
+  { slug: "vs",                name: "VS",                category: "Branding",           canvaUrl: "https://www.canva.com/d/lzVUP4x-0_j4Giu", bg: "linear-gradient(145deg,#2A2010 0%,#10100F 70%)", accent: "#B08A40", light: false , cover: "/portfolio/vs.png"},
+  { slug: "tecfides",          name: "Tecfides",          category: "Tech & Finance",      canvaUrl: "https://www.canva.com/d/uAp3r5ONIJyRW2t", bg: "linear-gradient(145deg,#1A2A3A 0%,#0F141A 70%)", accent: "#4A7FA0", light: false , cover: "/portfolio/tecfides.png"},
+  { slug: "natura",            name: "Natura",            category: "Wellness & Lifestyle",canvaUrl: "https://www.canva.com/d/5atF6nUAu2myTup", bg: "linear-gradient(145deg,#243010 0%,#101508 70%)", accent: "#7AAA40", light: false , cover: "/portfolio/natura.png"},
+  { slug: "hearing-ear-care",  name: "Hearing Ear Care",  category: "Health",              canvaUrl: "https://www.canva.com/d/_XDPj1ASuUmRVy9", bg: "linear-gradient(145deg,#142030 0%,#0A1018 70%)", accent: "#4A90C0", light: false , cover: "/portfolio/hearing-ear-care.png"},
+  { slug: "asbc",              name: "ASBC",              category: "Tech & Finance",      canvaUrl: "https://www.canva.com/d/exxmAdW_9dBXBMu", bg: "linear-gradient(145deg,#1E2440 0%,#0F1218 70%)", accent: "#5060B0", light: false , cover: "/portfolio/asbc.png"},
+  { slug: "scribbles",         name: "Scribbles",         category: "Branding",           canvaUrl: "https://www.canva.com/d/y4ZGuierNsuJMza", bg: "linear-gradient(145deg,#3A2010 0%,#18100F 70%)", accent: "#C07040", light: false , cover: "/portfolio/scribbles.png"},
+  { slug: "kere-pedals",       name: "Kere Pedals",       category: "Branding",           canvaUrl: "https://www.canva.com/d/QyGODGlg6dG5SDF", bg: "linear-gradient(145deg,#20103A 0%,#100F18 70%)", accent: "#7050C0", light: false , cover: "/portfolio/kere-pedals.png"},
+  { slug: "hyderabadi-dhaba",  name: "Hyderabadi Dhaba",  category: "Food & Beverage",     canvaUrl: "https://www.canva.com/d/MI7BarHBxPEkBaS", bg: "linear-gradient(145deg,#3A2010 0%,#180E08 70%)", accent: "#C07030", light: false , cover: "/portfolio/hyderabadi-dhaba.png"},
+  { slug: "travel-now",        name: "Travel Now",        category: "Wellness & Lifestyle",canvaUrl: "https://www.canva.com/d/c_eEfVej9so5gqu", bg: "linear-gradient(145deg,#10283A 0%,#081018 70%)", accent: "#3080B0", light: false , cover: "/portfolio/travel-now.png"},
+  { slug: "gurukripa",         name: "Gurukripa",         category: "Food & Beverage",     canvaUrl: "https://www.canva.com/d/dhxLE02h2RJJRJE", bg: "linear-gradient(145deg,#3A2015 0%,#180F0A 70%)", accent: "#C08050", light: false , cover: "/portfolio/gurukripa.png"},
+  { slug: "lyfsense",          name: "Lyfsense",          category: "Health",              canvaUrl: "https://www.canva.com/d/GqmEIxZ6C6ned0v", bg: "linear-gradient(145deg,#1E3828 0%,#0F1814 70%)", accent: "#50B080", light: false , cover: "/portfolio/lyfsense.png"},
+  { slug: "chocolate-dairies", name: "Chocolate Dairies", category: "Food & Beverage",     canvaUrl: "https://www.canva.com/d/pbq3mWpSOb8pdlK", bg: "linear-gradient(145deg,#3A1810 0%,#180C08 70%)", accent: "#A05030", light: false , cover: "/portfolio/chocolate-dairies.png"},
+  { slug: "pranik",            name: "Pranik",            category: "Health",              canvaUrl: "https://www.canva.com/d/9-FsZ9v_Njndj88", bg: "linear-gradient(145deg,#204020 0%,#0F1A10 70%)", accent: "#60A060", light: false , cover: "/portfolio/pranik.png"},
+  { slug: "armario",           name: "Armario",           category: "Branding",           canvaUrl: "https://www.canva.com/d/ZO04RqVk5EkiRCs", bg: "linear-gradient(145deg,#40201A 0%,#18100F 70%)", accent: "#B06050", light: false , cover: "/portfolio/armario.png"},
+  { slug: "espoir-cube",       name: "Espoir Cube",       category: "Branding",           canvaUrl: "https://www.canva.com/d/psdC61XxI9NI2Zu", bg: "linear-gradient(145deg,#2A2040 0%,#100F18 70%)", accent: "#8070B0", light: false , cover: "/portfolio/espoir-cube.png"},
+  { slug: "dip-n-melt",        name: "Dip n Melt",        category: "Food & Beverage",     canvaUrl: "https://www.canva.com/d/GvzfZGfDu3pj4ln", bg: "linear-gradient(145deg,#3A280A 0%,#181008 70%)", accent: "#B09040", light: false , cover: "/portfolio/dip-n-melt.png"},
+  { slug: "alive",             name: "Alive",             category: "Wellness & Lifestyle",canvaUrl: "https://www.canva.com/d/YX8nZA1NEv7FyP6", bg: "linear-gradient(145deg,#10381A 0%,#0A1810 70%)", accent: "#40B060", light: false , cover: "/portfolio/alive.png"},
+  { slug: "sorbete",           name: "Sorbete",           category: "Food & Beverage",     canvaUrl: "https://www.canva.com/d/h0dM5G2nJ8Txp5m", bg: "linear-gradient(145deg,#402015 0%,#180D08 70%)", accent: "#C06040", light: false , cover: "/portfolio/sorbete.jpg"},
+  { slug: "eqmed",             name: "EQMed",             category: "Health",              canvaUrl: "https://www.canva.com/d/yUQQzCWSNc8-yO8", bg: "linear-gradient(145deg,#10243A 0%,#081018 70%)", accent: "#4070A0", light: false , cover: "/portfolio/eqmed.png"},
+  { slug: "hayatibb",          name: "Hayatibb",          category: "Health",              canvaUrl: "https://www.canva.com/d/Zj2mWu5_8FKn9iM", bg: "linear-gradient(145deg,#2A2A10 0%,#10100A 70%)", accent: "#A0A040", light: false , cover: "/portfolio/hayatibb.png"},
+  { slug: "tmed",              name: "Tmed",              category: "Tech & Finance",      canvaUrl: "https://www.canva.com/d/zRQbUcH4o-74Giq", bg: "linear-gradient(145deg,#1E2840 0%,#0F1418 70%)", accent: "#4860A0", light: false , cover: "/portfolio/tmed.png"},
 ];
 
 const ALL_CATEGORIES = ["All", ...Array.from(new Set(PROJECTS.map((p) => p.category)))];
@@ -488,6 +488,22 @@ function ProjectCard({
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={media.url}
+            alt={project.name}
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              opacity: hovered ? 0.9 : 0.8,
+              transition: "opacity 0.3s ease-out",
+            }}
+          />
+        )}
+        {!media && project.cover && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={project.cover}
             alt={project.name}
             style={{
               position: "absolute",
