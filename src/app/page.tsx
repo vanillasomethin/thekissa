@@ -1040,13 +1040,23 @@ function CapabilitiesStrip() {
         style={{ position:"absolute", top:"8%", right:"4%", opacity:0 }} />
 
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 50px" }}>
+        <motion.p
+          initial={reduce ? false : { opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className="k-eyebrow"
+          style={{ marginBottom: 24 }}
+        >
+          What we do
+        </motion.p>
         {CAPABILITIES.map((cap, i) => (
           <motion.div
             key={i}
-            initial={reduce ? false : { opacity:0, x: i % 2 === 0 ? -32 : 32 }}
-            whileInView={{ opacity:1, x:0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.65, delay: i * 0.07, ease: [0.22,1,0.36,1] }}
+            initial={reduce ? false : { opacity: 0, x: i % 2 === 0 ? -48 : 48, filter: "blur(6px)" }}
+            whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+            viewport={{ once: true, margin: "-10% 0px" }}
+            transition={{ duration: 0.7, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
             style={{
               borderBottom: i < CAPABILITIES.length - 1 ? "1px solid rgba(255,255,255,0.18)" : "none",
               padding: "14px 0",
