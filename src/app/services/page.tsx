@@ -48,42 +48,36 @@ const SERVICES = [
     icon: Palette,
     title: "Graphic Design",
     desc: "Visuals that stop the scroll and stay in memory. From logos to full print campaigns.",
-    price: "$500",
     tags: ["Logo", "Print", "Brand Assets", "Social"],
   },
   {
     icon: Video,
     title: "Video Production",
     desc: "Cinematic storytelling for brands that demand attention — from storyboard to final cut.",
-    price: "$1,200",
     tags: ["Commercials", "Documentaries", "Social Content"],
   },
   {
     icon: Zap,
     title: "Branding",
     desc: "A brand that feels inevitable. We build the strategy, voice, and look from the ground up.",
-    price: "$800",
     tags: ["Strategy", "Visual Identity", "Naming"],
   },
   {
     icon: Share2,
     title: "Social Media",
     desc: "Consistent, compelling content that builds communities and converts followers to fans.",
-    price: "$400/mo",
     tags: ["Content", "Strategy", "Community"],
   },
   {
     icon: Camera,
     title: "Photography",
     desc: "Every frame tells your brand's story. We shoot products, people, and everything in between.",
-    price: "$600",
     tags: ["Product", "Lifestyle", "Events", "Portrait"],
   },
   {
     icon: Play,
     title: "Animation",
     desc: "Motion that brings ideas to life — from sleek motion graphics to full 2D animated stories.",
-    price: "$900",
     tags: ["Motion Graphics", "2D", "Explainers"],
   },
 ];
@@ -138,7 +132,19 @@ function QuoteForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Quote request submitted:", form);
+    const subject = `New project enquiry — ${form.service || "General"}`;
+    const body = [
+      `Name: ${form.name}`,
+      `Email: ${form.email}`,
+      form.phone && `Phone: ${form.phone}`,
+      form.company && `Company: ${form.company}`,
+      `Service: ${form.service}`,
+      `Budget: ${form.budget}`,
+      `Timeline: ${form.timeline}`,
+      "",
+      form.description,
+    ].filter(Boolean).join("\n");
+    window.location.href = `mailto:hello@thekissa.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     setSubmitted(true);
   };
 
@@ -503,6 +509,18 @@ export default function ServicesPage() {
               ))}
             </div>
 
+            {/* Section heading for the service tiles */}
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="k-eyebrow mb-6"
+              style={{ color: "var(--fg3)" }}
+            >
+              Types of work
+            </motion.p>
+
             {/* 6 Service cards */}
             <div className="grid gap-5 md:grid-cols-2">
               {SERVICES.map((svc, i) => {
@@ -576,27 +594,6 @@ export default function ServicesPage() {
                         </span>
                       ))}
                     </div>
-
-                    {/* Pricing */}
-                    <p
-                      style={{
-                        fontFamily: "var(--sans)",
-                        fontSize: "13px",
-                        color: "var(--fg3)",
-                        marginTop: "4px",
-                      }}
-                    >
-                      From{" "}
-                      <strong
-                        style={{
-                          color: "var(--crimson)",
-                          fontFamily: "var(--sans)",
-                          fontWeight: 700,
-                        }}
-                      >
-                        {svc.price}
-                      </strong>
-                    </p>
                   </motion.div>
                 );
               })}
@@ -713,8 +710,17 @@ export default function ServicesPage() {
               <h2 className="k-h2 mb-4">Get a quote.</h2>
               <p className="k-body-l">
                 Fill in the details below and we&apos;ll get back to you within 24 hours with a
-                tailored proposal.
+                tailored proposal — or skip ahead and book a call directly.
               </p>
+              <a
+                href="https://cal.com/thekissa"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-ghost"
+                style={{ display: "inline-flex", alignItems: "center", gap: 8, marginTop: 24 }}
+              >
+                Book a call on Cal.com →
+              </a>
             </motion.div>
 
             <QuoteForm />

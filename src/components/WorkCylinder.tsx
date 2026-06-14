@@ -13,8 +13,8 @@ interface CylinderProject {
   cover?: string;
 }
 
-const CARD_W = 1.9;
-const CARD_H = 1.2;
+const CARD_W = 4.6;
+const CARD_H = 2.9;
 const RADIUS = 5.6;
 
 function Card({

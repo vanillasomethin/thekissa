@@ -76,6 +76,16 @@ export default function ContactPage() {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    const subject = `New ${form.inquiryType || "general"} enquiry from ${form.name}`;
+    const body = [
+      `Name: ${form.name}`,
+      `Email: ${form.email}`,
+      form.phone && `Phone: ${form.phone}`,
+      `Inquiry type: ${form.inquiryType}`,
+      "",
+      form.message,
+    ].filter(Boolean).join("\n");
+    window.location.href = `mailto:hello@thekissa.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     setSubmitted(true);
   }
 
