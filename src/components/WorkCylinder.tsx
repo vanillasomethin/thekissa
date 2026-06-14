@@ -13,9 +13,9 @@ interface CylinderProject {
   cover?: string;
 }
 
-const CARD_W = 5.6;
-const CARD_H = 3.5;
-const RADIUS = 5.6;
+const CARD_W = 2.4;
+const CARD_H = 1.5;
+const RADIUS = 4.6;
 
 function Card({
   project,
@@ -40,6 +40,19 @@ function Card({
     texture.magFilter = THREE.LinearFilter;
     texture.generateMipmaps = true;
     texture.colorSpace = THREE.SRGBColorSpace;
+    // Cover-fit: crop the texture to match the card aspect ratio instead of stretching it
+    const img = texture.image as { width: number; height: number } | undefined;
+    if (img?.width && img?.height) {
+      const imgAspect = img.width / img.height;
+      const cardAspect = CARD_W / CARD_H;
+      if (imgAspect > cardAspect) {
+        texture.repeat.set(cardAspect / imgAspect, 1);
+        texture.offset.set((1 - cardAspect / imgAspect) / 2, 0);
+      } else {
+        texture.repeat.set(1, imgAspect / cardAspect);
+        texture.offset.set(0, (1 - imgAspect / cardAspect) / 2);
+      }
+    }
   }
   const angle = (index / total) * Math.PI * 2;
 
@@ -49,7 +62,6 @@ function Card({
     const a = angle + groupRotation.current;
     g.position.set(Math.sin(a) * RADIUS, 0, Math.cos(a) * RADIUS);
     g.rotation.y = a;
-    g.rotation.z = Math.sin(a * 2 + index) * 0.06;
     const target = hoveredIndex === index ? 1.08 : 1;
     g.scale.x += (target - g.scale.x) * 0.08;
     g.scale.y += (target - g.scale.y) * 0.08;
@@ -97,7 +109,7 @@ function Scene({
       <ambientLight intensity={0.7} />
       <directionalLight position={[3, 5, 6]} intensity={1.2} />
       <Suspense fallback={null}>
-        <group rotation={[0.16, 0, -0.05]}>
+        <group rotation={[0.05, 0, 0]}>
           {projects.map((p, i) => (
             <Card
               key={p.name + i}
@@ -140,7 +152,7 @@ export default function WorkCylinder({ projects }: { projects: CylinderProject[]
   return (
     <div style={{ position: "absolute", inset: 0 }}>
       <Canvas
-        camera={{ position: [0, 0.3, 9.5], fov: 38 }}
+        camera={{ position: [0, 1.2, 11.5], fov: 42 }}
         gl={{ alpha: true, antialias: true }}
         dpr={[1, 2]}
         style={{ touchAction: "none" }}
