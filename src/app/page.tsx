@@ -784,8 +784,6 @@ function ProjectPreviewCard({ project }: { project: Project }) {
 
 // Single work card — r3f rounded-glass plate (pmndrs cards-with-border-radius
 // pattern) tilting toward the pointer, with the project preview/name overlaid.
-// Scroll-scrubbed horizontal strip — the page scroll drives the track sideways,
-// so the work reveals itself as you scroll (pixel.melbourne pattern).
 function WorkCard({ p, i, n, CARD_W }: { p: Project; i: number; n: number; CARD_W: number }) {
   const pointerRef = useRef({ x: 0, y: 0 });
 
@@ -803,6 +801,7 @@ function WorkCard({ p, i, n, CARD_W }: { p: Project; i: number; n: number; CARD_
 
   return (
     <div
+      className="work-card"
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
       style={{
@@ -811,6 +810,7 @@ function WorkCard({ p, i, n, CARD_W }: { p: Project; i: number; n: number; CARD_
         height: 380,
         borderRadius: 18,
         flexShrink: 0,
+        willChange: "transform, filter",
         boxShadow: "0 30px 60px -20px rgba(0,0,0,0.6)",
       }}
     >
@@ -898,9 +898,36 @@ function WorkScrollStrip() {
 
     const getDistance = () => Math.max(0, track.scrollWidth - window.innerWidth + 100);
 
+    const cardEls = track.querySelectorAll<HTMLElement>(".work-card");
+
+    // Cinematic depth pass — cards near screen-center sit "closer to camera"
+    // (larger, sharper) while cards toward the edges recede (smaller, blurred,
+    // subtly rotated), echoing the depth-of-field camera moves from the
+    // codrops cinematic-scroll reference.
+    const updateDepth = () => {
+      const centerX = window.innerWidth / 2;
+      cardEls.forEach((card) => {
+        const rect = card.getBoundingClientRect();
+        const cardCenter = rect.left + rect.width / 2;
+        const dist = (cardCenter - centerX) / centerX; // -1 .. 1 roughly
+        const t = Math.min(Math.abs(dist), 1);
+        const scale = 1 - t * 0.12;
+        const rotateY = dist * -10;
+        const blur = t * 3;
+        const opacity = 1 - t * 0.35;
+        gsap.set(card, {
+          scale,
+          rotateY,
+          opacity,
+          filter: `blur(${blur}px)`,
+        });
+      });
+    };
+
     const tween = gsap.to(track, {
       x: () => -getDistance(),
       ease: "none",
+      onUpdate: updateDepth,
       scrollTrigger: {
         trigger: sectionRef.current,
         start: "top top",
@@ -908,8 +935,10 @@ function WorkScrollStrip() {
         scrub: 1,
         pin: true,
         invalidateOnRefresh: true,
+        onRefresh: updateDepth,
       },
     });
+    updateDepth();
 
     // Subtle parallax: each card's inner content drifts against the track
     const cards = track.querySelectorAll<HTMLElement>(".work-card-inner");
@@ -962,6 +991,7 @@ function WorkScrollStrip() {
             paddingRight: 100,
             width: "max-content",
             willChange: "transform",
+            perspective: 1400,
           }}
         >
           {featuredProjects.map((proj, i) => {
