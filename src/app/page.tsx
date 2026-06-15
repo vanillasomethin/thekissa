@@ -808,10 +808,9 @@ function WorkCard({ p, i, n, CARD_W }: { p: Project; i: number; n: number; CARD_
         position: "relative",
         width: CARD_W,
         height: 380,
-        borderRadius: 18,
+        borderRadius: 12,
         flexShrink: 0,
         willChange: "transform, filter",
-        boxShadow: "0 30px 60px -20px rgba(0,0,0,0.6)",
       }}
     >
       <ProjectCard3D accent={p.accent} pointerRef={pointerRef} />
@@ -822,7 +821,7 @@ function WorkCard({ p, i, n, CARD_W }: { p: Project; i: number; n: number; CARD_
         style={{
           position: "absolute",
           inset: 0,
-          borderRadius: 18,
+          borderRadius: 12,
           overflow: "hidden",
           textDecoration: "none",
           display: "block",
@@ -890,7 +889,7 @@ function WorkScrollStrip() {
   const n = featuredProjects.length;
 
   const CARD_W = 520;
-  const CARD_GAP = 32;
+  const CARD_GAP = 4;
 
   useEffect(() => {
     if (reduce || !sectionRef.current || !trackRef.current) return;
@@ -911,15 +910,13 @@ function WorkScrollStrip() {
         const cardCenter = rect.left + rect.width / 2;
         const dist = (cardCenter - centerX) / centerX; // -1 .. 1 roughly
         const t = Math.min(Math.abs(dist), 1);
-        const scale = 1 - t * 0.12;
-        const rotateY = dist * -10;
-        const blur = t * 3;
-        const opacity = 1 - t * 0.35;
+        const scale = 1 - t * 0.06;
+        const rotateY = dist * -6;
+        const opacity = 1 - t * 0.2;
         gsap.set(card, {
           scale,
           rotateY,
           opacity,
-          filter: `blur(${blur}px)`,
         });
       });
     };
