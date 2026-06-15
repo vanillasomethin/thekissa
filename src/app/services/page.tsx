@@ -2,15 +2,8 @@
 
 import { useState } from "react";
 import { motion } from "motion/react";
-import {
-  Palette,
-  Video,
-  Zap,
-  Share2,
-  Camera,
-  Play,
-  CheckCircle,
-} from "lucide-react";
+import Image from "next/image";
+import { CheckCircle } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -45,37 +38,37 @@ const PILLARS = [
 
 const SERVICES = [
   {
-    icon: Palette,
+    illustration: "/illustrations/1.svg",
     title: "Graphic Design",
     desc: "Visuals that stop the scroll and stay in memory. From logos to full print campaigns.",
     tags: ["Logo", "Print", "Brand Assets", "Social"],
   },
   {
-    icon: Video,
+    illustration: "/illustrations/2.svg",
     title: "Video Production",
     desc: "Cinematic storytelling for brands that demand attention — from storyboard to final cut.",
     tags: ["Commercials", "Documentaries", "Social Content"],
   },
   {
-    icon: Zap,
+    illustration: "/illustrations/3.svg",
     title: "Branding",
     desc: "A brand that feels inevitable. We build the strategy, voice, and look from the ground up.",
     tags: ["Strategy", "Visual Identity", "Naming"],
   },
   {
-    icon: Share2,
+    illustration: "/illustrations/4.svg",
     title: "Social Media",
     desc: "Consistent, compelling content that builds communities and converts followers to fans.",
     tags: ["Content", "Strategy", "Community"],
   },
   {
-    icon: Camera,
+    illustration: "/illustrations/5.svg",
     title: "Photography",
     desc: "Every frame tells your brand's story. We shoot products, people, and everything in between.",
     tags: ["Product", "Lifestyle", "Events", "Portrait"],
   },
   {
-    icon: Play,
+    illustration: "/illustrations/6.svg",
     title: "Animation",
     desc: "Motion that brings ideas to life — from sleek motion graphics to full 2D animated stories.",
     tags: ["Motion Graphics", "2D", "Explainers"],
@@ -524,7 +517,6 @@ export default function ServicesPage() {
             {/* 6 Service cards */}
             <div className="grid gap-5 md:grid-cols-2">
               {SERVICES.map((svc, i) => {
-                const Icon = svc.icon;
                 return (
                   <motion.div
                     key={svc.title}
@@ -545,19 +537,26 @@ export default function ServicesPage() {
                       transition: "box-shadow 0.2s, transform 0.2s",
                     }}
                   >
-                    {/* Icon */}
+                    {/* Illustration */}
                     <div
                       style={{
-                        width: "44px",
-                        height: "44px",
+                        width: "72px",
+                        height: "72px",
                         borderRadius: "var(--r-md)",
                         background: "var(--bone)",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
+                        overflow: "hidden",
                       }}
                     >
-                      <Icon size={22} style={{ color: "var(--crimson)" }} />
+                      <Image
+                        src={svc.illustration}
+                        alt=""
+                        width={72}
+                        height={72}
+                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                      />
                     </div>
 
                     {/* Title + desc */}
