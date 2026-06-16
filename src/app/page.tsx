@@ -91,9 +91,9 @@ function ScribbleMark({ src, size = 80, style, className, rot = 0, delay = 0 }: 
           height: "100%",
           opacity: 0,
           transform: `rotate(${rot - 35}deg) scale(0)`,
-          filter: "invert(1)",
-          mixBlendMode: "screen",
           willChange: "transform, opacity",
+          borderRadius: "12px",
+          overflow: "hidden",
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -371,15 +371,15 @@ function HeroText() {
 const SERVICE_COMPOSITIONS = [
   // 01 Story & Brand
   [
-    { src: "/projects/scribbles/s-105.svg", size: 260, top: "12%", left: "16%", rot: -8 },
+    { src: "/illustrations/6.svg", size: 280, top: "10%", left: "10%", rot: -4 },
   ],
   // 02 Motion & Film
   [
-    { src: "/projects/scribbles/s-04.svg",  size: 260, top: "10%", left: "14%", rot: 5  },
+    { src: "/illustrations/7.svg", size: 280, top: "10%", left: "10%", rot: 3  },
   ],
   // 03 Digital & Immersive
   [
-    { src: "/projects/scribbles/s-138.svg", size: 250, top: "12%", left: "16%", rot: 10 },
+    { src: "/illustrations/8.svg", size: 280, top: "10%", left: "10%", rot: 5 },
   ],
 ];
 
@@ -428,8 +428,8 @@ function ScribbleServicePanel({ index, active }: { index: number; active: boolea
             height:      item.size,
             opacity:     0,
             transform:   `rotate(${item.rot - 30}deg) scale(0)`,
-            filter:      "invert(1)",
-            mixBlendMode:"screen",
+            borderRadius: "16px",
+            overflow: "hidden",
             willChange:  "transform, opacity",
           }}
         >
@@ -1065,7 +1065,7 @@ function CapabilitiesStrip() {
   return (
     <section style={{ background: "#1c1c1c", padding: "48px 0 56px", overflow: "hidden", position: "relative" }}>
       {/* Single decorative scribble */}
-      <ScribbleMark src="/projects/scribbles/s-104.svg" size={110} rot={-14} delay={200}
+      <ScribbleMark src="/illustrations/1.svg" size={110} rot={-14} delay={200}
         style={{ position:"absolute", top:"8%", right:"4%", opacity:0 }} />
 
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 50px" }}>
@@ -1310,7 +1310,7 @@ export default function HomePage() {
         {/* ══ 3. STATEMENT ══════════════════════════════════════════════════════ */}
         <section className="section-pad-xl" style={{ background: "var(--ink)", padding: "48px 0 40px", borderTop: "1px solid rgba(255,255,255,0.08)", position: "relative", overflow: "hidden" }}>
           {/* Single scribble accent */}
-          <ScribbleMark src="/projects/scribbles/s-38.svg"  size={130} rot={-20} delay={200}
+          <ScribbleMark src="/illustrations/2.svg"  size={130} rot={-20} delay={200}
             style={{ position: "absolute", top: "8%",  right: "4%", opacity: 0 }} className="statement-scribble" />
           {/* Sticker badges */}
           <StickerBadge label="Film"      rot={-8}  style={{ top: "12%", left: "4%" }} />
