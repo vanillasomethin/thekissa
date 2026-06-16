@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import { Target, Eye, Trophy, Star, Flame, Shield, Gem } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import SplitHeadline from "@/components/SplitHeadline";
 import Footer from "@/components/Footer";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
@@ -229,10 +230,9 @@ export default function AboutPage() {
           >
             Our studio
           </motion.p>
-          <motion.h1
-            initial={{ opacity: 0, y: 28 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, delay: 0.1 }}
+          <SplitHeadline
+            immediate
+            delay={0.1}
             style={{
               fontFamily: "var(--sans)",
               fontSize: "clamp(48px, 7vw, 84px)",
@@ -247,7 +247,7 @@ export default function AboutPage() {
             <em className="italic-crimson" style={{ fontStyle: "italic" }}>
               the Kissa.
             </em>
-          </motion.h1>
+          </SplitHeadline>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}

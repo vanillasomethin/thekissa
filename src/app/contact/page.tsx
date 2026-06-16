@@ -14,6 +14,7 @@ import {
   Send,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
+import SplitHeadline from "@/components/SplitHeadline";
 import Footer from "@/components/Footer";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -114,13 +115,15 @@ export default function ContactPage() {
               >
                 Get in touch
               </p>
-              <h1
+              <SplitHeadline
+                immediate
+                delay={0.15}
                 className="k-h1"
                 style={{ color: "var(--fg-on-ink)", maxWidth: 680, margin: "0 auto" }}
               >
                 Let&apos;s create{" "}
                 <em className="italic-crimson">together.</em>
-              </h1>
+              </SplitHeadline>
             </motion.div>
           </div>
         </section>

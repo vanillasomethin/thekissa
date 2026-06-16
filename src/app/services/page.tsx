@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import Image from "next/image";
 import { CheckCircle } from "lucide-react";
+import SplitHeadline from "@/components/SplitHeadline";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -378,10 +379,9 @@ export default function ServicesPage() {
           >
             What we create
           </motion.p>
-          <motion.h1
-            initial={{ opacity: 0, y: 28 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, delay: 0.1 }}
+          <SplitHeadline
+            immediate
+            delay={0.1}
             style={{
               fontFamily: "var(--sans)",
               fontSize: "clamp(48px, 7vw, 84px)",
@@ -395,7 +395,7 @@ export default function ServicesPage() {
             <em className="italic-crimson" style={{ fontStyle: "italic" }}>
               tell it.
             </em>
-          </motion.h1>
+          </SplitHeadline>
         </section>
 
         {/* ── Services section ── */}

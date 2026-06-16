@@ -1,10 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "motion/react";
 import { Menu, X } from "lucide-react";
+import gsap from "gsap";
+import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
+
+gsap.registerPlugin(ScrambleTextPlugin);
 
 const navLinks = [
   { label: "Work", href: "/work" },
@@ -213,24 +217,34 @@ export default function Navbar() {
   );
 }
 
-function NavLink({ href, children }: { href: string; children: React.ReactNode }) {
-  const [hovered, setHovered] = useState(false);
+function NavLink({ href, children }: { href: string; children: string }) {
+  const textRef = useRef<HTMLSpanElement>(null);
+  const original = children;
+
+  function onEnter() {
+    if (!textRef.current) return;
+    gsap.to(textRef.current, {
+      duration: 0.5,
+      scrambleText: { text: original, chars: "upperCase", revealDelay: 0.1, speed: 0.8 },
+    });
+  }
+
   return (
     <Link
       href={href}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onMouseEnter={onEnter}
       style={{
         fontFamily: "var(--sans)",
         fontSize: "16px",
         fontWeight: 400,
-        color: hovered ? "rgba(255,255,255,0.55)" : "#ffffff",
+        color: "#ffffff",
         textDecoration: "none",
-        transition: "color 200ms ease",
         padding: "8px 0",
+        opacity: 1,
+        transition: "opacity 200ms ease",
       }}
     >
-      {children}
+      <span ref={textRef}>{children}</span>
     </Link>
   );
 }
