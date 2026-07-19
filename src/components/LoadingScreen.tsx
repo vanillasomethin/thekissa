@@ -25,12 +25,24 @@ const T = {
   exit:      9500,   // hold the logo, then fade out
 };
 
+const SEEN_KEY = "kissa_loader_seen";
+
 export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
-  const [visible, setVisible] = useState(true);
+  // Only run the loader on the first visit of a browser session.
+  const [visible, setVisible] = useState(() => {
+    if (typeof window === "undefined") return true;
+    return sessionStorage.getItem(SEEN_KEY) !== "1";
+  });
   const stageRef = useRef<HTMLDivElement>(null);
   const logoRef  = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!visible) {
+      onComplete?.();
+      return;
+    }
+    sessionStorage.setItem(SEEN_KEY, "1");
+
     const stage = stageRef.current;
     const logo  = logoRef.current;
     if (!stage || !logo) return;
@@ -110,9 +122,9 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
     t(() => {
       // re-center the existing bubble to the left, bring in a second on the right
       const existing = S.children[0] as HTMLElement | undefined;
-      if (existing) moveTo(existing, cx - 70, cy, 90, 103, 500);
+      if (existing) moveTo(existing, cx - 100, cy, 90, 103, 500);
       t(() => {
-        const right = bub(cx + 70, cy, 90, 103, false);
+        const right = bub(cx + 100, cy, 90, 103, false);
         if (right.firstChild) (right.firstChild as HTMLElement).style.transform = "scaleX(-1)";
         show(right, 0, 380);
         // pulse "conversation" — alternate scale pulses
