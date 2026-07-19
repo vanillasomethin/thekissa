@@ -815,9 +815,7 @@ function WorkCard({ p, i, n, CARD_W }: { p: Project; i: number; n: number; CARD_
     >
       <ProjectCard3D accent={p.accent} pointerRef={pointerRef} />
       <a
-        href={p.href}
-        target="_blank"
-        rel="noopener noreferrer"
+        href={`/case-study/${p.name.toLowerCase()}`}
         style={{
           position: "absolute",
           inset: 0,
