@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import type { CaseStudy, CaseStudyMedia } from "@/lib/caseStudies";
+import { emptyCaseStudy } from "@/lib/caseStudies";
 
 type Manifest = Record<string, CaseStudy>;
 
@@ -379,6 +380,36 @@ export default function AdminCaseStudies() {
             {manifest[slug].brand}
           </button>
         ))}
+
+        <button
+          onClick={() => {
+            const name = prompt("New case study — slug (lowercase, e.g. acme):");
+            if (!name) return;
+            const slug = name.trim().toLowerCase().replace(/[^a-z0-9-]+/g, "-");
+            if (!slug) return;
+            if (manifest[slug]) {
+              setActive(slug);
+              return;
+            }
+            setManifest({ ...manifest, [slug]: emptyCaseStudy(slug) });
+            setActive(slug);
+          }}
+          style={{
+            display: "block",
+            width: "100%",
+            textAlign: "left",
+            padding: "10px 12px",
+            borderRadius: 8,
+            border: "1px dashed rgba(255,255,255,0.2)",
+            marginTop: 12,
+            cursor: "pointer",
+            background: "transparent",
+            color: "rgba(255,255,255,0.6)",
+            fontSize: 14,
+          }}
+        >
+          + New case study
+        </button>
       </aside>
 
       {/* Editor */}
